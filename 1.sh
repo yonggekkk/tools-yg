@@ -433,7 +433,7 @@ vless://$UUID@$IP:$vless_port?encryption=none&flow=xtls-rprx-vision&security=rea
 在 https://github.com/yonggekkk/Cloudflare_vless_trojan 项目中可设置proxyip：$IP:$vless_port
 全局应用：可设置变量名：proxyip    可设置变量值：$IP:$vless_port  
 或者
-单节点应用：path路径直接改为/pyip=$IP:$vless_port
+单节点应用：path路径改为：/pyip=$IP:$vless_port
 
 hysteria2://$UUID@$IP:$hy2_port/?sni=www.bing.com&alpn=h3&insecure=1#$NAME-hy2
 
