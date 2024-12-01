@@ -104,6 +104,33 @@ generate_config() {
     "disable_expire": false
   },
     "inbounds": [
+     {
+        "tag": "vless-reality-vesion",
+        "type": "vless",
+        "listen": "$IP",
+        "listen_port": $vless_port,
+        "users": [
+            {
+              "uuid": "$UUID",
+              "flow": "xtls-rprx-vision"
+            }
+        ],
+        "tls": {
+            "enabled": true,
+            "server_name": "www.wto.org",
+            "reality": {
+                "enabled": true,
+                "handshake": {
+                    "server": "www.wto.org",
+                    "server_port": 443
+                },
+                "private_key": "$private_key",
+                "short_id": [
+                  ""
+                ]
+            }
+        }
+    },
     {
        "tag": "hysteria-in",
        "type": "hysteria2",
@@ -138,27 +165,6 @@ generate_config() {
       "type": "ws",
       "path": "/vmess",
       "early_data_header_name": "Sec-WebSocket-Protocol"
-      }
-    },
-    {
-      "tag": "tuic-in",
-      "type": "tuic",
-      "listen": "$IP",
-      "listen_port": $TUIC_PORT,
-      "users": [
-        {
-          "uuid": "$UUID",
-          "password": "admin123"
-        }
-      ],
-      "congestion_control": "bbr",
-      "tls": {
-        "enabled": true,
-        "alpn": [
-          "h3"
-        ],
-        "certificate_path": "cert.pem",
-        "key_path": "private.key"
       }
     }
 
