@@ -430,6 +430,11 @@ yellow "注意：v2ray或其他软件的跳过证书验证需设置为true,否�
 cat > list.txt <<EOF
 vless://$UUID@$IP:$vless_port?encryption=none&flow=xtls-rprx-vision&security=reality&sni=www.speedtest.net&fp=chrome&pbk=$public_key&type=tcp&headerType=none#$NAME-reality
 
+在 https://github.com/yonggekkk/Cloudflare_vless_trojan 项目中可设置proxyip：$IP:$vless_port
+全局应用：可设置变量名：proxyip    可设置变量值：$IP:$vless_port  
+或者
+单节点应用：path路径直接改为/pyip=$IP:$vless_port
+
 hysteria2://$UUID@$IP:$hy2_port/?sni=www.bing.com&alpn=h3&insecure=1#$NAME-hy2
 
 tuic://$UUID:admin123@$IP:$tuic_port?sni=www.bing.com&congestion_control=bbr&udp_relay_mode=native&alpn=h3&allow_insecure=1#$NAME-tuic
