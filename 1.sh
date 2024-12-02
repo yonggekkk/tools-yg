@@ -418,10 +418,7 @@ sleep 1
 rm -f "$(basename ${FILE_MAP[npm]})" "$(basename ${FILE_MAP[web]})"
 }
 
-
-  IP=$(curl -s --max-time 1.5 ipv4.ip.sb)
-  
-
+IP=$(curl -s --max-time 1.5 ipv4.ip.sb)
 get_links(){
 ISP=$(curl -s --max-time 2 https://speed.cloudflare.com/meta | awk -F\" '{print $26}' | sed -e 's/ /_/g' || echo "0")
 get_name() { if [ "$HOSTNAME" = "s1.ct8.pl" ]; then SERVER="CT8"; else SERVER=$(echo "$HOSTNAME" | cut -d '.' -f 1); fi; echo "$SERVER"; }
@@ -430,10 +427,10 @@ yellow "注意：v2ray或其他软件的跳过证书验证需设置为true,否�
 cat > list.txt <<EOF
 vless://$UUID@$IP:$vless_port?encryption=none&flow=xtls-rprx-vision&security=reality&sni=www.speedtest.net&fp=chrome&pbk=$public_key&type=tcp&headerType=none#$NAME-reality
 
-在 https://github.com/yonggekkk/Cloudflare_vless_trojan 项目中可设置proxyip：$IP:$vless_port
-全局应用：可设置变量名：proxyip    可设置变量值：$IP:$vless_port  
-或者
-单节点应用：path路径改为：/pyip=$IP:$vless_port
+可在 https://github.com/yonggekkk/Cloudflare_vless_trojan 项目中创建CF vless/trojan 节点
+设置proxyip：$IP:$vless_port
+方式一全局应用：设置变量名：proxyip    设置变量值：$IP:$vless_port  
+方式二单节点应用：path路径改为：/pyip=$IP:$vless_port
 
 hysteria2://$UUID@$IP:$hy2_port/?sni=www.bing.com&alpn=h3&insecure=1#$NAME-hy2
 
@@ -451,21 +448,20 @@ rm -rf config.json sb.log core fake_useragent_0.2.0.json
 menu() {
    clear
    echo ""
-   purple "=== Serv00|ct8老王sing-box一键三协议安装脚本 ===\n"
-   echo -e "${green}脚本地址：${re}${yellow}https://github.com/eooce/Sing-box${re}\n"
-   echo -e "${green}增加reality协议支持CF vless/trojan 节点的proxyip功能${re}\n"
+   purple "=== Serv00|ct8老王sing-box一键三协议安装脚本 https://github.com/eooce/Sing-box ===\n"
+   echo -e "${green}增加reality协议默认支持 CF vless/trojan 节点的proxyip功能${re}\n"
    purple "转载请著名处自老王，请勿滥用\n"
    green "1. 安装sing-box"
    echo  "==============="
    red "2. 卸载sing-box"
    echo  "==============="
-   green "3. 查看节点信息"
+   green "3. 查看节点及proxyip信息"
    echo  "==============="
    yellow "4. 清理所有进程"
    echo  "==============="
    red "0. 退出脚本"
    echo "==========="
-   reading "请输入选择(0-3): " choice
+   reading "请输入选择(0-4): " choice
    echo ""
     case "${choice}" in
         1) install_singbox ;;
