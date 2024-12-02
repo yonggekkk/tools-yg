@@ -441,7 +441,7 @@ vless://$UUID@$IP:$vless_port?encryption=none&flow=xtls-rprx-vision&security=rea
 方式一全局应用：设置变量名：proxyip    设置变量值：$IP:$vless_port  
 方式二单节点应用：path路径改为：/pyip=$IP:$vless_port
 
-hysteria2://$UUID@$IP:$hy2_port/?sni=www.bing.com&alpn=h3&insecure=1#$NAME-hy2
+hysteria2://$UUID@$IP:$hy2_port?sni=www.bing.com&alpn=h3&insecure=1#$NAME-hy2
 
 tuic://$UUID:$UUID@$IP:$tuic_port?sni=www.bing.com&congestion_control=bbr&udp_relay_mode=native&alpn=h3&allow_insecure=1#$NAME-tuic
 EOF
