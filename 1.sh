@@ -25,7 +25,7 @@ ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk '{print $2}' | xargs 
 
 read_uuid() {
         reading "请输入统一的uuid密码 (建议回车默认随机): " UUID
-        if [[ -z "$UUID" ]; then
+        if [[ -z "$UUID" ]]; then
 	    UUID=$(uuidgen -r)
         fi
 	green "你的uuid为: $UUID"
