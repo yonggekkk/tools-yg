@@ -446,8 +446,7 @@ hysteria2://$UUID@$IP:$hy2_port?sni=www.bing.com&alpn=h3&insecure=1#$NAME-hy2
 tuic://$UUID:$UUID@$IP:$tuic_port?sni=www.bing.com&congestion_control=bbr&udp_relay_mode=native&alpn=h3&allow_insecure=1#$NAME-tuic
 EOF
 cat list.txt
-purple "\n节点及proxyip信息已保存在$WORKDIR/list.txt文件中"
-sleep 3 
+sleep 2
 rm -rf config.json sb.log core fake_useragent_0.2.0.json
 
 }
