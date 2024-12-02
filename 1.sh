@@ -446,6 +446,7 @@ vless://$UUID@$IP:$vless_port?encryption=none&flow=xtls-rprx-vision&security=rea
 可用的proxyip(带端口)：$IP:$vless_port
 方式一全局应用：设置变量名：proxyip    设置变量值：$IP:$vless_port  
 方式二单节点应用：path路径改为：/pyip=$IP:$vless_port
+注：如果serv00的IP被墙，proxyip依旧有效！
 
 hysteria2://$UUID@$IP:$hy2_port?sni=www.bing.com&alpn=h3&insecure=1#$NAME-hy2
 
