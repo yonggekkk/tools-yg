@@ -94,11 +94,17 @@ reading "\n确定继续安装吗？【y/n】: " choice
     [Yy])
         cd $WORKDIR
         read_nz_variables
+	echo
 	read_uuid
+ 	echo
         read_vless_port
+        echo
         read_hy2_port
+	echo
         read_tuic_port
+	echo
         download_and_run_singbox
+	echo
         get_links
       ;;
     [Nn]) exit 0 ;;
@@ -437,7 +443,7 @@ cat > list.txt <<EOF
 vless://$UUID@$IP:$vless_port?encryption=none&flow=xtls-rprx-vision&security=reality&sni=www.speedtest.net&fp=chrome&pbk=$public_key&type=tcp&headerType=none#$NAME-reality
 
 可在 https://github.com/yonggekkk/Cloudflare_vless_trojan 项目中创建CF vless/trojan 节点
-可用的proxyip：$IP:$vless_port
+可用的proxyip(带端口)：$IP:$vless_port
 方式一全局应用：设置变量名：proxyip    设置变量值：$IP:$vless_port  
 方式二单节点应用：path路径改为：/pyip=$IP:$vless_port
 
