@@ -14,7 +14,6 @@ reading() { read -p "$(red "$1")" "$2"; }
 
 USERNAME=$(whoami)
 HOSTNAME=$(hostname)
-export UUID=${UUID:-'c97e86ba-c128-403f-9f33-c5c69254e250'}
 export NEZHA_SERVER=${NEZHA_SERVER:-''} 
 export NEZHA_PORT=${NEZHA_PORT:-'5555'}     
 export NEZHA_KEY=${NEZHA_KEY:-''}
@@ -22,6 +21,15 @@ export NEZHA_KEY=${NEZHA_KEY:-''}
 [[ "$HOSTNAME" == "s1.ct8.pl" ]] && WORKDIR="domains/${USERNAME}.ct8.pl/logs" || WORKDIR="domains/${USERNAME}.serv00.net/logs"
 [ -d "$WORKDIR" ] || (mkdir -p "$WORKDIR" && chmod 777 "$WORKDIR")
 ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
+
+
+read_uuid() {
+        reading "请输入统一的uuid密码 (建议回车默认随机): " UUID
+        if [[ -z "$suuid" ]; then
+	    UUID=$(uuidgen -r)
+        fi
+	green "你的uuid为: $UUID"
+}
 
 read_vless_port() {
     while true; do
@@ -86,6 +94,7 @@ reading "\n确定继续安装吗？【y/n】: " choice
     [Yy])
         cd $WORKDIR
         read_nz_variables
+	read_uuid
         read_vless_port
         read_hy2_port
         read_tuic_port
@@ -437,8 +446,7 @@ hysteria2://$UUID@$IP:$hy2_port/?sni=www.bing.com&alpn=h3&insecure=1#$NAME-hy2
 tuic://$UUID:$UUID@$IP:$tuic_port?sni=www.bing.com&congestion_control=bbr&udp_relay_mode=native&alpn=h3&allow_insecure=1#$NAME-tuic
 EOF
 cat list.txt
-purple "\n$WORKDIR/list.txt saved successfully"
-purple "Running done!\n"
+purple "\n节点及proxyip信息已保存在$WORKDIR/list.txt文件中"
 sleep 3 
 rm -rf config.json sb.log core fake_useragent_0.2.0.json
 
