@@ -288,7 +288,7 @@ openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=
                 "enabled": true,
                 "handshake": {
                     "server": "$reym",
-                    "server_port": 443
+                    "server_port": 80
                 },
                 "private_key": "$private_key",
                 "short_id": [
