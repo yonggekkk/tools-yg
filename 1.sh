@@ -464,7 +464,7 @@ vless://$UUID@$IP:$vless_port?encryption=none&flow=xtls-rprx-vision&security=rea
 用于非CF网站落地到 $IP 所在地区：客户端优选IP地址为：$IP，端口：$vless_port，TLS必须开启
 
 注：如果serv00的IP被墙，proxyip依旧有效，但用于客户端的优选IP将不可用！
-注：必定有大佬会扫Serv00的反代IP作为共享IP库或者出售，请慎重将reality域名设置为CF域名
+注：必定有大佬会扫Serv00的反代IP作为其共享IP库或者出售，请慎重将reality域名设置为CF域名
 -------------------------------------------------------------------------------------------------
 
 HY2分享链接如下：
