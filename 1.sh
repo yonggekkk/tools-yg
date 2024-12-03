@@ -118,7 +118,7 @@ reading "\n确定继续安装吗？【y/n】: " choice
         #read_nz_variables
         read_reym
   echo
-        read_report
+        #read_report
 	echo
 	      read_uuid
  	echo
@@ -305,7 +305,7 @@ openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=
                 "enabled": true,
                 "handshake": {
                     "server": "$reym",
-                    "server_port": $report
+                    "server_port": 80
                 },
                 "private_key": "$private_key",
                 "short_id": [
