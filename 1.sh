@@ -31,7 +31,7 @@ read_uuid() {
 }
 
 read_reym() {
-        reading "请输入reality域名 (回车默认CF域名，支持proxyip/非标端口优选反代ip功能): " reym
+        reading "请输入reality域名 (回车默认CF域名，支持proxyip+非标端口反代ip功能): " reym
         if [[ -z "$reym" ]]; then
 	         reym=www.speedtest.net
         fi
@@ -101,6 +101,7 @@ reading "\n确定继续安装吗？【y/n】: " choice
     [Yy])
         cd $WORKDIR
         #read_nz_variables
+	echo
         read_reym
 	echo
 	read_uuid
@@ -288,7 +289,7 @@ openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=
                 "enabled": true,
                 "handshake": {
                     "server": "$reym",
-                    "server_port": 80
+                    "server_port": 443
                 },
                 "private_key": "$private_key",
                 "short_id": [
@@ -448,15 +449,21 @@ get_name() { if [ "$HOSTNAME" = "s1.ct8.pl" ]; then SERVER="CT8"; else SERVER=$(
 NAME="$ISP-$(get_name)"
 yellow "注意：v2ray或其他软件的跳过证书验证需设置为true,否则hy2或tuic节点可能不通\n"
 cat > list.txt <<EOF
+
 Vless-reality分享链接如下：
 vless://$UUID@$IP:$vless_port?encryption=none&flow=xtls-rprx-vision&security=reality&sni=$reym&fp=chrome&pbk=$public_key&type=tcp&headerType=none#$NAME-reality
 
-Proxyip(带端口)与非标端口反代IP的信息如下：
+-------------------------------------------------------------------------------------------------
 可在 https://github.com/yonggekkk/Cloudflare_vless_trojan 项目中创建CF vless/trojan 节点
+1、Proxyip(带端口)信息如下：
 方式一全局应用：设置变量名：proxyip    设置变量值：$IP:$vless_port  
 方式二单节点应用：path路径改为：/pyip=$IP:$vless_port
-也可用作于非标端口的反代IP，用作于客户端优选地址，目前默认仅支持TLS节点
-注：如果serv00的IP被墙，proxyip依旧有效，但用作于客户端优选地址将不可用！
+
+2、非标端口反代IP信息如下：
+用于非CF网站落地到 $IP 所在地区：客户端优选IP地址为：$IP，端口：$vless_port，TLS必须开启
+
+注：如果serv00的IP被墙，proxyip依旧有效，但用于客户端的优选IP将不可用！
+-------------------------------------------------------------------------------------------------
 
 HY2分享链接如下：
 hysteria2://$UUID@$IP:$hy2_port?sni=www.bing.com&alpn=h3&insecure=1#$NAME-hy2
