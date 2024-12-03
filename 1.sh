@@ -38,21 +38,6 @@ read_reym() {
 	green "输入的reality域名为: $reym"
 }
 
-read_report() {
-        reading "请输入reality域名端口 (仅443与80，回车默认443): " report
-        if [[ -z "$report" || "$report" == "443" ]]; then
-	         report=443
-        elif [[ "$report" == "80" ]]; then
-           report=80
-        else
-           yellow "输入错误，仅支持443与80，请重新输入"
-           read_report
-        fi
-        green "输入的reality域名端口为: $report" 
-}
-
-#回车默认443：支持TLS节点做优选IP。80：支持非TLS节点做优选IP
-
 read_vless_port() {
     while true; do
         reading "请输入vless-reality端口 (面板开放的tcp端口): " vless_port
@@ -117,13 +102,11 @@ reading "\n确定继续安装吗？【y/n】: " choice
         cd $WORKDIR
         #read_nz_variables
         read_reym
-  echo
-        #read_report
 	echo
-	      read_uuid
+	read_uuid
  	echo
         read_vless_port
-  echo
+        echo
         read_hy2_port
 	echo
         read_tuic_port
@@ -305,7 +288,7 @@ openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=
                 "enabled": true,
                 "handshake": {
                     "server": "$reym",
-                    "server_port": 80
+                    "server_port": 443
                 },
                 "private_key": "$private_key",
                 "short_id": [
