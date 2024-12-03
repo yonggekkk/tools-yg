@@ -454,6 +454,7 @@ Vless-reality分享链接如下：
 vless://$UUID@$IP:$vless_port?encryption=none&flow=xtls-rprx-vision&security=reality&sni=$reym&fp=chrome&pbk=$public_key&type=tcp&headerType=none#$NAME-reality
 
 -------------------------------------------------------------------------------------------------
+如果之前输入的reality域名为CF域名，将激活以下功能：
 可在 https://github.com/yonggekkk/Cloudflare_vless_trojan 项目中创建CF vless/trojan 节点
 1、Proxyip(带端口)信息如下：
 方式一全局应用：设置变量名：proxyip    设置变量值：$IP:$vless_port  
@@ -463,6 +464,7 @@ vless://$UUID@$IP:$vless_port?encryption=none&flow=xtls-rprx-vision&security=rea
 用于非CF网站落地到 $IP 所在地区：客户端优选IP地址为：$IP，端口：$vless_port，TLS必须开启
 
 注：如果serv00的IP被墙，proxyip依旧有效，但用于客户端的优选IP将不可用！
+注：必定有大佬会扫Serv00的反代IP作为共享IP库或者出售，请慎重将reality域名设置为CF域名
 -------------------------------------------------------------------------------------------------
 
 HY2分享链接如下：
