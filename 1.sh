@@ -562,7 +562,7 @@ rm -rf boot.log config.json sb.log core tunnel.yml tunnel.json fake_useragent_0.
 menu() {
    clear
    echo ""
-   purple "=== 修改自Serv00|ct8老王sing-box安装脚本，支持一键三协议：vless-reality、hysteria2、tuic ===\n"
+   purple "=== 修改自Serv00|ct8老王sing-box安装脚本，支持一键三协议：vless-reality、Vmess-ws(Argo)、hysteria2 ===\n"
    echo -e "${green}甬哥侃侃侃主要增加reality协议默认支持 CF vless/trojan 节点的proxyip/非标端口优选反代ip功能${re}\n"
    purple "转载请著名处自老王，请勿滥用\n"
    green  "1. 安装sing-box"
