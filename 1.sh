@@ -510,7 +510,7 @@ get_argodomain() {
   fi
 }
 #IP=$(curl -s --max-time 1.5 ipv4.ip.sb)
-IP=panel14.serv00.com
+IP=s14.serv00.com
 get_links(){
 argodomain=$(get_argodomain)
 echo -e "\e[1;32mArgoDomain:\e[1;35m${argodomain}\e[0m\n"
