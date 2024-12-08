@@ -23,7 +23,7 @@ export NEZHA_KEY=${NEZHA_KEY:-''}
 #ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
 
 read_ip() {
-cat "$WORKDIR/ip.txt"
+cat domains/ip.txt
 reading "选择使用的IP (建议默认回车自动选择可用IP): " IP
 if [[ -z "$IP" ]]; then
 IP=$(grep -m 1 "可用" $WORKDIR/ip.txt | awk -F '：' '{print $1}')
@@ -592,28 +592,28 @@ rm -rf boot.log config.json sb.log core tunnel.yml tunnel.json fake_useragent_0.
    echo   "=================================="
 nb=$(echo "$HOSTNAME" | cut -d '.' -f 1 | tr -d 's')
 ym=("cache$nb.serv00.com" "$HOSTNAME" "web$nb.serv00.com")
-rm -rf $WORKDIR/ip.txt
+rm -rf domains/ip.txt
 for ym in "${ym[@]}"; do
 # 引用frankiejun API
 response=$(curl -s "https://ss.botai.us.kg/api/getip?host=$ym")
 if [[ -z "$response" ]]; then
 for ip in "${ym[@]}"; do
-dig @8.8.8.8 +time=2 +short $ip >> $WORKDIR/ip.txt
+dig @8.8.8.8 +time=2 +short $ip >> domains/ip.txt
 sleep 1  
 done
 break
 else
 echo "$response" | while IFS='|' read -r ip status; do
 if [[ $status == "Accessible" ]]; then
-echo "$ip：可用"  >> $WORKDIR/ip.txt
+echo "$ip：可用"  >> domains/ip.txt
 else
-echo "$ip：被墙"  >> $WORKDIR/ip.txt
+echo "$ip：被墙"  >> domains/ip.txt
 fi	
 done
 fi
 done
 green "当前可选择的IP如下："
-cat "$WORKDIR/ip.txt"
+cat domains/ip.txt
 if [[ -e $WORKDIR/list.txt ]]; then
 green "已安装sing-box" 
 else
