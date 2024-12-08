@@ -23,6 +23,46 @@ export NEZHA_KEY=${NEZHA_KEY:-''}
 [ -d "$WORKDIR" ] || (mkdir -p "$WORKDIR" && chmod 777 "$WORKDIR")
 #ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
 
+check_ip() {
+nb=$(echo "$HOSTNAME" | cut -d '.' -f 1 | tr -d 's')
+ym=("cache$nb.serv00.com" "$HOSTNAME" "web$nb.serv00.com")
+rm -rf $WORKDIR/ip.txt
+for ym in "${ym[@]}"; do
+# 引用frankiejun API
+response=$(curl -s "https://ss.botai.us.kg/api/getip?host=$ym")
+if [[ -z "$response" ]]; then
+for ip in "${ym[@]}"; do
+dig @8.8.8.8 +time=2 +short $ip >> $WORKDIR/ip.txt
+sleep 1  
+done
+break
+fi
+else
+echo "$response" | while IFS='|' read -r ip status; do
+if [[ $status == "Accessible" ]]; then
+echo "$ip：可用"  >> $WORKDIR/ip.txt
+else
+echo "$ip：被墙"  >> $WORKDIR/ip.txt
+fi	
+done
+done
+fi
+green "当前可选择的IP如下："
+cat $WORKDIR/ip.txt
+}
+
+read_ip() {
+reading "选择使用的IP (建议默认回车自动选择可用IP): " IP
+if [[ -z "$IP" ]]; then
+IP=$(grep -m 1 "可用" $WORKDIR/ip.txt | awk -F '：' '{print $1}')
+if [ -z "$IP" ]; then
+IP=$(head -n 1 $WORKDIR/ip.txt | awk -F '：' '{print $1}')
+red "当前IP可能都被墙了，但argo节点与proxyip依旧可用"
+fi
+fi
+green "你使用的IP: $IP"
+}
+
 read_uuid() {
         reading "请输入统一的uuid密码 (建议回车默认随机): " UUID
         if [[ -z "$UUID" ]]; then
@@ -102,6 +142,10 @@ reading "\n确定继续安装吗？【y/n】: " choice
     [Yy])
         cd $WORKDIR
         #read_nz_variables
+	echo
+	check_ip
+	echo
+	read_ip
 	echo
         read_reym
 	echo
@@ -509,8 +553,7 @@ get_argodomain() {
     echo "$argodomain"
   fi
 }
-#IP=$(curl -s --max-time 1.5 ipv4.ip.sb)
-IP=188.68.240.161
+
 get_links(){
 argodomain=$(get_argodomain)
 echo -e "\e[1;32mArgoDomain:\e[1;35m${argodomain}\e[0m\n"
@@ -559,6 +602,7 @@ rm -rf boot.log config.json sb.log core tunnel.yml tunnel.json fake_useragent_0.
 }
 
 check(){
+check_ip
 if [[ -n $WORKDIR/list.txt ]]; then
 green "已安装sing-box" 
 else
