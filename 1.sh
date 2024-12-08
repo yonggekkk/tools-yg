@@ -529,7 +529,7 @@ get_argodomain() {
 
 get_links(){
 argodomain=$(get_argodomain)
-echo -e "\e[1;32mArgoDomain:\e[1;35m${argodomain}\e[0m\n"
+echo -e "\e[1;32mArgo域名:\e[1;35m${argodomain}\e[0m\n"
 ISP=$(curl -s --max-time 2 https://speed.cloudflare.com/meta | awk -F\" '{print $26}' | sed -e 's/ /_/g' || echo "0")
 get_name() { if [ "$HOSTNAME" = "s1.ct8.pl" ]; then SERVER="CT8"; else SERVER=$(echo "$HOSTNAME" | cut -d '.' -f 1); fi; echo "$SERVER"; }
 NAME="$ISP-$(get_name)"
@@ -605,9 +605,9 @@ break
 else
 echo "$response" | while IFS='|' read -r ip status; do
 if [[ $status == "Accessible" ]]; then
-echo "$ip：可用"  >> $WORKDIR/ip.txt
+echo "$ip : 可用"  >> $WORKDIR/ip.txt
 else
-echo "$ip：被墙"  >> $WORKDIR/ip.txt
+echo "$ip : 被墙"  >> $WORKDIR/ip.txt
 fi	
 done
 fi
