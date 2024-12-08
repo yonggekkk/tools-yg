@@ -576,6 +576,8 @@ vmess://$(echo "{ \"v\": \"2\", \"ps\": \"$NAME-vmess-ws-argo\", \"add\": \"icoo
 三、HY2分享链接如下：
 hysteria2://$UUID@$IP:$hy2_port?sni=www.bing.com&alpn=h3&insecure=1#$NAME-hy2
 
+查看sing-box与clash-meta配置文件，请进入主菜单选择4
+
 =================================================================================================
 
 EOF
