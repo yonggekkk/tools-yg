@@ -105,14 +105,10 @@ read_nz_variables() {
   fi
 }
 
-checksbins(){
+install_singbox() {
 if [[ -e $WORKDIR/list.txt ]]; then
 yellow "已安装sing-box，请先选择2卸载，再执行安装" && exit
 fi
-}
-
-install_singbox() {
-checksbins
 echo -e "${yellow}本脚本同时三协议共存${purple}(vless-reality、vmess+ws/argo、hysteria2)${re}"
 echo -e "${yellow}开始运行前，请确保在面板${purple}已开放3个端口，两个tcp端口和一个udp端口${re}"
 echo -e "${yellow}面板${purple}Additional services中的Run your own applications${yellow}已开启为${purplw}Enabled${yellow}状态${re}"
@@ -576,7 +572,7 @@ vmess://$(echo "{ \"v\": \"2\", \"ps\": \"$NAME-vmess-ws-argo\", \"add\": \"icoo
 三、HY2分享链接如下：
 hysteria2://$UUID@$IP:$hy2_port?sni=www.bing.com&alpn=h3&insecure=1#$NAME-hy2
 
-查看sing-box与clash-meta配置文件，请进入主菜单选择4
+四、查看sing-box与clash-meta配置文件，请进入主菜单选择4
 
 =================================================================================================
 
@@ -1056,19 +1052,25 @@ rm -rf boot.log config.json sb.log core tunnel.yml tunnel.json fake_useragent_0.
 }
 
 showlist(){
-checksbins
+if [[ -e $WORKDIR/list.txt ]]; then
 green "查看节点及proxyip/非标端口反代ip信息"
 cat $WORKDIR/list.txt
+else
+red "未安装sing-box" && exit
+fi
 }
 
 showsbclash(){
-checksbins
+if [[ -e $WORKDIR/sing_box.txt ]]; then
 green "sing_box配置文件如下："
 cat $WORKDIR/sing_box.txt 
 sleep 2
 echo
 green "clash_meta配置文件如下："
 cat $WORKDIR/clash_meta.txt
+else
+red "未安装sing-box" && exit
+fi
 }
 
 #主菜单
