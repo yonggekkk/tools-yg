@@ -23,7 +23,7 @@ export NEZHA_KEY=${NEZHA_KEY:-''}
 #ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
 
 read_ip() {
-cat $WORKDIR/ip.txt
+cat "$WORKDIR/ip.txt"
 reading "选择使用的IP (建议默认回车自动选择可用IP): " IP
 if [[ -z "$IP" ]]; then
 IP=$(grep -m 1 "可用" $WORKDIR/ip.txt | awk -F '：' '{print $1}')
@@ -613,7 +613,7 @@ done
 fi
 done
 green "当前可选择的IP如下："
-cat $WORKDIR/ip.txt
+cat "$WORKDIR/ip.txt"
 if [[ -e $WORKDIR/list.txt ]]; then
 green "已安装sing-box" 
 else
