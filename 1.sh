@@ -36,7 +36,6 @@ dig @8.8.8.8 +time=2 +short $ip >> $WORKDIR/ip.txt
 sleep 1  
 done
 break
-fi
 else
 echo "$response" | while IFS='|' read -r ip status; do
 if [[ $status == "Accessible" ]]; then
