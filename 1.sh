@@ -105,6 +105,9 @@ read_nz_variables() {
 }
 
 install_singbox() {
+if [[ -e $WORKDIR/list.txt ]]; then
+yellow "已安装sing-box，请先选择2卸载，再执行安装"
+fi
 echo -e "${yellow}本脚本同时三协议共存${purple}(vless-reality|vmess+ws/argo|hysteria2)${re}"
 echo -e "${yellow}开始运行前，请确保在面板${purple}已开放3个端口，两个tcp端口和一个udp端口${re}"
 echo -e "${yellow}面板${purple}Additional services中的Run your own applications${yellow}已开启为${purplw}Enabled${yellow}状态${re}"
