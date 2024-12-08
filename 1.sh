@@ -21,7 +21,7 @@ export NEZHA_KEY=${NEZHA_KEY:-''}
 [[ "$HOSTNAME" == "s1.ct8.pl" ]] && WORKDIR="domains/${USERNAME}.ct8.pl/logs" || WORKDIR="domains/${USERNAME}.serv00.net/logs"
 [ -d "$WORKDIR" ] || (mkdir -p "$WORKDIR" && chmod 777 "$WORKDIR")
 #ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
-
+check_ip(){
 nb=$(echo "$HOSTNAME" | cut -d '.' -f 1 | tr -d 's')
 ym=("cache$nb.serv00.com" "$HOSTNAME" "web$nb.serv00.com")
 rm -rf $WORKDIR/ip.txt
@@ -46,6 +46,7 @@ fi
 done
 green "当前可选择的IP如下："
 cat $WORKDIR/ip.txt
+}
 
 read_ip() {
 reading "选择使用的IP (建议默认回车自动选择可用IP): " IP
@@ -598,6 +599,7 @@ rm -rf boot.log config.json sb.log core tunnel.yml tunnel.json fake_useragent_0.
 }
 
 check(){
+check_ip
 if [[ -n $WORKDIR/list.txt ]]; then
 green "已安装sing-box" 
 else
