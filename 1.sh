@@ -137,8 +137,6 @@ reading "\n确定继续安装吗？【y/n】: " choice
         cd $WORKDIR
         #read_nz_variables
 	echo
-	check_ip
-	echo
 	read_ip
 	echo
         read_reym
