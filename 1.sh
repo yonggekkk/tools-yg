@@ -610,7 +610,7 @@ fi
 done
 green "当前可选择的IP如下："
 cat $WORKDIR/ip.txt
-if [[ -n $WORKDIR/list.txt ]]; then
+if [[ -e $WORKDIR/list.txt ]]; then
 green "已安装sing-box" 
 else
 red "未安装sing-box" 
