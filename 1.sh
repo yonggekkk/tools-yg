@@ -105,10 +105,14 @@ read_nz_variables() {
   fi
 }
 
-install_singbox() {
+checksbins(){
 if [[ -e $WORKDIR/list.txt ]]; then
-yellow "已安装sing-box，请先选择2卸载，再执行安装"
+yellow "已安装sing-box，请先选择2卸载，再执行安装" && exit
 fi
+}
+
+install_singbox() {
+checksbins
 echo -e "${yellow}本脚本同时三协议共存${purple}(vless-reality、vmess+ws/argo、hysteria2)${re}"
 echo -e "${yellow}开始运行前，请确保在面板${purple}已开放3个端口，两个tcp端口和一个udp端口${re}"
 echo -e "${yellow}面板${purple}Additional services中的Run your own applications${yellow}已开启为${purplw}Enabled${yellow}状态${re}"
@@ -726,7 +730,7 @@ cat > sing_box.txt <<EOF
                         ""
                     ]
                 },
-                "path": "$UUID-vm",
+                "path": "/$UUID-vm",
                 "type": "ws"
             },
             "type": "vmess",
@@ -737,13 +741,13 @@ cat > sing_box.txt <<EOF
     {
         "type": "hysteria2",
         "tag": "hy2-$NAME",
-        "server": "$cl_hy2_ip",
+        "server": "$IP",
         "server_port": $hy2_port,
         "password": "$UUID",
         "tls": {
             "enabled": true,
-            "server_name": "$hy2_name",
-            "insecure": $hy2_ins,
+            "server_name": "www.bing.com",
+            "insecure": true,
             "alpn": [
                 "h3"
             ]
@@ -755,7 +759,7 @@ cat > sing_box.txt <<EOF
             "tag": "vmess-tls-argo-$NAME",
             "tls": {
                 "enabled": true,
-                "server_name": "$argo",
+                "server_name": "$argodomain",
                 "insecure": false,
                 "utls": {
                     "enabled": true,
@@ -766,10 +770,10 @@ cat > sing_box.txt <<EOF
             "transport": {
                 "headers": {
                     "Host": [
-                        "$argo"
+                        "$argodomain"
                     ]
                 },
-                "path": "$UUID-vm",
+                "path": "/$UUID-vm",
                 "type": "ws"
             },
             "type": "vmess",
@@ -782,7 +786,7 @@ cat > sing_box.txt <<EOF
             "tag": "vmess-argo-$NAME",
             "tls": {
                 "enabled": false,
-                "server_name": "$argo",
+                "server_name": "$argodomain",
                 "insecure": false,
                 "utls": {
                     "enabled": true,
@@ -793,10 +797,10 @@ cat > sing_box.txt <<EOF
             "transport": {
                 "headers": {
                     "Host": [
-                        "$argo"
+                        "$argodomain"
                     ]
                 },
-                "path": "$UUID-vm",
+                "path": "/$UUID-vm",
                 "type": "ws"
             },
             "type": "vmess",
@@ -957,24 +961,24 @@ proxies:
   network: ws
   servername: $vm_name                    
   ws-opts:
-    path: "$UUID-vm"                             
+    path: "/$UUID-vm"                             
     headers:
       Host: $vm_name                     
 
 - name: hysteria2-$NAME                            
   type: hysteria2                                      
-  server: $cl_hy2_ip                               
+  server: $IP                               
   port: $hy2_port                                
   password: $UUID                          
   alpn:
     - h3
-  sni: $hy2_name                               
-  skip-cert-verify: $hy2_ins
+  sni: www.bing.com                               
+  skip-cert-verify: true
   fast-open: true
 
 - name: vmess-tls-argo-$NAME                         
   type: vmess
-  server: $vmadd_argo                        
+  server: icook.hk                        
   port: 8443                                     
   uuid: $UUID       
   alterId: 0
@@ -982,11 +986,11 @@ proxies:
   udp: true
   tls: true
   network: ws
-  servername: $argo                    
+  servername: $argodomain                    
   ws-opts:
-    path: "$ws_path"                             
+    path: "/$UUID-vm"                             
     headers:
-      Host: $argo
+      Host: $argodomain
 
 - name: vmess-argo-$NAME                         
   type: vmess
@@ -998,11 +1002,11 @@ proxies:
   udp: true
   tls: false
   network: ws
-  servername: $argo                    
+  servername: $argodomain                   
   ws-opts:
-    path: "$ws_path"                             
+    path: "/$UUID-vm"                             
     headers:
-      Host: $argo 
+      Host: $argodomain 
 
 proxy-groups:
 - name: 负载均衡
@@ -1049,6 +1053,22 @@ sleep 2
 rm -rf boot.log config.json sb.log core tunnel.yml tunnel.json fake_useragent_0.2.0.json
 }
 
+showlist(){
+checksbins
+green "查看节点及proxyip/非标端口反代ip信息"
+cat $WORKDIR/list.txt
+}
+
+showsbclash(){
+checksbins
+green "sing_box配置文件如下："
+cat $WORKDIR/sing_box.txt 
+sleep 2
+echo
+green "clash_meta配置文件如下："
+cat $WORKDIR/clash_meta.txt
+}
+
 #主菜单
 menu() {
    clear
@@ -1065,7 +1085,9 @@ menu() {
    echo   "=================================="
    green  "3. 查看节点及proxyip/非标端口反代ip"
    echo   "=================================="
-   yellow "4. 清理所有进程"
+   green  "4. 查看sing-box与clash-meta配置文件"
+   echo   "=================================="
+   yellow "5. 清理所有进程"
    echo   "=================================="
    red    "0. 退出脚本"
    echo   "=================================="
@@ -1100,13 +1122,14 @@ else
 red "未安装sing-box，请选择1进行安装" 
 fi
    echo   "=================================="
-   reading "请输入选择(0-4): " choice
+   reading "请输入选择(0-5): " choice
    echo ""
     case "${choice}" in
         1) install_singbox ;;
         2) uninstall_singbox ;; 
-        3) cat $WORKDIR/list.txt ;; 
-        4) kill_all_tasks ;;
+        3) showlist ;;
+	4) showsbclash ;;
+        5) kill_all_tasks ;;
 	0) exit 0 ;;
         *) red "无效的选项，请输入 0 到 4" ;;
     esac
