@@ -44,8 +44,8 @@ else
 echo "$ip：被墙"  >> $WORKDIR/ip.txt
 fi	
 done
-done
 fi
+done
 green "当前可选择的IP如下："
 cat $WORKDIR/ip.txt
 }
