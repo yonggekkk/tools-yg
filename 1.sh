@@ -26,9 +26,9 @@ read_ip() {
 cat ip.txt
 reading "选择使用的IP (建议默认回车自动选择可用IP): " IP
 if [[ -z "$IP" ]]; then
-IP=$(grep -m 1 "可用" ip.txt | awk -F '：' '{print $1}')
+IP=$(grep -m 1 "可用" ip.txt | awk -F ':' '{print $1}')
 if [ -z "$IP" ]; then
-IP=$(head -n 1 ip.txt | awk -F '：' '{print $1}')
+IP=$(head -n 1 ip.txt | awk -F ':' '{print $1}')
 red "当前IP可能都被墙了，但argo节点与proxyip依旧可用"
 fi
 fi
