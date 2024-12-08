@@ -558,6 +558,13 @@ sleep 2
 rm -rf boot.log config.json sb.log core tunnel.yml tunnel.json fake_useragent_0.2.0.json
 }
 
+check(){
+if [[ -n $WORKDIR/list.txt ]]; then
+green "已安装sing-box" 
+else
+red "未安装sing-box" 
+fi
+}
 #主菜单
 menu() {
    clear
@@ -585,5 +592,6 @@ menu() {
 	0) exit 0 ;;
         *) red "无效的选项，请输入 0 到 4" ;;
     esac
-}
+    check
+    }
 menu
