@@ -190,8 +190,6 @@ ingress:
       noTLSVerify: true
   - service: http_status:404
 EOF
-  else
-    green "使用token连接到Argo隧道"
   fi
 }
 
