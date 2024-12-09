@@ -1141,7 +1141,7 @@ echo
 if [[ -e $WORKDIR/list.txt ]]; then
 green "已安装sing-box" 
 else
-red "未安装sing-box，请选择1进行安装" 
+red "未安装sing-box，请选择 1 进行安装" 
 fi
    echo   "----------------------------------"
    reading "请输入选择(0-5): " choice
