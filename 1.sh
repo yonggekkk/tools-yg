@@ -159,7 +159,7 @@ argo_configure() {
   if [[ -z $ARGO_AUTH || -z $ARGO_DOMAIN ]]; then
     yellow "Argo临时隧道 (无需域名，推荐)"
     yellow "Argo固定隧道 (需要域名，需要CF设置提取Token)"
-    reading "选择 g 表示使用Argo固定隧道；回车跳过 表示使用Argo临时隧道【g/回车】: " argo_choice
+    reading "输入 g 表示使用Argo固定隧道 ；回车跳过 表示使用Argo临时隧道 【g/回车】: " argo_choice
     if [[ "$argo_choice" != "g" && "$argo_choice" != "G" && -n "$argo_choice" ]]; then
     red "无效的选择，请输入 g 或回车"
     argo_configure
@@ -172,7 +172,6 @@ argo_configure() {
 	  echo -e "${red}注意：${purple}使用token，需要在cloudflare后台设置隧道端口和vmess+ws的tcp端口一致${re}"
       else
           green "使用Argo临时隧道"
-          return
       fi
   fi
 
