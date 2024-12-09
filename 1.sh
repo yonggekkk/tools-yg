@@ -1012,11 +1012,11 @@ proxy-groups:
   interval: 300
   strategy: round-robin
   proxies:
-    - vless-reality-vision-$hostname                              
-    - vmess-ws-$hostname
-    - hysteria2-$hostname
-    - vmess-tls-argo-$hostname
-    - vmess-argo-$hostname
+    - vless-reality-vision-$NAME                              
+    - vmess-ws-$NAME
+    - hysteria2-$NAME
+    - vmess-tls-argo-$NAME
+    - vmess-argo-$NAME
 
 - name: 自动选择
   type: url-test
