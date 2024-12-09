@@ -1144,7 +1144,7 @@ else
 red "未安装sing-box，请选择 1 进行安装" 
 fi
    echo   "----------------------------------"
-   reading "请输入选择(0-5): " choice
+   reading "请输入选择【0-5】: " choice
    echo ""
     case "${choice}" in
         1) install_singbox ;;
