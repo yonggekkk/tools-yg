@@ -108,7 +108,7 @@ install_singbox() {
 if [[ -e $WORKDIR/list.txt ]]; then
 yellow "已安装sing-box，请先选择2卸载，再执行安装" && exit
 fi
-yellow "请确保在Serv00网页设置中已开放3个端口，两个tcp端口和一个udp端口"
+yellow "请确保在Serv00网页设置中已开放3个端口：2个tcp端口、1个udp端口"
 sleep 2
         cd $WORKDIR
         #read_nz_variables
