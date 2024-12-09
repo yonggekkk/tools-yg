@@ -159,7 +159,7 @@ argo_configure() {
   if [[ -z $ARGO_AUTH || -z $ARGO_DOMAIN ]]; then
     yellow "Argo临时隧道 (无需域名，推荐)"
     yellow "Argo固定隧道 (需要域名，需要CF设置提取Token)"
-      reading "选择 g 表示使用Argo固定隧道；回车跳过 表示使用Argo临时隧道【g/回车】: " argo_choice
+    reading "选择 g 表示使用Argo固定隧道；回车跳过 表示使用Argo临时隧道【g/回车】: " argo_choice
     if [[ "$argo_choice" != "g" && "$argo_choice" != "G" && -n "$argo_choice" ]]; then
     red "无效的选择，请输入 g 或回车"
     argo_configure
