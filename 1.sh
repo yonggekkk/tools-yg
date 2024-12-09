@@ -578,7 +578,7 @@ hysteria2://$UUID@$IP:$hy2_port?sni=www.bing.com&alpn=h3&insecure=1#$NAME-hy2
 EOF
 cat list.txt
 
-cat > sing_box.txt <<EOF
+cat > sing_box.json <<EOF
 {
   "log": {
     "disabled": false,
@@ -903,7 +903,7 @@ cat > sing_box.txt <<EOF
 }
 EOF
 
-cat > clash_meta.txt <<EOF
+cat > clash_meta.yaml <<EOF
 port: 7890
 allow-lan: true
 mode: rule
@@ -1061,17 +1061,17 @@ fi
 }
 
 showsbclash(){
-if [[ -e $WORKDIR/sing_box.txt ]]; then
+if [[ -e $WORKDIR/sing_box.json ]]; then
 green "Sing_box配置文件如下："
 yellow "Argo节点的地址可自行修改优选IP"
 sleep 2
-cat $WORKDIR/sing_box.txt 
+cat $WORKDIR/sing_box.json 
 echo
 echo
 green "Clash_meta配置文件如下："
 yellow "Argo节点的地址可自行修改优选IP"
 sleep 2
-cat $WORKDIR/clash_meta.txt
+cat $WORKDIR/clash_meta.yaml
 else
 red "未安装sing-box" && exit
 fi
