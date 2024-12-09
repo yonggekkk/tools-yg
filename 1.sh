@@ -956,11 +956,11 @@ proxies:
   udp: true
   tls: false
   network: ws
-  servername: $vm_name                    
+  servername: www.bing.com                    
   ws-opts:
     path: "/$UUID-vm"                             
     headers:
-      Host: $vm_name                     
+      Host: www.bing.com                     
 
 - name: hysteria2-$NAME                            
   type: hysteria2                                      
