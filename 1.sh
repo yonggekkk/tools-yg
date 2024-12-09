@@ -156,24 +156,25 @@ reading "\n清理所有进程将退出ssh连接，确定继续清理吗？【y/n
 
 # Generating argo Config
 argo_configure() {
-  if [[ -z $ARGO_AUTH || -z $ARGO_DOMAIN ]]; then
+  while true; do
     yellow "Argo临时隧道 (无需域名，推荐)"
     yellow "Argo固定隧道 (需要域名，需要CF设置提取Token)"
     reading "输入 g 表示使用Argo固定隧道 ；回车跳过 表示使用Argo临时隧道 【g/回车】: " argo_choice
     if [[ "$argo_choice" != "g" && "$argo_choice" != "G" && -n "$argo_choice" ]]; then
-    red "无效的选择，请输入 g 或回车"
-    argo_configure
+        red "无效的选择，请输入 g 或回车"
+        continue
     fi
-      if [[ "$argo_choice" == "g" || "$argo_choice" == "G" ]]; then
-          reading "请输入argo固定隧道域名: " ARGO_DOMAIN
-          green "你的argo固定隧道域名为: $ARGO_DOMAIN"
-          reading "请输入argo固定隧道密钥（Json或Token）: " ARGO_AUTH
-          green "你的argo固定隧道密钥为: $ARGO_AUTH"
-	  echo -e "${red}注意：${purple}使用token，需要在cloudflare后台设置隧道端口和vmess+ws的tcp端口一致${re}"
-      else
-          green "使用Argo临时隧道"
-      fi
-  fi
+    if [[ "$argo_choice" == "g" || "$argo_choice" == "G" ]]; then
+        reading "请输入argo固定隧道域名: " ARGO_DOMAIN
+        green "你的argo固定隧道域名为: $ARGO_DOMAIN"
+        reading "请输入argo固定隧道密钥（Json或Token）: " ARGO_AUTH
+        green "你的argo固定隧道密钥为: $ARGO_AUTH"
+        echo -e "${red}注意：${purple}使用token，需要在cloudflare后台设置隧道端口和vmess+ws的tcp端口一致${re}"
+    else
+        green "使用Argo临时隧道"
+    fi
+    break
+done
 
   if [[ $ARGO_AUTH =~ TunnelSecret ]]; then
     echo $ARGO_AUTH > tunnel.json
@@ -190,7 +191,7 @@ ingress:
   - service: http_status:404
 EOF
   else
-    green "ARGO_AUTH mismatch TunnelSecret,use token connect to tunnel"
+    green "使用token连接到Argo隧道"
   fi
 }
 
