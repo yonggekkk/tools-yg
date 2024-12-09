@@ -108,12 +108,8 @@ install_singbox() {
 if [[ -e $WORKDIR/list.txt ]]; then
 yellow "已安装sing-box，请先选择2卸载，再执行安装" && exit
 fi
-echo -e "${yellow}本脚本同时三协议共存${purple}(vless-reality、vmess+ws/argo、hysteria2)${re}"
-echo -e "${yellow}开始运行前，请确保在面板${purple}已开放3个端口，两个tcp端口和一个udp端口${re}"
-echo -e "${yellow}面板${purple}Additional services中的Run your own applications${yellow}已开启为${purplw}Enabled${yellow}状态${re}"
-reading "\n确定继续安装吗？【y/n】: " choice
-  case "$choice" in
-    [Yy])
+yellow "请确保在Serv00网页设置中已开放3个端口，两个tcp端口和一个udp端口"
+sleep 2
         cd $WORKDIR
         #read_nz_variables
 	echo
@@ -134,10 +130,6 @@ reading "\n确定继续安装吗？【y/n】: " choice
         download_and_run_singbox
 	echo
         get_links
-      ;;
-    [Nn]) exit 0 ;;
-    *) red "无效的选择，请输入y或n" && menu ;;
-  esac
 }
 
 uninstall_singbox() {
@@ -162,21 +154,21 @@ reading "\n清理所有进程将退出ssh连接，确定继续清理吗？【y/n
   esac
 }
 
-
 # Generating argo Config
 argo_configure() {
   if [[ -z $ARGO_AUTH || -z $ARGO_DOMAIN ]]; then
-      reading "选择 y 表示使用固定argo隧道(需要域名)；选择 n 表示使用argo临时隧道（无需域名）【y/n】: " argo_choice
-      [[ -z $argo_choice ]] && return
-      [[ "$argo_choice" != "y" && "$argo_choice" != "Y" && "$argo_choice" != "n" && "$argo_choice" != "N" ]] && { red "无效的选择，请输入y或n"; return; }
-      if [[ "$argo_choice" == "y" || "$argo_choice" == "Y" ]]; then
+    yellow "Argo临时隧道 (无需域名，推荐)"
+    yellow "Argo固定隧道 (需要域名，需要CF设置提取Token)"
+      reading "选择 g 表示使用Argo固定隧道；回车跳过 表示使用Argo临时隧道【g/回车】: " argo_choice
+      [[ "$argo_choice" != "g" && "$argo_choice" != "G" && -n "$argo_choice" ]] && { red "无效的选择，请输入g或回车"; return; }
+      if [[ "$argo_choice" == "g" || "$argo_choice" == "G" ]]; then
           reading "请输入argo固定隧道域名: " ARGO_DOMAIN
           green "你的argo固定隧道域名为: $ARGO_DOMAIN"
           reading "请输入argo固定隧道密钥（Json或Token）: " ARGO_AUTH
           green "你的argo固定隧道密钥为: $ARGO_AUTH"
 	  echo -e "${red}注意：${purple}使用token，需要在cloudflare后台设置隧道端口和面板开放的tcp端口一致${re}"
       else
-          green "ARGO隧道变量未设置，将使用临时隧道"
+          green "使用Argo临时隧道"
           return
       fi
   fi
