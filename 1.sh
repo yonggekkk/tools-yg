@@ -73,7 +73,7 @@ read_hy2_port() {
 
 read_vmess_port() {
     while true; do
-        reading "请输入vmess+ws端口 (面板开放的tcp端口): " vmess_port
+        reading "请输入vmess-ws端口 (面板开放的tcp端口): " vmess_port
         if [[ "$vmess_port" =~ ^[0-9]+$ ]] && [ "$vmess_port" -ge 1 ] && [ "$vmess_port" -le 65535 ]; then
             green "你的vmess端口为: $vmess_port"
             break
@@ -170,7 +170,6 @@ ingress:
 EOF
   fi
 }
-
 
 # Download Dependency Files
 download_and_run_singbox() {
@@ -502,7 +501,6 @@ baseurl=$(echo -e "$url" | base64 -w 0)
 echo
 sleep 2
 cat > list.txt <<EOF
-
 =================================================================================================
 
 一、Vless-reality分享链接如下：
