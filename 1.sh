@@ -78,7 +78,7 @@ read_vmess_port() {
     while true; do
         reading "请输入vmess+ws端口 (面板开放的tcp端口): " vmess_port
         if [[ "$vmess_port" =~ ^[0-9]+$ ]] && [ "$vmess_port" -ge 1 ] && [ "$vmess_port" -le 65535 ]; then
-            green "你的tuic端口为: $tuic_port"
+            green "你的vmess端口为: $vmess_port"
             break
         else
             yellow "输入错误，请重新输入面板开放的tcp端口"
@@ -200,7 +200,7 @@ download_and_run_singbox() {
   if [ "$ARCH" == "arm" ] || [ "$ARCH" == "arm64" ] || [ "$ARCH" == "aarch64" ]; then
       FILE_INFO=("https://github.com/eooce/test/releases/download/arm64/sb web" "https://github.com/eooce/test/releases/download/arm64/bot13 bot" "https://github.com/eooce/test/releases/download/ARM/swith npm")
   elif [ "$ARCH" == "amd64" ] || [ "$ARCH" == "x86_64" ] || [ "$ARCH" == "x86" ]; then
-      FILE_INFO=("https://github.com/yonggekkk/tools-yg/releases/download/1/sb web" "https://github.com/yonggekkk/tools-yg/releases/download/1/server bot" "https://github.com/eooce/test/releases/download/freebsd/npm npm")
+      FILE_INFO=("https://github.com/yonggekkk/tools-yg/releases/download/1/sb web" "https://github.com/yonggekkk/tools-yg/releases/download/1/server bot")
   else
       echo "Unsupported architecture: $ARCH"
       exit 1
