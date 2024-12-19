@@ -939,7 +939,7 @@ rules:
   
 EOF
 sleep 2
-rm -rf boot.log config.json sb.log core tunnel.yml tunnel.json fake_useragent_0.2.0.json
+rm -rf boot.log sb.log core tunnel.yml tunnel.json fake_useragent_0.2.0.json
 }
 
 install_singbox() {
