@@ -88,31 +88,6 @@ read_vmess_port() {
     done
 }
 
-cronkeep() {
-reading "是否启用本地保活进程功能 (回车表示启用 n表示不启用】: " keep
-if [[ "$keep" != "n" || "$keep" != "N" ]]; then
-curl -sSL https://raw.githubusercontent.com/yonggekkk/Cloudflare_vless_trojan/main/serv00keep.sh -o serv00keep.sh && chmod +x serv00keep.sh
-sed -i '' -e '18s|743f8207-40d0-4440-9a44-97be0fea69c1|'"$UUID"'|' serv00keep.sh
-sed -i '' -e '21s|123|'"$vless_port"'|' serv00keep.sh
-sed -i '' -e '22s|456|'"$vmess_port"'|' serv00keep.sh
-sed -i '' -e '23s|789|'"$hy2_port"'|' serv00keep.sh
-sed -i '' -e '24s|888|'"$IP"'|' serv00keep.sh
-sed -i '' -e '25s|www.speedtest.net|'"$reym"'|' serv00keep.sh
-bash serv00keep.sh
-if ! crontab -l 2>/dev/null | grep -v serv00keep; then
-crontab -l 2>/dev/null; echo '*/2 * * * * if ! ps aux | grep '[c]onfig' > /dev/null; then /bin/bash serv00keep.sh; fi' | crontab -
-fi
- 
-        if [[ -z "$reym" ]]; then
-           reym=www.speedtest.net
-	elif [[ "$reym" == "s" || "$reym" == "S" ]]; then
-           reym=$USERNAME.serv00.net
-        fi
-	green "你的reality域名为: $reym"
-
-
-}
-
 install_singbox() {
 if [[ -e $WORKDIR/list.txt ]]; then
 yellow "已安装sing-box，请先选择2卸载，再执行安装" && exit
