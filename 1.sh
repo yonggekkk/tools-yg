@@ -273,6 +273,7 @@ openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=
              "password": "$UUID"
          }
      ],
+     "masquerade": "https://www.bing.com",
      "ignore_client_bandwidth":false,
      "tls": {
          "enabled": true,
