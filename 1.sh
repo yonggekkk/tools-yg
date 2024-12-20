@@ -511,9 +511,8 @@ sed -i '' -e '22s|456|'"$vmess_port"'|' serv00keep.sh
 sed -i '' -e '23s|789|'"$hy2_port"'|' serv00keep.sh
 sed -i '' -e '24s|888|'"$IP"'|' serv00keep.sh
 sed -i '' -e '25s|www.speedtest.net|'"$reym"'|' serv00keep.sh
-bash serv00keep.sh
-if ! crontab -l 2>/dev/null | grep -v serv00keep; then
-crontab -l 2>/dev/null; echo '*/2 * * * * if ! ps aux | grep '[c]onfig' > /dev/null; then /bin/bash ${WORKDIR}/serv00keep.sh; fi' | crontab -
+if ! crontab -l 2>/dev/null | grep -q 'serv00keep'; then
+(crontab -l 2>/dev/null; echo "*/2 * * * * if ! ps aux | grep '[c]onfig' > /dev/null; then /bin/bash ${WORKDIR}/serv00keep.sh; fi") | crontab -
 fi
 green "进程保活安装完毕"
 ISP=$(curl -s --max-time 2 https://speed.cloudflare.com/meta | awk -F\" '{print $26}' | sed -e 's/ /_/g' || echo "0")
