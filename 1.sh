@@ -266,7 +266,7 @@ openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=
     {
        "tag": "hysteria-in",
        "type": "hysteria2",
-       "listen": "::",
+       "listen": "$IP",
        "listen_port": $hy2_port,
        "users": [
          {
@@ -355,8 +355,7 @@ openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=
 "outbound": "direct",
 "network": "udp,tcp"
 }
-    ],
-    "final": "direct"
+    ]
    },
    "experimental": {
       "cache_file": {
