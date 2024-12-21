@@ -390,7 +390,7 @@ else
     for i in {1..5}; do
         pkill -x "$(basename ${FILE_MAP[bot]})"
         nohup ./"$(basename ${FILE_MAP[bot]})" "${args}" >/dev/null 2>&1 &
-        sleep 5
+        sleep 15
         if pgrep -x "$(basename ${FILE_MAP[bot]})" > /dev/null; then
             green "$(basename ${FILE_MAP[bot]}) restarted successfully on attempt $i"
             break
