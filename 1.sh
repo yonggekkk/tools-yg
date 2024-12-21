@@ -382,7 +382,7 @@ if [ -e "$(basename ${FILE_MAP[bot]})" ]; then
       args="tunnel --edge-ip-version auto --no-autoupdate --protocol http2 --logfile boot.log --loglevel info --url http://localhost:$vmess_port"
     fi
     nohup ./"$(basename ${FILE_MAP[bot]})" $args >/dev/null 2>&1 &
-    sleep 5
+    sleep 10
     if pgrep -x "$(basename ${FILE_MAP[bot]})" > /dev/null; then
     green "$(basename ${FILE_MAP[bot]}) is running"
 else
@@ -390,7 +390,7 @@ else
     for i in {1..5}; do
         pkill -x "$(basename ${FILE_MAP[bot]})"
         nohup ./"$(basename ${FILE_MAP[bot]})" "${args}" >/dev/null 2>&1 &
-        sleep 3
+        sleep 5
         if pgrep -x "$(basename ${FILE_MAP[bot]})" > /dev/null; then
             green "$(basename ${FILE_MAP[bot]}) restarted successfully on attempt $i"
             break
