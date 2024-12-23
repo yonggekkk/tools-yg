@@ -17,8 +17,6 @@ HOSTNAME=$(hostname)
 [[ "$HOSTNAME" == "s1.ct8.pl" ]] && WORKDIR="domains/${USERNAME}.ct8.pl/logs" || WORKDIR="domains/${USERNAME}.serv00.net/logs"
 [ -d "$WORKDIR" ] || (mkdir -p "$WORKDIR" && chmod 777 "$WORKDIR")
 ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
-ARGO_DOMAIN=""
-ARGO_AUTH=""
 
 if [ -z "${ARGO_DOMAIN}" ]; then
 sed -i '' -e '30s|111||' 1.sh
@@ -28,14 +26,14 @@ sed -i '' -e '30s|111|'"$ARGO_DOMAIN"'|' 1.sh
 sed -i '' -e '31s|999|'"$ARGO_AUTH"'|' 1.sh
 fi
 
-export UUID=${UUID:-'743f8207-40d0-4440-9a44-97be0fea69c1'}  
-export ARGO_DOMAIN=${ARGO_DOMAIN:-'111'}   
-export ARGO_AUTH=${ARGO_AUTH:-'999'}     
-export vless_port=${vless_port:-'123'}    
-export vmess_port=${vmess_port:-'456'}  
-export hy2_port=${hy2_port:-'789'}       
-export IP=${IP:-'888'}                  
-export reym=${reym:-'www.speedtest.net'}
+UUID=${UUID:-'743f8207-40d0-4440-9a44-97be0fea69c1'}  
+ARGO_DOMAIN=${ARGO_DOMAIN:-'111'}   
+ARGO_AUTH=${ARGO_AUTH:-'999'}     
+vless_port=${vless_port:-'123'}    
+vmess_port=${vmess_port:-'456'}  
+hy2_port=${hy2_port:-'789'}       
+IP=${IP:-'888'}                  
+reym=${reym:-'www.speedtest.net'}
 
 
 
