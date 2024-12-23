@@ -19,11 +19,11 @@ HOSTNAME=$(hostname)
 ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
 echo "0"
 if [ -z "${ARGO_DOMAIN}" ]; then
-sed -i '' -e '30s|111||' 1.sh
-sed -i '' -e '31s|999||' 1.sh
+sed -i '' -e '32s|111||' 1.sh
+sed -i '' -e '33s|999||' 1.sh
 else
-sed -i '' -e '30s|111|'"$ARGO_DOMAIN"'|' 1.sh
-sed -i '' -e '31s|999|'"$ARGO_AUTH"'|' 1.sh
+sed -i '' -e '32s|111|'"$ARGO_DOMAIN"'|' 1.sh
+sed -i '' -e '33s|999|'"$ARGO_AUTH"'|' 1.sh
 fi
 echo "1"
 sleep 2
