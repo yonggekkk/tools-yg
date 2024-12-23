@@ -27,9 +27,6 @@ export hy2_port=${hy2_port:-'789'}
 export IP=${IP:-'888'}                  
 export reym=${reym:-'www.speedtest.net'}
 
-echo "ARGO_DOMAIN=$ARGO_DOMAIN"
-echo "ARGO_AUTH=$ARGO_AUTH"
-
 read_ip(){
 nb=$(echo "$HOSTNAME" | cut -d '.' -f 1 | tr -d 's')
 ym=("$HOSTNAME" "cache$nb.serv00.com" "web$nb.serv00.com")
