@@ -18,14 +18,6 @@ HOSTNAME=$(hostname)
 [ -d "$WORKDIR" ] || (mkdir -p "$WORKDIR" && chmod 777 "$WORKDIR")
 ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
 
-if [ -z "${ARGO_DOMAIN}" ]; then
-sed -i '' -e '30s|111||' 1.sh
-sed -i '' -e '31s|999||' 1.sh
-else
-sed -i '' -e '30s|111|'"$ARGO_DOMAIN"'|' 1.sh
-sed -i '' -e '31s|999|'"$ARGO_AUTH"'|' 1.sh
-fi
-
 UUID=${UUID:-'743f8207-40d0-4440-9a44-97be0fea69c1'}  
 ARGO_DOMAIN=${ARGO_DOMAIN:-'111'}   
 ARGO_AUTH=${ARGO_AUTH:-'999'}     
@@ -35,7 +27,13 @@ hy2_port=${hy2_port:-'789'}
 IP=${IP:-'888'}                  
 reym=${reym:-'www.speedtest.net'}
 
-
+if [ -z "${ARGO_DOMAIN}" ]; then
+sed -i '' -e '22s|111||' 1.sh
+sed -i '' -e '23s|999||' 1.sh
+else
+sed -i '' -e '22s|111|'"$ARGO_DOMAIN"'|' 1.sh
+sed -i '' -e '23s|999|'"$ARGO_AUTH"'|' 1.sh
+fi
 
 read_ip(){
 nb=$(echo "$HOSTNAME" | cut -d '.' -f 1 | tr -d 's')
