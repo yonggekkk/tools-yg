@@ -17,7 +17,7 @@ HOSTNAME=$(hostname)
 [[ "$HOSTNAME" == "s1.ct8.pl" ]] && WORKDIR="domains/${USERNAME}.ct8.pl/logs" || WORKDIR="domains/${USERNAME}.serv00.net/logs"
 [ -d "$WORKDIR" ] || (mkdir -p "$WORKDIR" && chmod 777 "$WORKDIR")
 ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
-cd $WORKDIR
+
 if [ -z "${ARGO_DOMAIN}" ]; then
 sed -i '' -e '30s|111||' 1.sh
 sed -i '' -e '31s|999||' 1.sh
@@ -863,6 +863,7 @@ rm -rf boot.log config.json sb.log core tunnel.yml tunnel.json fake_useragent_0.
 }
 
 install_singbox() {
+cd $WORKDIR
 read_ip
 argo_configure
 download_and_run_singbox
