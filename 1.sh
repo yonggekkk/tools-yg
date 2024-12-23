@@ -21,12 +21,12 @@ ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk '{print $2}' | xargs 
 if [ -z "${ARGO_DOMAIN}" ]; then
 sed -i '' -e '32s|111||' 1.sh
 sed -i '' -e '33s|999||' 1.sh
+echo "${ARGO_DOMAIN}"
 else
 sed -i '' -e '32s|111|'"$ARGO_DOMAIN"'|' 1.sh
 sed -i '' -e '33s|999|'"$ARGO_AUTH"'|' 1.sh
+echo "${ARGO_DOMAIN}"
 fi
-
-
 
 export UUID=${UUID:-'743f8207-40d0-4440-9a44-97be0fea69c1'}  
 export ARGO_DOMAIN=${ARGO_DOMAIN:-'111'}   
