@@ -134,6 +134,13 @@ for entry in "${FILE_INFO[@]}"; do
 done
 wait
 
+if [ ! -e private_key.txt ]; then
+output=$(./"$(basename ${FILE_MAP[web]})" generate reality-keypair)
+private_key=$(echo "${output}" | awk '/PrivateKey:/ {print $2}')
+public_key=$(echo "${output}" | awk '/PublicKey:/ {print $2}')
+echo "${private_key}" > private_key.txt
+echo "${public_key}" > public_key.txt
+fi
 private_key=$(<private_key.txt)
 public_key=$(<public_key.txt)
 
