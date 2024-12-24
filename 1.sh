@@ -1,6 +1,5 @@
 #!/bin/bash
-while true; do
-if ! ps aux | grep '[c]onfig' > /dev/null ; then
+
 # 定义颜色
 re="\033[0m"
 red="\033[1;91m"
@@ -879,6 +878,3 @@ download_and_run_singbox
 get_links
 }
 install_singbox
-fi
-sleep 30
-done
