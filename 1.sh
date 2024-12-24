@@ -287,8 +287,7 @@ red "主进程未启动，根据以下情况一一排查"
 yellow "1、网页端权限是否开启"
 yellow "2、端口是否设置错误(2个TCP、1个UDP)"
 yellow "3、尝试更换网页端3个端口并重装"
-yellow "4、选择5重置"
-yellow "5、当前Serv00服务器炸了？等会再试"
+yellow "4、当前Serv00服务器炸了？等会再试"
 exit
 fi
 }
