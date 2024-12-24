@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # 定义颜色
 re="\033[0m"
 red="\033[1;91m"
@@ -17,6 +16,7 @@ HOSTNAME=$(hostname)
 [[ "$HOSTNAME" == "s1.ct8.pl" ]] && WORKDIR="domains/${USERNAME}.ct8.pl/logs" || WORKDIR="domains/${USERNAME}.serv00.net/logs"
 [ -d "$WORKDIR" ] || (mkdir -p "$WORKDIR" && chmod 777 "$WORKDIR")
 ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
+sleep 2
 
 export UUID=${UUID:-'743f8207-40d0-4440-9a44-97be0fea69c1'}  
 export ARGO_DOMAIN=${ARGO_DOMAIN:-'111'}   
