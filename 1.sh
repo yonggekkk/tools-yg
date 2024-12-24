@@ -1,5 +1,6 @@
 #!/bin/bash
-
+while true; do
+if ! ps aux | grep '[c]onfig' > /dev/null ; then
 # 定义颜色
 re="\033[0m"
 red="\033[1;91m"
@@ -278,8 +279,19 @@ if [ -e "$(basename ${FILE_MAP[bot]})" ]; then
     sleep 10
     pgrep -x "$(basename ${FILE_MAP[bot]})" > /dev/null && green "$(basename ${FILE_MAP[bot]}) is running" || { red "$(basename ${FILE_MAP[bot]}) is not running, restarting..."; pkill -x "$(basename ${FILE_MAP[bot]})" && nohup ./"$(basename ${FILE_MAP[bot]})" "${args}" >/dev/null 2>&1 & sleep 2; purple "$(basename ${FILE_MAP[bot]}) restarted"; }
 fi
-sleep 3
+sleep 5
 rm -f "$(basename ${FILE_MAP[web]})"
+if ps aux | grep '[c]onfig' > /dev/null; then
+green "主进程已启动"
+else
+red "主进程未启动，根据以下情况一一排查"
+yellow "1、网页端权限是否开启"
+yellow "2、端口是否设置错误(2个TCP、1个UDP)"
+yellow "3、尝试更换网页端3个端口并重装"
+yellow "4、选择5重置"
+yellow "5、当前Serv00服务器炸了？等会再试"
+exit
+fi
 }
 
 get_argodomain() {
@@ -867,3 +879,6 @@ download_and_run_singbox
 get_links
 }
 install_singbox
+fi
+sleep 30
+done
