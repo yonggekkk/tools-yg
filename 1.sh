@@ -281,7 +281,7 @@ if [ -e "$(basename ${FILE_MAP[bot]})" ]; then
       args="tunnel --url http://localhost:$vmess_port --edge-ip-version auto --no-autoupdate --protocol http2 > boot.log"
       nohup ./"$(basename ${FILE_MAP[bot]})" $args >/dev/null 2>&1 &
       sleep 5
-      if [ -e boot.log ]; then
+      if [ -n "$(grep -oE 'https://[[:alnum:]+\.-]+\.trycloudflare\.com' boot.log 2>/dev/null | sed 's@https://@@')" ]; then
        break
       fi
     done   
