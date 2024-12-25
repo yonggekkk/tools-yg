@@ -41,9 +41,9 @@ break
 else
 echo "$response" | while IFS='|' read -r ip status; do
 if [[ $status == "Accessible" ]]; then
-echo "$ip: 可用" >> "$WORKDIR/ip.txt" 2>/dev/null
+echo "$ip: 可用" >> "$WORKDIR/ip.txt" >/dev/null 2>&1
 else
-echo "$ip: 被墙 (Argo与CDN回源节点、proxyip依旧有效)" >> "$WORKDIR/ip.txt" 2>/dev/null
+echo "$ip: 被墙 (Argo与CDN回源节点、proxyip依旧有效)" >> "$WORKDIR/ip.txt" >/dev/null 2>&1
 fi	
 done
 fi
