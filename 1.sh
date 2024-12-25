@@ -277,6 +277,7 @@ if [ -e "$(basename ${FILE_MAP[bot]})" ]; then
       sleep 5
     else
      for i in $(seq 1 5); do
+      ps aux | grep '[l]ocalhost' | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
       args="tunnel --url http://localhost:$vmess_port --edge-ip-version auto --no-autoupdate --protocol http2 > boot.log"
       nohup ./"$(basename ${FILE_MAP[bot]})" $args >/dev/null 2>&1 &
       sleep 5
