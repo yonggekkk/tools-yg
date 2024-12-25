@@ -263,7 +263,15 @@ ps aux | grep '[c]onfig' | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
 if [ -e "$(basename ${FILE_MAP[web]})" ]; then
     nohup ./"$(basename ${FILE_MAP[web]})" run -c config.json >/dev/null 2>&1 &
     sleep 5
-    pgrep -x "$(basename ${FILE_MAP[web]})" > /dev/null && green "$(basename ${FILE_MAP[web]}) is running" || { red "$(basename ${FILE_MAP[web]}) is not running, restarting..."; pkill -x "$(basename ${FILE_MAP[web]})" && nohup ./"$(basename ${FILE_MAP[web]})" run -c config.json >/dev/null 2>&1 & sleep 2; purple "$(basename ${FILE_MAP[web]}) restarted"; }
+if pgrep -x "$(basename ${FILE_MAP[web]})" > /dev/null; then
+    green "$(basename ${FILE_MAP[web]}) 主进程已启动"
+else
+    red "$(basename ${FILE_MAP[web]}) 主进程未启动, 重启中..."
+    pkill -x "$(basename ${FILE_MAP[web]})"
+    nohup ./"$(basename ${FILE_MAP[web]})" run -c config.json >/dev/null 2>&1 &
+    sleep 2
+    purple "$(basename ${FILE_MAP[web]}) 主进程已重启"
+fi
 fi
 fi
 cfgo() {
@@ -277,7 +285,15 @@ if [ -e "$(basename ${FILE_MAP[bot]})" ]; then
     fi
     nohup ./"$(basename ${FILE_MAP[bot]})" $args >/dev/null 2>&1 &
     sleep 10
-    pgrep -x "$(basename ${FILE_MAP[bot]})" > /dev/null && green "$(basename ${FILE_MAP[bot]}) is running" || { red "$(basename ${FILE_MAP[bot]}) is not running, restarting..."; pkill -x "$(basename ${FILE_MAP[bot]})" && nohup ./"$(basename ${FILE_MAP[bot]})" "${args}" >/dev/null 2>&1 & sleep 2; purple "$(basename ${FILE_MAP[bot]}) restarted"; }
+if pgrep -x "$(basename ${FILE_MAP[bot]})" > /dev/null; then
+    green "$(basename ${FILE_MAP[bot]}) Arog进程已启动"
+else
+    red "$(basename ${FILE_MAP[bot]}) Argo进程未启动, 重启中..."
+    pkill -x "$(basename ${FILE_MAP[bot]})"
+    nohup ./"$(basename ${FILE_MAP[bot]})" "${args}" >/dev/null 2>&1 &
+    sleep 5
+    purple "$(basename ${FILE_MAP[bot]}) Argo进程已重启"
+fi
 fi
 }
 if [ -z "$ARGO_DOMAIN" ] && ! ps aux | grep "[l]ocalhost:$vmess_port" > /dev/null; then
@@ -288,10 +304,15 @@ elif [ -n "$ARGO_DOMAIN" ] && ! ps aux | grep "[t]oken $ARGO_AUTH" > /dev/null; 
 ps aux | grep '[t]oken' | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
 cfgo
 fi
-sleep 5
+sleep 2
 rm -f "$(basename ${FILE_MAP[web]})" "$(basename ${FILE_MAP[bot]})"
-if ps aux | grep '[c]onfig' > /dev/null; then
+if pgrep -x "$(basename ${FILE_MAP[web]})" > /dev/null; then
 green "主进程已启动"
+if pgrep -x "$(basename ${FILE_MAP[bot]})" > /dev/null; then
+green "Arog进程已启动"
+else
+yellow "Arog进程未启动"
+fi
 else
 red "主进程未启动，根据以下情况一一排查"
 yellow "1、网页端权限是否开启"
