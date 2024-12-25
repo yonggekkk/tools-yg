@@ -11,14 +11,6 @@ yellow() { echo -e "\e[1;33m$1\033[0m"; }
 purple() { echo -e "\e[1;35m$1\033[0m"; }
 reading() { read -p "$(red "$1")" "$2"; }
 export LC_ALL=C
-if [[ "$reset" =~ ^[Yy]$ ]]; then
-ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
-find ~ -type f -exec chmod 644 {} \; 2>/dev/null
-find ~ -type d -exec chmod 755 {} \; 2>/dev/null
-find ~ -type f -exec rm -f {} \; 2>/dev/null
-find ~ -type d -empty -exec rmdir {} \; 2>/dev/null
-find ~ -exec rm -rf {} \; 2>/dev/null
-fi
 export UUID=${UUID:-'743f8207-40d0-4440-9a44-97be0fea69c1'}  
 export ARGO_DOMAIN=${ARGO_DOMAIN:-'111'}   
 export ARGO_AUTH=${ARGO_AUTH:-'999'}     
@@ -27,6 +19,18 @@ export vmess_port=${vmess_port:-'456'}
 export hy2_port=${hy2_port:-'789'}       
 export IP=${IP:-'888'}                  
 export reym=${reym:-'www.speedtest.net'}
+export reset=${reset:-''}
+
+if [[ "$reset" =~ ^[Yy]$ ]]; then
+ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
+find ~ -type f -exec chmod 644 {} \; 2>/dev/null
+find ~ -type d -exec chmod 755 {} \; 2>/dev/null
+find ~ -type f -exec rm -f {} \; 2>/dev/null
+find ~ -type d -empty -exec rmdir {} \; 2>/dev/null
+find ~ -exec rm -rf {} \; 2>/dev/null
+echo "重置系统完成"
+fi
+sleep 2
 USERNAME=$(whoami)
 HOSTNAME=$(hostname)
 [[ "$HOSTNAME" == "s1.ct8.pl" ]] && export WORKDIR="domains/${USERNAME}.ct8.pl/logs" || export WORKDIR="domains/${USERNAME}.serv00.net/logs"
