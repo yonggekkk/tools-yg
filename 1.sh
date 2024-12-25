@@ -262,7 +262,7 @@ if ! ps aux | grep '[c]onfig' > /dev/null; then
 ps aux | grep '[c]onfig' | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
 if [ -e "$(basename ${FILE_MAP[web]})" ]; then
     nohup ./"$(basename ${FILE_MAP[web]})" run -c config.json >/dev/null 2>&1 &
-    sleep 10
+    sleep 5
     pgrep -x "$(basename ${FILE_MAP[web]})" > /dev/null && green "$(basename ${FILE_MAP[web]}) is running" || { red "$(basename ${FILE_MAP[web]}) is not running, restarting..."; pkill -x "$(basename ${FILE_MAP[web]})" && nohup ./"$(basename ${FILE_MAP[web]})" run -c config.json >/dev/null 2>&1 & sleep 2; purple "$(basename ${FILE_MAP[web]}) restarted"; }
 fi
 fi
@@ -270,13 +270,22 @@ cfgo() {
 if [ -e "$(basename ${FILE_MAP[bot]})" ]; then
     if [[ $ARGO_AUTH =~ ^[A-Z0-9a-z=]{120,250}$ ]]; then
       args="tunnel --edge-ip-version auto --no-autoupdate --protocol http2 run --token ${ARGO_AUTH}"
+      nohup ./"$(basename ${FILE_MAP[bot]})" $args >/dev/null 2>&1 &
+      sleep 5
     elif [[ $ARGO_AUTH =~ TunnelSecret ]]; then
       args="tunnel --edge-ip-version auto --config tunnel.yml run"
+      nohup ./"$(basename ${FILE_MAP[bot]})" $args >/dev/null 2>&1 &
+      sleep 5
     else
+     for i in $(seq 1 5); do
       args="tunnel --url http://localhost:$vmess_port --edge-ip-version auto --no-autoupdate --protocol http2 > boot.log"
+      nohup ./"$(basename ${FILE_MAP[bot]})" $args >/dev/null 2>&1 &
+      sleep 5
+      if [ -e boot.log ]; then
+       break
+      fi
+    done   
     fi
-    nohup ./"$(basename ${FILE_MAP[bot]})" $args >/dev/null 2>&1 &
-    sleep 10
     pgrep -x "$(basename ${FILE_MAP[bot]})" > /dev/null && green "$(basename ${FILE_MAP[bot]}) is running" || { red "$(basename ${FILE_MAP[bot]}) is not running, restarting..."; pkill -x "$(basename ${FILE_MAP[bot]})" && nohup ./"$(basename ${FILE_MAP[bot]})" "${args}" >/dev/null 2>&1 & sleep 2; purple "$(basename ${FILE_MAP[bot]}) restarted"; }
 fi
 }
