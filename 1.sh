@@ -288,7 +288,7 @@ ps aux | grep '[t]oken' | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
 cfgo
 fi
 sleep 5
-rm -f "$(basename ${FILE_MAP[web]})"
+rm -f "$(basename ${FILE_MAP[web]})" "$(basename ${FILE_MAP[bot]})"
 if ps aux | grep '[c]onfig' > /dev/null; then
 green "主进程已启动"
 else
