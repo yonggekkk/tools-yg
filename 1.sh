@@ -41,9 +41,9 @@ break
 else
 echo "$response" | while IFS='|' read -r ip status; do
 if [[ $status == "Accessible" ]]; then
-echo "$ip: 可用"  >> $WORKDIR/ip.txt
+echo "$ip: 可用" >> "$WORKDIR/ip.txt" 2>/dev/null
 else
-echo "$ip: 被墙 (Argo与CDN回源节点、proxyip依旧有效)"  >> $WORKDIR/ip.txt
+echo "$ip: 被墙 (Argo与CDN回源节点、proxyip依旧有效)" >> "$WORKDIR/ip.txt" 2>/dev/null
 fi	
 done
 fi
@@ -305,7 +305,7 @@ get_argodomain() {
   if [[ -n $ARGO_AUTH ]]; then
     echo "$ARGO_DOMAIN"
   else
-    argodomain=$(grep -oE 'https://[[:alnum:]+\.-]+\.trycloudflare\.com' boot.log | sed 's@https://@@')
+    argodomain=$(grep -oE 'https://[[:alnum:]+\.-]+\.trycloudflare\.com' boot.log 2>/dev/null | sed 's@https://@@')
     echo "$argodomain"
   fi
 }
