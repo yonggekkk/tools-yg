@@ -273,6 +273,8 @@ else
     purple "$(basename ${FILE_MAP[web]}) 主进程已重启"
 fi
 fi
+else
+green "主进程已启动"
 fi
 cfgo() {
 if [ -e "$(basename ${FILE_MAP[bot]})" ]; then
@@ -303,17 +305,12 @@ cfgo
 elif [ -n "$ARGO_DOMAIN" ] && ! ps aux | grep "[t]oken $ARGO_AUTH" > /dev/null; then
 ps aux | grep '[t]oken' | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
 cfgo
+else
+green "Arog进程已启动"
 fi
 sleep 2
 rm -f "$(basename ${FILE_MAP[web]})" "$(basename ${FILE_MAP[bot]})"
-if pgrep -x "$(basename ${FILE_MAP[web]})" > /dev/null; then
-green "主进程已启动"
-if pgrep -x "$(basename ${FILE_MAP[bot]})" > /dev/null; then
-green "Arog进程已启动"
-else
-yellow "Arog进程未启动"
-fi
-else
+if ! ps aux | grep '[c]onfig' > /dev/null; then
 red "主进程未启动，根据以下情况一一排查"
 yellow "1、网页端权限是否开启"
 yellow "2、端口是否设置错误(2个TCP、1个UDP)"
