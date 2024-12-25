@@ -269,11 +269,11 @@ fi
 cfgo() {
 if [ -e "$(basename ${FILE_MAP[bot]})" ]; then
     if [[ $ARGO_AUTH =~ ^[A-Z0-9a-z=]{120,250}$ ]]; then
-      args="tunnel --edge-ip-version auto --no-autoupdate --protocol http2 run --token ${ARGO_AUTH}"
+      args="tunnel --edge-ip-version auto --no-autoupdate --protocol http2 run --token ${ARGO_AUTH} >/dev/null 2>&1 &"
     elif [[ $ARGO_AUTH =~ TunnelSecret ]]; then
       args="tunnel --edge-ip-version auto --config tunnel.yml run"
     else
-      args="tunnel --edge-ip-version auto --no-autoupdate --protocol http2 --logfile boot.log --loglevel info --url http://localhost:$vmess_port"
+      args="tunnel --url http://localhost:$vmess_port --edge-ip-version auto --no-autoupdate --protocol http2 > boot.log 2>&1 &"
     fi
     nohup ./"$(basename ${FILE_MAP[bot]})" $args >/dev/null 2>&1 &
     sleep 10
@@ -302,7 +302,6 @@ fi
 }
 
 get_argodomain() {
-  argodomain=""
   if [[ -n $ARGO_AUTH ]]; then
     echo "$ARGO_DOMAIN"
   else
@@ -322,7 +321,6 @@ get_argodomain() {
 }
 
 get_links(){
-argodomain=""
 argodomain=$(get_argodomain)
 echo -e "\e[1;32mArgo域名:\e[1;35m${argodomain}\e[0m\n"
 if [ -z ${argodomain} ]; then
