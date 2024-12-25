@@ -32,22 +32,23 @@ rm -rf $WORKDIR/ip.txt
 for ym in "${ym[@]}"; do
 # 引用frankiejun API
 response=$(curl -sL --connect-timeout 5 --max-time 7 "https://ss.botai.us.kg/api/getip?host=$ym")
-echo "$response" | while IFS='|' read -r ip status; do
-if [[ $status == "Accessible" ]]; then
-echo "$ip: 可用" >> "$WORKDIR/ip.txt"
-else
-echo "$ip: 被墙 (Argo与CDN回源节点、proxyip依旧有效)" >> "$WORKDIR/ip.txt"
-fi
-done
-if [ ! -e ip.txt ] || [ ! -s ip.txt ]; then
+if [[ -z "$response" || "$response" == *unknown* ]]; then
 for ip in "${ym[@]}"; do
 dig @8.8.8.8 +time=2 +short $ip >> $WORKDIR/ip.txt
 sleep 1  
 done
 break
+else
+echo "$response" | while IFS='|' read -r ip status; do
+if [[ $status == "Accessible" ]]; then
+echo "$ip: yes"  >> $WORKDIR/ip.txt
+else
+echo "$ip: no"  >> $WORKDIR/ip.txt
+fi	
+done
 fi
 done
-IP=$(grep -m 1 "可用" ip.txt | awk -F ':' '{print $1}')
+IP=$(grep -m 1 "yes" ip.txt | awk -F ':' '{print $1}')
 if [ -z "$IP" ]; then
 IP=$(head -n 1 ip.txt | awk -F ':' '{print $1}')
 fi
