@@ -269,11 +269,11 @@ fi
 cfgo() {
 if [ -e "$(basename ${FILE_MAP[bot]})" ]; then
     if [[ $ARGO_AUTH =~ ^[A-Z0-9a-z=]{120,250}$ ]]; then
-      args="tunnel --edge-ip-version auto --no-autoupdate --protocol http2 run --token ${ARGO_AUTH} >/dev/null 2>&1 &"
+      args="tunnel --edge-ip-version auto --no-autoupdate --protocol http2 run --token ${ARGO_AUTH}"
     elif [[ $ARGO_AUTH =~ TunnelSecret ]]; then
       args="tunnel --edge-ip-version auto --config tunnel.yml run"
     else
-      args="tunnel --url http://localhost:$vmess_port --edge-ip-version auto --no-autoupdate --protocol http2 > boot.log 2>&1 &"
+      args="tunnel --url http://localhost:$vmess_port --edge-ip-version auto --no-autoupdate --protocol http2 > boot.log"
     fi
     nohup ./"$(basename ${FILE_MAP[bot]})" $args >/dev/null 2>&1 &
     sleep 10
@@ -305,17 +305,7 @@ get_argodomain() {
   if [[ -n $ARGO_AUTH ]]; then
     echo "$ARGO_DOMAIN"
   else
-    local retry=0
-    local max_retries=6
-    local argodomain=""
-    while [[ $retry -lt $max_retries ]]; do
-      ((retry++))
-      argodomain=$(grep -oE 'https://[[:alnum:]+\.-]+\.trycloudflare\.com' boot.log | sed 's@https://@@') 
-      if [[ -n $argodomain ]]; then
-        break
-      fi
-      sleep 1
-    done
+    argodomain=$(grep -oE 'https://[[:alnum:]+\.-]+\.trycloudflare\.com' boot.log | sed 's@https://@@')
     echo "$argodomain"
   fi
 }
@@ -324,7 +314,7 @@ get_links(){
 argodomain=$(get_argodomain)
 echo -e "\e[1;32mArgo域名:\e[1;35m${argodomain}\e[0m\n"
 if [ -z ${argodomain} ]; then
-red "Argo域名生成失败，当前Argo节点不可用"
+yellow "Argo临时域名暂时未生成，两个Argo节点不可用，其他未被墙的节点依旧可用"
 fi
 ISP=$(curl -sL --max-time 5 https://speed.cloudflare.com/meta | awk -F\" '{print $26}' | sed -e 's/ /_/g' || echo "0")
 get_name() { if [ "$HOSTNAME" = "s1.ct8.pl" ]; then SERVER="CT8"; else SERVER=$(echo "$HOSTNAME" | cut -d '.' -f 1); fi; echo "$SERVER"; }
@@ -875,7 +865,7 @@ rules:
   
 EOF
 sleep 2
-rm -rf boot.log config.json sb.log core tunnel.yml tunnel.json fake_useragent_0.2.0.json
+rm -rf config.json sb.log core tunnel.yml tunnel.json fake_useragent_0.2.0.json
 }
 
 install_singbox() {
