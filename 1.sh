@@ -47,16 +47,16 @@ for ym in "${ym[@]}"; do
 response=$(curl -sL --connect-timeout 5 --max-time 7 "https://ss.botai.us.kg/api/getip?host=$ym")
 if [[ -z "$response" || "$response" == *unknown* ]]; then
 for ip in "${ym[@]}"; do
-dig @8.8.8.8 +time=2 +short $ip >> $WORKDIR/ip.txt
+dig @8.8.8.8 +time=2 +short $ip >> ip.txt
 sleep 1  
 done
 break
 else
 echo "$response" | while IFS='|' read -r ip status; do
 if [[ $status == "Accessible" ]]; then
-echo "$ip: yes"  >> $WORKDIR/ip.txt
+echo "$ip: yes"  >> ip.txt
 else
-echo "$ip: no"  >> $WORKDIR/ip.txt
+echo "$ip: no"  >> ip.txt
 fi	
 done
 fi
