@@ -21,7 +21,7 @@ export IP=${IP:-'888'}
 export reym=${reym:-'www.speedtest.net'}
 export reset=${reset:-''}
 
-if [[ "$reset" =~ ^[Yy]$ ]]; then
+if [[ "$reset" == yes_reset ]]; then
 ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
 find ~ -type f -exec chmod 644 {} \; 2>/dev/null
 find ~ -type d -exec chmod 755 {} \; 2>/dev/null
