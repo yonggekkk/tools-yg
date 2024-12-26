@@ -35,13 +35,14 @@ USERNAME=$(whoami)
 HOSTNAME=$(hostname)
 [[ "$HOSTNAME" == "s1.ct8.pl" ]] && export WORKDIR="domains/${USERNAME}.ct8.pl/logs" || export WORKDIR="domains/${USERNAME}.serv00.net/logs"
 [ -d "$WORKDIR" ] || (mkdir -p "$WORKDIR" && chmod 777 "$WORKDIR")
-ip_file="$WORKDIR/ip.txt"
-[ -f "$ip_file" ] || (touch "$ip_file" && chmod 644 "$ip_file")
+#ip_file="$WORKDIR/ip.txt"
+#[ -f "$ip_file" ] || (touch "$ip_file" && chmod 644 "$ip_file")
 
 read_ip(){
 nb=$(echo "$HOSTNAME" | cut -d '.' -f 1 | tr -d 's')
 ym=("$HOSTNAME" "cache$nb.serv00.com" "web$nb.serv00.com")
-> ip.txt
+rm -rf ip.txt
+#> ip.txt
 for ym in "${ym[@]}"; do
 # 引用frankiejun API
 response=$(curl -sL --connect-timeout 5 --max-time 7 "https://ss.botai.us.kg/api/getip?host=$ym")
