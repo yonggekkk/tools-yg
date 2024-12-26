@@ -40,6 +40,7 @@ read_ip(){
 nb=$(echo "$HOSTNAME" | cut -d '.' -f 1 | tr -d 's')
 ym=("$HOSTNAME" "cache$nb.serv00.com" "web$nb.serv00.com")
 rm -rf $WORKDIR/ip.txt
+mkdir $WORKDIR/ip.txt
 for ym in "${ym[@]}"; do
 # 引用frankiejun API
 response=$(curl -sL --connect-timeout 5 --max-time 7 "https://ss.botai.us.kg/api/getip?host=$ym")
