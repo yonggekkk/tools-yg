@@ -11,14 +11,14 @@ yellow() { echo -e "\e[1;33m$1\033[0m"; }
 purple() { echo -e "\e[1;35m$1\033[0m"; }
 reading() { read -p "$(red "$1")" "$2"; }
 export LC_ALL=C
-export UUID=${UUID:-'743f8207-40d0-4440-9a44-97be0fea69c1'}  
+export UUID=${UUID:-''}  
 export ARGO_DOMAIN=${ARGO_DOMAIN:-''}   
 export ARGO_AUTH=${ARGO_AUTH:-''}     
-export vless_port=${vless_port:-'123'}    
-export vmess_port=${vmess_port:-'456'}  
-export hy2_port=${hy2_port:-'789'}       
-export IP=${IP:-'888'}                  
-export reym=${reym:-'www.speedtest.net'}
+export vless_port=${vless_port:-''}    
+export vmess_port=${vmess_port:-''}  
+export hy2_port=${hy2_port:-''}       
+export IP=${IP:-''}                  
+export reym=${reym:-''}
 export reset=${reset:-''}
 
 if [[ "$reset" =~ ^[Yy]$ ]]; then
