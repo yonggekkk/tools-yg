@@ -12,8 +12,8 @@ purple() { echo -e "\e[1;35m$1\033[0m"; }
 reading() { read -p "$(red "$1")" "$2"; }
 export LC_ALL=C
 export UUID=${UUID:-'743f8207-40d0-4440-9a44-97be0fea69c1'}  
-export ARGO_DOMAIN=${ARGO_DOMAIN:-'111'}   
-export ARGO_AUTH=${ARGO_AUTH:-'999'}     
+export ARGO_DOMAIN=${ARGO_DOMAIN:-''}   
+export ARGO_AUTH=${ARGO_AUTH:-''}     
 export vless_port=${vless_port:-'123'}    
 export vmess_port=${vmess_port:-'456'}  
 export hy2_port=${hy2_port:-'789'}       
