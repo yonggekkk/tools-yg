@@ -404,7 +404,6 @@ if [ -e "$(basename ${FILE_MAP[bot]})" ]; then
     fi
     nohup ./"$(basename ${FILE_MAP[bot]})" $args >/dev/null 2>&1 &
     sleep 10
-
 if [[ "$args" == *"boot.log"* ]]; then    
 for ((i=1; i<=5; i++)); do
     red "$(basename ${FILE_MAP[bot]}) Argo进程重启中... (尝试次数: $i)"
@@ -430,6 +429,7 @@ else
     nohup ./"$(basename ${FILE_MAP[bot]})" "${args}" >/dev/null 2>&1 &
     sleep 5
     purple "$(basename ${FILE_MAP[bot]}) Argo进程已重启"
+fi
 fi
 fi
 sleep 2
