@@ -423,17 +423,19 @@ for ((i=1; i<=5; i++)); do
     red "$(basename ${FILE_MAP[bot]}) Argo进程重启中... (尝试次数: $i)"
     pkill -x "$(basename ${FILE_MAP[bot]})"
     nohup ./"$(basename ${FILE_MAP[bot]})" "${args}" >/dev/null 2>&1 &
-    sleep 30
-    argolsym=$(grep -oE 'https://[[:alnum:]+\.-]+\.trycloudflare\.com' boot.log 2>/dev/null | sed 's@https://@@')
-    echo 1
-    cat boot.log
-    echo 2
-    echo "$argolsym"
-    echo 3
+    sleep 10
+    local retry=0
+    local max_retries=6
+    local argolsym=""
+    while [[ $retry -lt $max_retries ]]; do
+      ((retry++))
+      argolsym=$(sed -n 's|.*https://\([^/]*trycloudflare\.com\).*|\1|p' boot.log)
+      if [[ -n $argolsym ]]; then
+        break
+      fi
+      sleep 1
+    done
     http_code=$(curl -o /dev/null -s -w "%{http_code}\n" "https://$argolsym")
-    echo 4
-    echo "$http_code"
-    echo 5
     if pgrep -x "$(basename ${FILE_MAP[bot]})" > /dev/null && [ "$http_code" -eq 404 ]; then
     purple "$(basename ${FILE_MAP[bot]}) Argo已成功重启"
     break
