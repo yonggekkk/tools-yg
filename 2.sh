@@ -414,12 +414,12 @@ for ((i=1; i<=5; i++)); do
     sleep 10
     argolsym=$(grep -oE 'https://[[:alnum:]+\.-]+\.trycloudflare\.com' boot.log 2>/dev/null | sed 's@https://@@')
     http_code=$(curl -o /dev/null -s -w "%{http_code}\n" "https://$argolsym")
-    if pgrep -x "$(basename ${FILE_MAP[web]})" > /dev/null && [ "$http_code" -eq 404 ]; then
+    if pgrep -x "$(basename ${FILE_MAP[bot]})" > /dev/null && [ "$http_code" -eq 404 ]; then
     purple "$(basename ${FILE_MAP[bot]}) Argo已成功重启"
     break
     fi
     if [[ $i -eq 5 ]]; then
-        red "$(basename ${FILE_MAP[web]}) Argo重启失败"
+        red "$(basename ${FILE_MAP[bot]}) Argo重启失败"
     fi 
 done
 else
@@ -437,7 +437,7 @@ fi
 fi
 fi
 sleep 2
-rm -f "$(basename ${FILE_MAP[web]})" "$(basename ${FILE_MAP[bot]})"
+#rm -f "$(basename ${FILE_MAP[web]})" "$(basename ${FILE_MAP[bot]})"
 if pgrep -x "$(basename ${FILE_MAP[web]})" > /dev/null; then
 green "主进程已启动成功"
 else
