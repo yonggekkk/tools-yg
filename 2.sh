@@ -425,10 +425,15 @@ for ((i=1; i<=5; i++)); do
     nohup ./"$(basename ${FILE_MAP[bot]})" "${args}" >/dev/null 2>&1 &
     sleep 10
     argolsym=$(grep -oE 'https://[[:alnum:]+\.-]+\.trycloudflare\.com' boot.log 2>/dev/null | sed 's@https://@@')
+    echo 1
     cat boot.log
+    echo 2
     echo "$argolsym"
+    echo 3
     http_code=$(curl -o /dev/null -s -w "%{http_code}\n" "https://$argolsym")
+    echo 4
     echo "$http_code"
+    echo 5
     if pgrep -x "$(basename ${FILE_MAP[bot]})" > /dev/null && [ "$http_code" -eq 404 ]; then
     purple "$(basename ${FILE_MAP[bot]}) Argo已成功重启"
     break
