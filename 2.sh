@@ -404,15 +404,15 @@ if [ -e "$(basename ${FILE_MAP[bot]})" ]; then
     fi
     nohup ./"$(basename ${FILE_MAP[bot]})" $args >/dev/null 2>&1 &
     sleep 10
-if pgrep -x "$(basename ${FILE_MAP[bot]})" > /dev/null; then
-    green "$(basename ${FILE_MAP[bot]}) Arog进程已启动"
-else
+
+if [[ "$args" == *"boot.log"* ]]; then    
 for ((i=1; i<=5; i++)); do
-    red "$(basename ${FILE_MAP[bot]}) Argo进程未启动, 重启中... (尝试次数: $i)"
+    red "$(basename ${FILE_MAP[bot]}) Argo进程重启中... (尝试次数: $i)"
     pkill -x "$(basename ${FILE_MAP[bot]})"
     nohup ./"$(basename ${FILE_MAP[bot]})" "${args}" >/dev/null 2>&1 &
     sleep 10
-    http_code=$(curl -o /dev/null -s -w "%{http_code}\n" "https://$ym")
+    argolsym=$(grep -oE 'https://[[:alnum:]+\.-]+\.trycloudflare\.com' boot.log 2>/dev/null | sed 's@https://@@')
+    http_code=$(curl -o /dev/null -s -w "%{http_code}\n" "https://$argolsym")
     if pgrep -x "$(basename ${FILE_MAP[web]})" > /dev/null && [ "$http_code" -eq 404 ]; then
     purple "$(basename ${FILE_MAP[bot]}) Argo已成功重启"
     break
@@ -421,6 +421,15 @@ for ((i=1; i<=5; i++)); do
         red "$(basename ${FILE_MAP[web]}) Argo重启失败"
     fi 
 done
+else
+if pgrep -x "$(basename ${FILE_MAP[bot]})" > /dev/null; then
+   green "$(basename ${FILE_MAP[bot]}) Arog进程已启动"
+else
+    red "$(basename ${FILE_MAP[bot]}) Argo进程未启动, 重启中..."
+    pkill -x "$(basename ${FILE_MAP[bot]})"
+    nohup ./"$(basename ${FILE_MAP[bot]})" "${args}" >/dev/null 2>&1 &
+    sleep 5
+    purple "$(basename ${FILE_MAP[bot]}) Argo进程已重启"
 fi
 fi
 sleep 2
