@@ -337,15 +337,15 @@ openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=
         "server": "162.159.195.100",
         "server_port": 1701,
         "local_address": [
-                "172.16.0.2/32",
-                "2606:4700:110:83c7:b31f:5858:b3a8:c6b1/128"
+        "172.16.0.2/32",
+        "2606:4700:110:8468:c6c3:c1a2:2db1:a7a/128"
         ],
-        "private_key": "mPZo+V9qlrMGCZ7+E6z2NI6NOV34PD++TpAR09PtCWI=",
+        "private_key": "hveWdmx6gLzabPneunzSvj0zDfYVYXq++b0kRuKdGq8=",
         "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
         "reserved": [
-                26,
-                21,
-                228
+            165,
+            196,
+            69
         ]
     },
     {
@@ -374,7 +374,23 @@ EOF
 if [ -e "$(basename ${FILE_MAP[web]})" ]; then
     nohup ./"$(basename ${FILE_MAP[web]})" run -c config.json >/dev/null 2>&1 &
     sleep 5
-    pgrep -x "$(basename ${FILE_MAP[web]})" > /dev/null && green "$(basename ${FILE_MAP[web]}) is running" || { red "$(basename ${FILE_MAP[web]}) is not running, restarting..."; pkill -x "$(basename ${FILE_MAP[web]})" && nohup ./"$(basename ${FILE_MAP[web]})" run -c config.json >/dev/null 2>&1 & sleep 2; purple "$(basename ${FILE_MAP[web]}) restarted"; }
+if pgrep -x "$(basename ${FILE_MAP[web]})" > /dev/null; then
+    green "$(basename ${FILE_MAP[web]}) 主进程已启动"
+else
+for ((i=1; i<=5; i++)); do
+    red "$(basename ${FILE_MAP[web]}) 主进程未启动, 重启中... (尝试次数: $i)"
+    pkill -x "$(basename ${FILE_MAP[web]})"
+    nohup ./"$(basename ${FILE_MAP[web]})" run -c config.json >/dev/null 2>&1 &
+    sleep 5
+    if pgrep -x "$(basename ${FILE_MAP[web]})" > /dev/null; then
+        purple "$(basename ${FILE_MAP[web]}) 主进程已成功重启"
+        break
+    fi
+    if [[ $i -eq 5 ]]; then
+        red "$(basename ${FILE_MAP[web]}) 主进程重启失败"
+    fi
+done
+fi
 fi
 
 if [ -e "$(basename ${FILE_MAP[bot]})" ]; then
@@ -384,11 +400,28 @@ if [ -e "$(basename ${FILE_MAP[bot]})" ]; then
     elif [[ $ARGO_AUTH =~ TunnelSecret ]]; then
       args="tunnel --edge-ip-version auto --config tunnel.yml run"
     else
-      args="tunnel --edge-ip-version auto --no-autoupdate --protocol http2 --logfile boot.log --loglevel info --url http://localhost:$vmess_port"
+     args="tunnel --edge-ip-version auto --no-autoupdate --protocol http2 --logfile boot.log --loglevel info --url http://localhost:$vmess_port"
     fi
     nohup ./"$(basename ${FILE_MAP[bot]})" $args >/dev/null 2>&1 &
     sleep 10
-    pgrep -x "$(basename ${FILE_MAP[bot]})" > /dev/null && green "$(basename ${FILE_MAP[bot]}) is running" || { red "$(basename ${FILE_MAP[bot]}) is not running, restarting..."; pkill -x "$(basename ${FILE_MAP[bot]})" && nohup ./"$(basename ${FILE_MAP[bot]})" "${args}" >/dev/null 2>&1 & sleep 5; purple "$(basename ${FILE_MAP[bot]}) restarted"; }
+if pgrep -x "$(basename ${FILE_MAP[bot]})" > /dev/null; then
+    green "$(basename ${FILE_MAP[bot]}) Arog进程已启动"
+else
+for ((i=1; i<=5; i++)); do
+    red "$(basename ${FILE_MAP[bot]}) Argo进程未启动, 重启中... (尝试次数: $i)"
+    pkill -x "$(basename ${FILE_MAP[bot]})"
+    nohup ./"$(basename ${FILE_MAP[bot]})" "${args}" >/dev/null 2>&1 &
+    sleep 10
+    http_code=$(curl -o /dev/null -s -w "%{http_code}\n" "https://$ym")
+    if pgrep -x "$(basename ${FILE_MAP[web]})" > /dev/null && [ "$http_code" -eq 404 ]; then
+    purple "$(basename ${FILE_MAP[bot]}) Argo已成功重启"
+    break
+    fi
+    if [[ $i -eq 5 ]]; then
+        red "$(basename ${FILE_MAP[web]}) Argo重启失败"
+    fi 
+done
+fi
 fi
 sleep 2
 rm -f "$(basename ${FILE_MAP[web]})" "$(basename ${FILE_MAP[bot]})"
