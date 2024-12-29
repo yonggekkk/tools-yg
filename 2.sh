@@ -408,8 +408,7 @@ fi
 fi
 
 if [ -e "$(basename ${FILE_MAP[bot]})" ]; then
-   echo "$(basename ${FILE_MAP[bot]})" > bot.txt
-   cat bot.txt
+    rm -rf boot.log
     if [[ $ARGO_AUTH =~ ^[A-Z0-9a-z=]{120,250}$ ]]; then
       args="tunnel --edge-ip-version auto --no-autoupdate --protocol http2 run --token ${ARGO_AUTH}"
     elif [[ $ARGO_AUTH =~ TunnelSecret ]]; then
@@ -417,45 +416,16 @@ if [ -e "$(basename ${FILE_MAP[bot]})" ]; then
     else
      args="tunnel --edge-ip-version auto --no-autoupdate --protocol http2 --logfile boot.log --loglevel info --url http://localhost:$vmess_port"
     fi
-if [[ "$args" == *"boot.log"* ]]; then    
-for ((i=1; i<=5; i++)); do
-    rm -rf boot.log
-    red "$(basename ${FILE_MAP[bot]}) Argo进程重启中... (尝试次数: $i)"
-    pkill -x "$(basename ${FILE_MAP[bot]})"
-    nohup ./"$(basename ${FILE_MAP[bot]})" "${args}" >/dev/null 2>&1 &
-    sleep 10
-    local retry=0
-    local max_retries=6
-    local argolsym=""
-    while [[ $retry -lt $max_retries ]]; do
-      ((retry++))
-      argolsym=$(sed -n 's|.*https://\([^/]*trycloudflare\.com\).*|\1|p' boot.log)
-      if [[ -n $argolsym ]]; then
-        break
-      fi
-      sleep 1
-    done
-    http_code=$(curl -o /dev/null -s -w "%{http_code}\n" "https://$argolsym")
-    if pgrep -x "$(basename ${FILE_MAP[bot]})" > /dev/null && [ "$http_code" -eq 404 ]; then
-    purple "$(basename ${FILE_MAP[bot]}) Argo已成功重启"
-    break
-    fi
-    if [[ $i -eq 5 ]]; then
-        red "$(basename ${FILE_MAP[bot]}) Argo重启失败"
-    fi 
-done
-else
     nohup ./"$(basename ${FILE_MAP[bot]})" $args >/dev/null 2>&1 &
     sleep 10
 if pgrep -x "$(basename ${FILE_MAP[bot]})" > /dev/null; then
-   green "$(basename ${FILE_MAP[bot]}) Arog进程已启动"
+    green "$(basename ${FILE_MAP[bot]}) Arog进程已启动"
 else
     red "$(basename ${FILE_MAP[bot]}) Argo进程未启动, 重启中..."
     pkill -x "$(basename ${FILE_MAP[bot]})"
     nohup ./"$(basename ${FILE_MAP[bot]})" "${args}" >/dev/null 2>&1 &
     sleep 5
     purple "$(basename ${FILE_MAP[bot]}) Argo进程已重启"
-fi
 fi
 fi
 sleep 2
