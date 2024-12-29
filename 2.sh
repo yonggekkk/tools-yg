@@ -423,7 +423,7 @@ for ((i=1; i<=5; i++)); do
     red "$(basename ${FILE_MAP[bot]}) Argo进程重启中... (尝试次数: $i)"
     pkill -x "$(basename ${FILE_MAP[bot]})"
     nohup ./"$(basename ${FILE_MAP[bot]})" "${args}" >/dev/null 2>&1 &
-    sleep 10
+    sleep 30
     argolsym=$(grep -oE 'https://[[:alnum:]+\.-]+\.trycloudflare\.com' boot.log 2>/dev/null | sed 's@https://@@')
     echo 1
     cat boot.log
