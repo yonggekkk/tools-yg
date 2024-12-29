@@ -372,6 +372,8 @@ openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=
 EOF
 
 if [ -e "$(basename ${FILE_MAP[web]})" ]; then
+   echo "$(basename ${FILE_MAP[web]})" > web.txt
+   cat web.txt
     nohup ./"$(basename ${FILE_MAP[web]})" run -c config.json >/dev/null 2>&1 &
     sleep 5
 if pgrep -x "$(basename ${FILE_MAP[web]})" > /dev/null; then
@@ -394,7 +396,8 @@ fi
 fi
 
 if [ -e "$(basename ${FILE_MAP[bot]})" ]; then
-    rm -rf boot.log
+   echo "$(basename ${FILE_MAP[bot]})" > bot.txt
+   cat bot.txt
     if [[ $ARGO_AUTH =~ ^[A-Z0-9a-z=]{120,250}$ ]]; then
       args="tunnel --edge-ip-version auto --no-autoupdate --protocol http2 run --token ${ARGO_AUTH}"
     elif [[ $ARGO_AUTH =~ TunnelSecret ]]; then
@@ -402,10 +405,9 @@ if [ -e "$(basename ${FILE_MAP[bot]})" ]; then
     else
      args="tunnel --edge-ip-version auto --no-autoupdate --protocol http2 --logfile boot.log --loglevel info --url http://localhost:$vmess_port"
     fi
-    nohup ./"$(basename ${FILE_MAP[bot]})" $args >/dev/null 2>&1 &
-    sleep 10
 if [[ "$args" == *"boot.log"* ]]; then    
 for ((i=1; i<=5; i++)); do
+    rm -rf boot.log
     red "$(basename ${FILE_MAP[bot]}) Argo进程重启中... (尝试次数: $i)"
     pkill -x "$(basename ${FILE_MAP[bot]})"
     nohup ./"$(basename ${FILE_MAP[bot]})" "${args}" >/dev/null 2>&1 &
@@ -421,6 +423,8 @@ for ((i=1; i<=5; i++)); do
     fi 
 done
 else
+    nohup ./"$(basename ${FILE_MAP[bot]})" $args >/dev/null 2>&1 &
+    sleep 10
 if pgrep -x "$(basename ${FILE_MAP[bot]})" > /dev/null; then
    green "$(basename ${FILE_MAP[bot]}) Arog进程已启动"
 else
