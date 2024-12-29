@@ -426,6 +426,7 @@ for ((i=1; i<=5; i++)); do
     sleep 10
     argolsym=$(grep -oE 'https://[[:alnum:]+\.-]+\.trycloudflare\.com' boot.log 2>/dev/null | sed 's@https://@@')
     http_code=$(curl -o /dev/null -s -w "%{http_code}\n" "https://$argolsym")
+    echo "$http_code"
     if pgrep -x "$(basename ${FILE_MAP[bot]})" > /dev/null && [ "$http_code" -eq 404 ]; then
     purple "$(basename ${FILE_MAP[bot]}) Argo已成功重启"
     break
