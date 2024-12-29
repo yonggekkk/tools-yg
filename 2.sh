@@ -264,6 +264,18 @@ openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=
     "level": "info",
     "timestamp": true
   },
+   "dns": {
+    "servers": [
+      {
+        "address": "8.8.8.8",
+        "address_resolver": "local"
+      },
+      {
+        "tag": "local",
+        "address": "local"
+      }
+    ]
+  },
     "inbounds": [
     {
        "tag": "hysteria-in",
