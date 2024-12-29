@@ -264,7 +264,7 @@ openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=
     "level": "info",
     "timestamp": true
   },
-   "dns": {
+    "dns": {
     "servers": [
       {
         "address": "8.8.8.8",
@@ -346,7 +346,7 @@ openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=
          {
         "type": "wireguard",
         "tag": "wg",
-        "server": "162.159.195.100",
+        "server": "162.159.192.110",
         "server_port": 1701,
         "local_address": [
         "172.16.0.2/32",
@@ -379,13 +379,11 @@ openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=
      "outbound": "wg"
     }
     ]
-    }
+    }  
 }
 EOF
 
 if [ -e "$(basename ${FILE_MAP[web]})" ]; then
-   echo "$(basename ${FILE_MAP[web]})" > web.txt
-   cat web.txt
     nohup ./"$(basename ${FILE_MAP[web]})" run -c config.json >/dev/null 2>&1 &
     sleep 5
 if pgrep -x "$(basename ${FILE_MAP[web]})" > /dev/null; then
@@ -429,7 +427,6 @@ else
 fi
 fi
 sleep 2
-#rm -f "$(basename ${FILE_MAP[web]})" "$(basename ${FILE_MAP[bot]})"
 if pgrep -x "$(basename ${FILE_MAP[web]})" > /dev/null; then
 green "主进程已启动成功"
 else
@@ -449,7 +446,17 @@ get_argodomain() {
     echo "$ARGO_DOMAIN" > gdym.log
     echo "$ARGO_DOMAIN"
   else
+    local retry=0
+    local max_retries=6
+    local argodomain=""
+    while [[ $retry -lt $max_retries ]]; do
+    ((retry++)) 
     argodomain=$(grep -oE 'https://[[:alnum:]+\.-]+\.trycloudflare\.com' boot.log 2>/dev/null | sed 's@https://@@')
+      if [[ -n $argodomain ]]; then
+        break
+      fi
+      sleep 2
+    done  
     if [ -z ${argodomain} ]; then
     argodomain="Argo临时域名暂时获取失败，Argo节点暂不可用"
     fi
@@ -459,8 +466,7 @@ get_argodomain() {
 
 get_links(){
 argodomain=$(get_argodomain)
-echo -e "\e[1;32mArgo域名：\e[1;35m${argodomain}\e[0m\n"
-echo
+echo -e "\e[1;32mArgo域名:\e[1;35m${argodomain}\e[0m\n"
 green "安装进程保活"
 curl -sSL https://raw.githubusercontent.com/yonggekkk/Cloudflare_vless_trojan/main/serv00keep.sh -o serv00keep.sh && chmod +x serv00keep.sh
 sed -i '' -e "18s|''|'$UUID'|" serv00keep.sh
