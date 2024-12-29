@@ -463,7 +463,7 @@ get_argodomain() {
 
 get_links(){
 argodomain=$(get_argodomain)
-echo -e "\e[1;32mArgo域名:\e[1;35m${argodomain}\e[0m\n"
+echo -e "\e[1;32mArgo域名：\e[1;35m${argodomain}\e[0m\n"
 echo
 green "安装进程保活"
 curl -sSL https://raw.githubusercontent.com/yonggekkk/Cloudflare_vless_trojan/main/serv00keep.sh -o serv00keep.sh && chmod +x serv00keep.sh
