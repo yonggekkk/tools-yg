@@ -289,7 +289,7 @@ openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=
     {
         "tag": "vless-reality-vesion",
         "type": "vless",
-        "listen": "::",
+        "listen": "$IP",
         "listen_port": $vless_port,
         "users": [
             {
@@ -316,7 +316,7 @@ openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=
 {
       "tag": "vmess-ws-in",
       "type": "vmess",
-      "listen": "::",
+      "listen": "$IP",
       "listen_port": $vmess_port,
       "users": [
       {
