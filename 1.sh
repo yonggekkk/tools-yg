@@ -268,8 +268,7 @@ fi
     "rules": [
     {
      "domain": [
-   $ytb
-   $twh
+     "ip.gs","ip.me",$ytb$twh
       ],
      "outbound": "wg"
     }
