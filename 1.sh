@@ -171,20 +171,6 @@ fi
     "level": "info",
     "timestamp": true
   },
-  "dns": {
-    "servers": [
-      {
-        "tag": "google",
-        "address": "tls://8.8.8.8",
-        "strategy": "ipv4_only",
-        "detour": "direct"
-      }
-    ],
-    "final": "google",
-    "strategy": "",
-    "disable_cache": false,
-    "disable_expire": false
-  },
     "inbounds": [
     {
        "tag": "hysteria-in",
@@ -276,10 +262,6 @@ fi
     {
       "type": "block",
       "tag": "block"
-    },
-    {
-      "type": "dns",
-      "tag": "dns-out"
     }
   ],
    "route": {
