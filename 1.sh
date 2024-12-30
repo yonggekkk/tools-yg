@@ -157,9 +157,9 @@ openssl ecparam -genkey -name prime256v1 -out "private.key"
 openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=$USERNAME.serv00.net"
 
 nb=$(hostname | cut -d '.' -f 1 | tr -d 's')
-if [ "$nb" == "14" ]; then
-ytb='"jnn-pa.googleapis.com"'
-fi
+#if [ "$nb" == "14" ]; then
+#ytb='"jnn-pa.googleapis.com"'
+#fi
 if [ "$nb" == "15" ]; then
 twh='"usher.ttvnw.net"'
 fi
@@ -268,7 +268,7 @@ fi
     "rules": [
     {
      "domain": [
-     "ip.gs","ip.me",$ytb$twh
+     "jnn-pa.googleapis.com"
       ],
      "outbound": "wg"
     }
