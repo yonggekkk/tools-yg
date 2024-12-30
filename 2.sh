@@ -272,17 +272,19 @@ fi
     "level": "info",
     "timestamp": true
   },
-    "dns": {
+  "dns": {
     "servers": [
       {
-        "address": "8.8.8.8",
-        "address_resolver": "local"
-      },
-      {
-        "tag": "local",
-        "address": "local"
+        "tag": "google",
+        "address": "tls://8.8.8.8",
+        "strategy": "ipv4_only",
+        "detour": "direct"
       }
-    ]
+    ],
+    "final": "google",
+    "strategy": "",
+    "disable_cache": false,
+    "disable_expire": false
   },
     "inbounds": [
     {
@@ -375,6 +377,10 @@ fi
     {
       "type": "block",
       "tag": "block"
+    },
+    {
+      "type": "dns",
+      "tag": "dns-out"
     }
   ],
    "route": {
