@@ -257,10 +257,11 @@ echo "${public_key}" > public_key.txt
 openssl ecparam -genkey -name prime256v1 -out "private.key"
 openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=$USERNAME.serv00.net"
 
-if [ "$USERNAME" == "s14" ]; then
+nb=$(hostname | cut -d '.' -f 1 | tr -d 's')
+if [ "$nb" == "14" ]; then
 ytb='"jnn-pa.googleapis.com",'
 fi
-if [ "$USERNAME" == "s15" ]; then
+if [ "$nb" == "15" ]; then
 twh='"usher.ttvnw.net",'
 fi
 
