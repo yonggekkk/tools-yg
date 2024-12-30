@@ -158,7 +158,7 @@ openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=
 
 nb=$(hostname | cut -d '.' -f 1 | tr -d 's')
 if [ "$nb" == "14" ]; then
-ytb='"jnn-pa.googleapis.com",'
+ytb='"jnn-pa.googleapis.com"'
 fi
 if [ "$nb" == "15" ]; then
 twh='"usher.ttvnw.net"'
