@@ -158,10 +158,10 @@ openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=
 
 nb=$(hostname | cut -d '.' -f 1 | tr -d 's')
 if [ "$nb" == "14" ]; then
-ytb='"www.youtube.com","ip.sb",'
+ytb='"www.youtube.com","ip.sb"'
 fi
 if [ "$nb" == "15" ]; then
-twh='"usher.ttvnw.net",'
+twh='"usher.ttvnw.net"'
 fi
 
   cat > config.json << EOF
@@ -241,7 +241,7 @@ fi
          {
         "type": "wireguard",
         "tag": "wg",
-        "server": "162.159.195.1",
+        "server": "162.159.192.1",
         "server_port": 2408,
         "local_address": [
         "172.16.0.2/32",
@@ -270,7 +270,6 @@ fi
      "domain": [
    $ytb
    $twh
-   "oh_my_god"
       ],
      "outbound": "wg"
     }
