@@ -268,7 +268,7 @@ fi
     "rules": [
     {
      "domain": [
-     "jnn-pa.googleapis.com"
+     "123456"
       ],
      "outbound": "wg"
     }
