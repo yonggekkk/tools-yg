@@ -393,7 +393,8 @@ fi
       ],
      "outbound": "wg"
     }
-    ]
+    ],
+    "final": "direct"
     }  
 }
 EOF
