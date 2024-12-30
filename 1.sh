@@ -255,8 +255,8 @@ fi
          {
         "type": "wireguard",
         "tag": "wg",
-        "server": "162.159.192.110",
-        "server_port": 1701,
+        "server": "162.159.195.1",
+        "server_port": 2408,
         "local_address": [
         "172.16.0.2/32",
         "2606:4700:110:8468:c6c3:c1a2:2db1:a7a/128"
