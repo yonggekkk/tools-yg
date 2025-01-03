@@ -59,11 +59,37 @@ fi
 done
 fi
 done
+if [[ -z "$IP" ]]; then
 IP=$(grep -m 1 "可用" ip.txt | awk -F ':' '{print $1}')
+if [ -z "$IP" ]; then
+IP=$(okip)
 if [ -z "$IP" ]; then
 IP=$(head -n 1 ip.txt | awk -F ':' '{print $1}')
 fi
+fi
+fi
 }
+
+okip(){
+    IP_LIST=($(devil vhost list | awk '/^[0-9]+/ {print $1}'))
+    API_URL="https://status.eooce.com/api"
+    IP=""
+    THIRD_IP=${IP_LIST[2]}
+    RESPONSE=$(curl -s --max-time 2 "${API_URL}/${THIRD_IP}")
+    if [[ $(echo "$RESPONSE" | jq -r '.status') == "Available" ]]; then
+        IP=$THIRD_IP
+    else
+        FIRST_IP=${IP_LIST[0]}
+        RESPONSE=$(curl -s --max-time 2 "${API_URL}/${FIRST_IP}")
+        
+        if [[ $(echo "$RESPONSE" | jq -r '.status') == "Available" ]]; then
+            IP=$FIRST_IP
+        else
+            IP=${IP_LIST[1]}
+        fi
+    fi
+    echo "$IP"
+    }
 
 # Generating argo Config
 argo_configure() {
