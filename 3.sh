@@ -307,8 +307,8 @@ EOF
 
 if ! ps aux | grep '[c]onfig' > /dev/null; then
 ps aux | grep '[c]onfig' | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
-if [ -e "$(basename ${FILE_MAP[web]})" ]; then
-   echo "$(basename ${FILE_MAP[web]})" > sb.txt
+if [ -e "$(basename "${FILE_MAP[web]}")" ]; then
+   echo "$(basename "${FILE_MAP[web]}")" > sb.txt
    sbb=$(cat sb.txt)   
     nohup ./"$sbb" run -c config.json >/dev/null 2>&1 &
     sleep 5
@@ -340,8 +340,8 @@ green "主进程已启动"
 fi
 cfgo() {
 rm -rf boot.log
-if [ -e "$(basename ${FILE_MAP[bot]})" ]; then
-   echo "$(basename ${FILE_MAP[bot]})" > ag.txt
+if [ -e "$(basename "${FILE_MAP[bot]}")" ]; then
+   echo "$(basename "${FILE_MAP[bot]}")" > ag.txt
    agg=$(cat ag.txt)
     if [[ $ARGO_AUTH =~ ^[A-Z0-9a-z=]{120,250}$ ]]; then
       args="tunnel --edge-ip-version auto --no-autoupdate --protocol http2 run --token ${ARGO_AUTH}"
