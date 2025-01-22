@@ -52,6 +52,86 @@ read_reym() {
 	green "你的reality域名为: $reym"
 }
 
+check_binexec_and_port () {
+port_list=$(devil port list)
+tcp_ports=$(echo "$port_list" | grep -c "tcp")
+udp_ports=$(echo "$port_list" | grep -c "udp")
+
+if [[ $tcp_ports -ne 2 || $udp_ports -ne 1 ]]; then
+    red "端口数量不符合要求，正在调整..."
+
+    if [[ $tcp_ports -gt 2 ]]; then
+        tcp_to_delete=$((tcp_ports - 2))
+        echo "$port_list" | awk '/tcp/ {print $1, $2}' | head -n $tcp_to_delete | while read port type; do
+            devil port del $type $port
+            green "已删除TCP端口: $port"
+        done
+    fi
+
+    if [[ $udp_ports -gt 1 ]]; then
+        udp_to_delete=$((udp_ports - 1))
+        echo "$port_list" | awk '/udp/ {print $1, $2}' | head -n $udp_to_delete | while read port type; do
+            devil port del $type $port
+            green "已删除UDP端口: $port"
+        done
+    fi
+
+    if [[ $tcp_ports -lt 2 ]]; then
+        tcp_ports_to_add=$((2 - tcp_ports))
+        tcp_ports_added=0
+        while [[ $tcp_ports_added -lt $tcp_ports_to_add ]]; do
+            tcp_port=$(shuf -i 10000-65535 -n 1) 
+            result=$(devil port add tcp $tcp_port 2>&1)
+            if [[ $result == *"succesfully"* ]]; then
+                green "已添加TCP端口: $tcp_port"
+                if [[ $tcp_ports_added -eq 0 ]]; then
+                    tcp_port1=$tcp_port
+                else
+                    tcp_port2=$tcp_port
+                fi
+                tcp_ports_added=$((tcp_ports_added + 1))
+            else
+                yellow "端口 $tcp_port 不可用，尝试其他端口..."
+            fi
+        done
+    fi
+
+    if [[ $udp_ports -lt 1 ]]; then
+        while true; do
+            udp_port=$(shuf -i 10000-65535 -n 1) 
+            result=$(devil port add udp $udp_port 2>&1)
+            if [[ $result == *"succesfully"* ]]; then
+                green "已添加UDP端口: $udp_port"
+                break
+            else
+                yellow "端口 $udp_port 不可用，尝试其他端口..."
+            fi
+        done
+    fi
+    green "端口已调整完成,将断开ssh连接,请重新连接shh重新执行脚本"
+    devil binexec on >/dev/null 2>&1
+    kill -9 $(ps -o ppid= -p $$) >/dev/null 2>&1
+else
+    tcp_ports=$(echo "$port_list" | awk '/tcp/ {print $1}')
+    tcp_port1=$(echo "$tcp_ports" | sed -n '1p')
+    tcp_port2=$(echo "$tcp_ports" | sed -n '2p')
+    udp_port=$(echo "$port_list" | awk '/udp/ {print $1}')
+
+    purple "当前TCP端口: $tcp_port1 和 $tcp_port2"
+    purple "当前UDP端口: $udp_port"
+fi
+
+export VLESS_PORT=$tcp_port1
+export TUIC_PORT=$tcp_port2
+export HY2_PORT=$udp_port
+}
+
+
+
+
+
+
+
 read_vless_port() {
     while true; do
         reading "请输入vless-reality端口 (面板开放的tcp端口): " vless_port
