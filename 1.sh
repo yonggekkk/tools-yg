@@ -125,7 +125,7 @@ uninstall_singbox() {
     case "$choice" in
        [Yy])
           bash -c 'ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk "{print \$2}" | xargs -r kill -9 >/dev/null 2>&1' >/dev/null 2>&1
-          rm -rf $WORKDIR serv00.sh serv00keep.sh
+          rm -rf domains serv00.sh serv00keep.sh
 	  crontab -l | grep -v "serv00keep" >rmcron
           crontab rmcron >/dev/null 2>&1
           rm rmcron
@@ -412,16 +412,18 @@ if [ -e "$(basename ${FILE_MAP[bot]})" ]; then
    agg=$(cat ag.txt)
     rm -rf boot.log
     if [[ $ARGO_AUTH =~ ^[A-Z0-9a-z=]{120,250}$ ]]; then
-      args="tunnel run --token ${ARGO_AUTH} --edge-ip-version auto --no-autoupdate --protocol http2"
+      #args="tunnel --edge-ip-version auto --no-autoupdate --protocol http2 run --token ${ARGO_AUTH}"
+      args="tunnel --no-autoupdate run --token ${ARGO_AUTH}"
     elif [[ $ARGO_AUTH =~ TunnelSecret ]]; then
       args="tunnel --edge-ip-version auto --config tunnel.yml run"
     else
-     args="tunnel --url http://localhost:$vmess_port --edge-ip-version auto --no-autoupdate --protocol http2 --logfile boot.log --loglevel info"
+     #args="tunnel --edge-ip-version auto --no-autoupdate --protocol http2 --logfile boot.log --loglevel info --url http://localhost:$vmess_port"
+     args="tunnel --url http://localhost:$vmess_port --no-autoupdate --logfile boot.log --loglevel info"
     fi
     nohup ./"$agg" $args >/dev/null 2>&1 &
     sleep 10
 if pgrep -x "$agg" > /dev/null; then
-    green "$agg Arog进程已启动"
+    green "$agg Argo进程已启动"
 else
     red "$agg Argo进程未启动, 重启中..."
     pkill -x "$agg"
@@ -453,7 +455,7 @@ get_argodomain() {
     local argodomain=""
     while [[ $retry -lt $max_retries ]]; do
     ((retry++)) 
-    argodomain=$(grep -oE 'https://[[:alnum:]+\.-]+\.trycloudflare\.com' boot.log 2>/dev/null | sed 's@https://@@')
+    argodomain=$(cat boot.log 2>/dev/null | grep -a trycloudflare.com | awk 'NR==2{print}' | awk -F// '{print $2}' | awk '{print $1}')
       if [[ -n $argodomain ]]; then
         break
       fi
@@ -1148,7 +1150,7 @@ if [[ -e $WORKDIR/list.txt ]]; then
 green "已安装sing-box"
 ps aux | grep '[c]onfig' > /dev/null && green "主进程运行正常" || yellow "主进程启动中…………2分钟后可再次进入脚本查看"
 if [ -f "$WORKDIR/boot.log" ] && grep -q "trycloudflare.com" "$WORKDIR/boot.log" 2>/dev/null && ps aux | grep [l]ocalhost > /dev/null; then
-argosl=$(grep -oE 'https://[[:alnum:]+\.-]+\.trycloudflare\.com' $WORKDIR/boot.log 2>/dev/null | sed 's@https://@@')
+argosl=$(cat "$WORKDIR/boot.log" 2>/dev/null | grep -a trycloudflare.com | awk 'NR==2{print}' | awk -F// '{print $2}' | awk '{print $1}')
 checkhttp=$(curl -o /dev/null -s -w "%{http_code}\n" "https://$argosl")
 [ "$checkhttp" -eq 404 ] && check="域名有效" || check="域名可能无效"
 green "当前Argo临时域名：$argosl  $check"
@@ -1158,9 +1160,9 @@ yellow "当前Argo临时域名暂时不存在，后台会继续生成有效的�
 fi
 if ps aux | grep [t]oken > /dev/null; then
 argogd=$(cat $WORKDIR/gdym.log 2>/dev/null)
-checkhttp=$(curl -o /dev/null -s -w "%{http_code}\n" "https://$argogd")
-[ "$checkhttp" -eq 404 ] && check="域名有效" || check="域名可能无效"
-green "当前Argo固定域名：$argogd  $check"
+checkhttp=$(curl --max-time 2 -o /dev/null -s -w "%{http_code}\n" "https://$argogd")
+[ "$checkhttp" -eq 404 ] && check="域名有效" || check="域名可能失效"
+green "当前Argo固定域名：$argogd $check"
 fi
 if [ ! -f "$WORKDIR/boot.log" ] && ! ps aux | grep [t]oken > /dev/null; then
 yellow "当前Argo固定域名：$(cat $WORKDIR/gdym.log 2>/dev/null)，请检查相关参数是否输入有误，建议卸载重装"
