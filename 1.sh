@@ -52,7 +52,7 @@ read_reym() {
 	green "你的reality域名为: $reym"
 }
 
-check_binexec_and_port () {
+check_port () {
 port_list=$(devil port list)
 tcp_ports=$(echo "$port_list" | grep -c "tcp")
 udp_ports=$(echo "$port_list" | grep -c "udp")
@@ -121,51 +121,12 @@ else
     purple "当前UDP端口: $udp_port"
 fi
 
-export VLESS_PORT=$tcp_port1
-export TUIC_PORT=$tcp_port2
-export HY2_PORT=$udp_port
-}
-
-
-
-
-
-
-
-read_vless_port() {
-    while true; do
-        reading "请输入vless-reality端口 (面板开放的tcp端口): " vless_port
-        if [[ "$vless_port" =~ ^[0-9]+$ ]] && [ "$vless_port" -ge 1 ] && [ "$vless_port" -le 65535 ]; then
-            green "你的vless-reality端口为: $vless_port"
-            break
-        else
-            yellow "输入错误，请重新输入面板开放的TCP端口"
-        fi
-    done
-}
-
-read_hy2_port() {
-    while true; do
-        reading "请输入hysteria2端口 (面板开放的UDP端口): " hy2_port
-        if [[ "$hy2_port" =~ ^[0-9]+$ ]] && [ "$hy2_port" -ge 1 ] && [ "$hy2_port" -le 65535 ]; then
-            green "你的hysteria2端口为: $hy2_port"
-            break
-        else
-            yellow "输入错误，请重新输入面板开放的UDP端口"
-        fi
-    done
-}
-
-read_vmess_port() {
-    while true; do
-        reading "请输入vmess-ws端口 (面板开放的tcp端口): " vmess_port
-        if [[ "$vmess_port" =~ ^[0-9]+$ ]] && [ "$vmess_port" -ge 1 ] && [ "$vmess_port" -le 65535 ]; then
-            green "你的vmess端口为: $vmess_port"
-            break
-        else
-            yellow "输入错误，请重新输入面板开放的tcp端口"
-        fi
-    done
+export vless_port=$tcp_port1
+export vmess_port=$tcp_port2
+export hy2_port=$udp_port
+green "你的vless-reality端口为: $vless_port"
+green "你的vmess端口为: $vmess_port"
+green "你的hysteria2端口为: $hy2_port"
 }
 
 install_singbox() {
@@ -181,12 +142,8 @@ sleep 2
         read_reym
 	echo
 	read_uuid
- 	echo
-        read_vless_port
-	echo
-        read_vmess_port
-	echo
-        read_hy2_port
+        echo
+        check_port
 	echo
         sleep 2
         argo_configure
