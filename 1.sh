@@ -133,7 +133,7 @@ install_singbox() {
 if [[ -e $WORKDIR/list.txt ]]; then
 yellow "已安装sing-box，请先选择2卸载，再执行安装" && exit
 fi
-yellow "请确保在Serv00网页设置中已开放3个端口：2个tcp端口、1个udp端口"
+yellow "为确保节点可用性，不必在Serv00网页设置3个端口，脚本会随机生成"
 sleep 2
         cd $WORKDIR
 	echo
@@ -473,11 +473,10 @@ sleep 2
 if ! pgrep -x "$(cat sb.txt)" > /dev/null; then
 red "主进程未启动，根据以下情况一一排查"
 yellow "1、网页端权限是否开启"
-yellow "2、端口是否设置错误(2个TCP、1个UDP)"
-yellow "3、尝试更换网页端3个端口并重装"
-yellow "4、选择5重置"
-yellow "5、当前Serv00服务器炸了？等会再试"
-red "6、以上都试了，哥直接躺平，交给进程保活，过会再来看"
+yellow "2、网页后台删除所有端口，让其随机生成可用端口"
+yellow "3、选择5重置"
+yellow "4、当前Serv00服务器炸了？等会再试"
+red "5、以上都试了，哥直接躺平，交给进程保活，过会再来看"
 sleep 6
 fi
 }
