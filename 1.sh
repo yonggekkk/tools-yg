@@ -999,11 +999,11 @@ sleep 2
 FILE_PATH="/usr/home/${USERNAME}/domains/${USERNAME}.serv00.net/public_html"
 [ -d "$FILE_PATH" ] || mkdir -p "$FILE_PATH"
 echo "$baseurl" > ${FILE_PATH}/${USERNAME}_v2sub.txt
-cat clash_meta.yaml > ${FILE_PATH}/${USERNAME}_clashmeta.yaml
-cat sing_box.json > ${FILE_PATH}/${USERNAME}_singbox.json
+cat clash_meta.yaml > ${FILE_PATH}/${USERNAME}_clashmeta.txt
+cat sing_box.json > ${FILE_PATH}/${USERNAME}_singbox.txt
 V2rayN_LINK="https://${USERNAME}.serv00.net/${USERNAME}_v2sub.txt"
-Clashmeta_LINK="https://${USERNAME}.serv00.net/${USERNAME}_clashmeta.yaml"
-Singbox_LINK="https://${USERNAME}.serv00.net/${USERNAME}_singbox.json"
+Clashmeta_LINK="https://${USERNAME}.serv00.net/${USERNAME}_clashmeta.txt"
+Singbox_LINK="https://${USERNAME}.serv00.net/${USERNAME}_singbox.txt"
 cat > list.txt <<EOF
 =================================================================================================
 
