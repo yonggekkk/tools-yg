@@ -124,16 +124,17 @@ fi
 export vless_port=$tcp_port1
 export vmess_port=$tcp_port2
 export hy2_port=$udp_port
-green "你的vless-reality端口为: $vless_port"
-green "你的vmess端口为: $vmess_port"
-green "你的hysteria2端口为: $hy2_port"
+green "你的vless-reality端口: $vless_port"
+green "你的vmess-ws端口(设置Argo固定域名端口): $vmess_port"
+green "你的hysteria2端口: $hy2_port"
+sleep 2
 }
 
 install_singbox() {
 if [[ -e $WORKDIR/list.txt ]]; then
 yellow "已安装sing-box，请先选择2卸载，再执行安装" && exit
 fi
-yellow "为确保节点可用性，不必在Serv00网页设置3个端口，脚本会随机生成"
+yellow "为确保节点可用性，建议在Serv00网页不设置端口，脚本会随机生成有效端口"
 sleep 2
         cd $WORKDIR
 	echo
@@ -473,7 +474,7 @@ sleep 2
 if ! pgrep -x "$(cat sb.txt)" > /dev/null; then
 red "主进程未启动，根据以下情况一一排查"
 yellow "1、网页端权限是否开启"
-yellow "2、网页后台删除所有端口，让其随机生成可用端口"
+yellow "2、网页后台删除所有端口，让脚本自动生成随机可用端口"
 yellow "3、选择5重置"
 yellow "4、当前Serv00服务器炸了？等会再试"
 red "5、以上都试了，哥直接躺平，交给进程保活，过会再来看"
@@ -523,6 +524,16 @@ hy2_link="hysteria2://$UUID@$IP:$hy2_port?sni=www.bing.com&alpn=h3&insecure=1#$N
 echo "$hy2_link" >> jh.txt
 url=$(cat jh.txt 2>/dev/null)
 baseurl=$(echo -e "$url" | base64 -w 0)
+
+FILE_PATH="/usr/home/${USERNAME}/domains/${USERNAME}.serv00.net/public_html"
+[ -d "$FILE_PATH" ] || mkdir -p "$FILE_PATH"
+echo "$baseurl" > ${FILE_PATH}/${USERNAME}_v2sub.txt
+cat clash_meta.yaml > ${FILE_PATH}/${USERNAME}_clashmeta.yaml
+cat sing_box.json > ${FILE_PATH}/${USERNAME}_singbox.json
+V2rayN_LINK="https://${USERNAME}.serv00.net/${USERNAME}_v2sub.txt"
+Clashmeta_LINK="https://${USERNAME}.serv00.net/${USERNAME}_clashmeta.yaml"
+Singbox_LINK="https://${USERNAME}.serv00.net/${USERNAME}_singbox.json"
+
 echo
 sleep 2
 cat > list.txt <<EOF
@@ -1141,7 +1152,7 @@ menu() {
    green "甬哥Blogger博客 ：ygkkk.blogspot.com"
    green "甬哥YouTube频道 ：www.youtube.com/@ygkkk"
    green "一键三协议共存：vless-reality、Vmess-ws(Argo)、hysteria2"
-   green "当前脚本版本：V25.1.12  快捷方式：bash serv00.sh"
+   green "当前脚本版本：V25.1.22  快捷方式：bash serv00.sh"
    echo "========================================================="
    green  "1. 安装sing-box"
    echo   "---------------------------------------------------------"
@@ -1201,7 +1212,7 @@ checkhttp=$(curl --max-time 2 -o /dev/null -s -w "%{http_code}\n" "https://$argo
 green "当前Argo固定域名：$argogd $check"
 fi
 if [ ! -f "$WORKDIR/boot.log" ] && ! ps aux | grep [t]oken > /dev/null; then
-yellow "当前Argo固定域名：$(cat $WORKDIR/gdym.log 2>/dev/null)，请检查相关参数是否输入有误，建议卸载重装"
+yellow "当前Argo固定域名：$(cat $WORKDIR/gdym.log 2>/dev/null)，启用失败，请检查相关参数是否输入有误"
 fi
 if ! crontab -l 2>/dev/null | grep -q 'serv00keep'; then
 if [ -f "$WORKDIR/boot.log" ] || grep -q "trycloudflare.com" "$WORKDIR/boot.log" 2>/dev/null; then
