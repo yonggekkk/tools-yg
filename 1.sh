@@ -1092,7 +1092,7 @@ fi
 }
 
 keepweb(){
-    keep_path="$HOME/domains/keep.${USERNAME}.serv00.net/public_nodejs"
+    keep_path="$HOME/domains/1.${USERNAME}.serv00.net/public_nodejs"
     [ -d "$keep_path" ] || mkdir -p "$keep_path"
     curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/app.js -o $HOME/domains/${USERNAME}.serv00.net/public_nodejs/app.js
     devil www add 1.${USERNAME}.serv00.net nodejs /usr/local/bin/node18 > /dev/null 2>&1
