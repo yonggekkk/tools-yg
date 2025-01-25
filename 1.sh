@@ -1092,6 +1092,7 @@ fi
 }
 
 keepweb(){
+npm install dotenv basic-auth express
 devil binexec on
 if [ -z "$(command -v pm2)" ]; then
     mkdir -p /home/${USERNAME}/.npm-global
