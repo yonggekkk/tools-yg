@@ -19,3 +19,13 @@ app.get("/info", function (req, res) {
 
     res.type("html").send("<pre>你好啊</pre>");
 });
+app.use((req, res, next) => {
+    if (req.path === '/info') {
+        return next(); // 如果是 /info 页面，继续处理后续路由
+    }
+    res.status(404).send('页面未找到');
+});
+
+app.listen(3000, () => {
+    console.log("服务器已启动，监听端口 3000");
+});
