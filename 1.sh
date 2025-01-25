@@ -13,6 +13,7 @@ purple() { echo -e "\e[1;35m$1\033[0m"; }
 reading() { read -p "$(red "$1")" "$2"; }
 USERNAME=$(whoami)
 HOSTNAME=$(hostname)
+FILE_PATH="$HOME/domains/${USERNAME}.serv00.net/public_html"
 [[ "$HOSTNAME" == "s1.ct8.pl" ]] && export WORKDIR="domains/${USERNAME}.ct8.pl/logs" || export WORKDIR="domains/${USERNAME}.serv00.net/logs"
 [ -d "$WORKDIR" ] || (mkdir -p "$WORKDIR" && chmod 777 "$WORKDIR")
 
@@ -163,7 +164,9 @@ uninstall_singbox() {
     case "$choice" in
        [Yy])
           bash -c 'ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk "{print \$2}" | xargs -r kill -9 >/dev/null 2>&1' >/dev/null 2>&1
-          rm -rf domains serv00.sh serv00keep.sh
+          rm -rf serv00.sh serv00keep.sh
+       	    rm -rf $WORKDIR && find ${FILE_PATH} -mindepth 1 ! -name 'index.html' -exec rm -rf {} +
+            devil www keep.${USERNAME}.serv00.net nodejs 2>/dev/null || true
 	  crontab -l | grep -v "serv00keep" >rmcron
           crontab rmcron >/dev/null 2>&1
           rm rmcron
@@ -180,6 +183,9 @@ reading "\n清理所有进程并清空所有安装内容，将退出ssh连接，
   case "$choice" in
     [Yy]) 
     bash -c 'ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk "{print \$2}" | xargs -r kill -9 >/dev/null 2>&1' >/dev/null 2>&1
+            rm -rf serv00.sh serv00keep.sh
+       	    rm -rf $WORKDIR && find ${FILE_PATH} -mindepth 1 ! -name 'index.html' -exec rm -rf {} +
+            devil www keep.${USERNAME}.serv00.net nodejs 2>/dev/null || true
     crontab -l | grep -v "serv00keep" >rmcron
     crontab rmcron >/dev/null 2>&1
     rm rmcron
@@ -208,7 +214,7 @@ argo_configure() {
     if [[ "$argo_choice" == "g" || "$argo_choice" == "G" ]]; then
         reading "请输入argo固定隧道域名: " ARGO_DOMAIN
         green "你的argo固定隧道域名为: $ARGO_DOMAIN"
-        reading "请输入argo固定隧道密钥（Json或Token。当你粘贴Token时，必须以ey开头）: " ARGO_AUTH
+        reading "请输入argo固定隧道密钥（当你粘贴Token时，必须以ey开头）: " ARGO_AUTH
         green "你的argo固定隧道密钥为: $ARGO_AUTH"
     else
         green "使用Argo临时隧道"
@@ -996,7 +1002,6 @@ rules:
 EOF
 
 sleep 2
-FILE_PATH="/usr/home/${USERNAME}/domains/${USERNAME}.serv00.net/public_html"
 [ -d "$FILE_PATH" ] || mkdir -p "$FILE_PATH"
 echo "$baseurl" > ${FILE_PATH}/${USERNAME}_v2sub.txt
 cat clash_meta.yaml > ${FILE_PATH}/${USERNAME}_clashmeta.txt
@@ -1004,6 +1009,20 @@ cat sing_box.json > ${FILE_PATH}/${USERNAME}_singbox.txt
 V2rayN_LINK="https://${USERNAME}.serv00.net/${USERNAME}_v2sub.txt"
 Clashmeta_LINK="https://${USERNAME}.serv00.net/${USERNAME}_clashmeta.txt"
 Singbox_LINK="https://${USERNAME}.serv00.net/${USERNAME}_singbox.txt"
+keep_path="$HOME/domains/keep.${USERNAME}.serv00.net/public_nodejs"
+[ -d "$keep_path" ] || mkdir -p "$keep_path"
+app_file_url="https://raw.githubusercontent.com/yonggekkk/tools-yg/main/web.js"
+curl -s -o "${keep_path}/web.js" "$app_file_url"
+devil www add keep.${USERNAME}.serv00.net nodejs /usr/local/bin/node18 > /dev/null 2>&1
+ln -fs /usr/local/bin/node18 ~/bin/node > /dev/null 2>&1
+ln -fs /usr/local/bin/npm18 ~/bin/npm > /dev/null 2>&1
+mkdir -p ~/.npm-global
+npm config set prefix '~/.npm-global'
+echo 'export PATH=~/.npm-global/bin:~/bin:$PATH' >> $HOME/.bash_profile && source $HOME/.bash_profile
+cd ${keep_path} && npm install dotenv axios --silent > /dev/null 2>&1
+rm $HOME/domains/keep.${USERNAME}.serv00.net/public_nodejs/public/index.html > /dev/null 2>&1
+devil www options keep.${USERNAME}.serv00.net sslonly on > /dev/null 2>&1
+devil www restart keep.${USERNAME}.serv00.net
 cat > list.txt <<EOF
 =================================================================================================
 
@@ -1055,7 +1074,7 @@ $hy2_link
 四、以上五个节点的聚合通用订阅分享链接如下：
 $V2rayN_LINK
 
-五个节点聚合通用分享码：
+以上五个节点聚合通用分享码：
 $baseurl
 -------------------------------------------------------------------------------------------------
 
@@ -1159,15 +1178,15 @@ menu() {
    green "甬哥Blogger博客 ：ygkkk.blogspot.com"
    green "甬哥YouTube频道 ：www.youtube.com/@ygkkk"
    green "一键三协议共存：vless-reality、Vmess-ws(Argo)、hysteria2"
-   green "当前脚本版本：V25.1.22  快捷方式：bash serv00.sh"
+   green "当前脚本版本：V25.1.23  快捷方式：bash serv00.sh"
    echo "========================================================="
    green  "1. 安装sing-box"
    echo   "---------------------------------------------------------"
    red    "2. 卸载sing-box"
    echo   "---------------------------------------------------------"
-   green  "3. 查看节点及proxyip/非标端口反代ip"
+   green  "3. 查看：各节点分享/sing-box与clash-meta订阅链接/CF节点proxyip"
    echo   "---------------------------------------------------------"
-   green  "4. 查看sing-box与clash-meta配置文件"
+   green  "4. 查看：sing-box与clash-meta配置文件"
    echo   "---------------------------------------------------------"
    yellow "5. 重置并清理所有服务进程(系统初始化)"
    echo   "---------------------------------------------------------"
@@ -1228,8 +1247,8 @@ else
 check_process="! ps aux | grep '[c]onfig' > /dev/null || ! ps aux | grep [t]oken > /dev/null"
 fi
 (crontab -l 2>/dev/null; echo "*/2 * * * * if $check_process; then /bin/bash serv00keep.sh; fi") | crontab -
-yellow "发现Cron保活可能被重置清空！现已修复成功！"
-yellow "主进程与Argo进程启动中…………2分钟后可再次进入脚本查看"
+purple "Serv00开大招了，把Cron保活重置清空了！但现已修复成功！"
+purple "主进程与Argo进程启动中…………2分钟后可再次进入脚本查看"
 else
 green "Cron保活运行正常"
 fi
