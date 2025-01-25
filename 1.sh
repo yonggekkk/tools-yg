@@ -1094,20 +1094,27 @@ fi
 }
 
 keepweb(){
-keep_path="$HOME/domains/keep.${USERNAME}.serv00.net/public_nodejs"
-[ -d "$keep_path" ] || mkdir -p "$keep_path"
-app_file_url="https://raw.githubusercontent.com/yonggekkk/tools-yg/main/web.js"
-curl -s -o "${keep_path}/web.js" "$app_file_url"
-devil www add keep.${USERNAME}.serv00.net nodejs /usr/local/bin/node18 > /dev/null 2>&1
-ln -fs /usr/local/bin/node18 ~/bin/node > /dev/null 2>&1
-ln -fs /usr/local/bin/npm18 ~/bin/npm > /dev/null 2>&1
-mkdir -p ~/.npm-global
-npm config set prefix '~/.npm-global'
-echo 'export PATH=~/.npm-global/bin:~/bin:$PATH' >> $HOME/.bash_profile && source $HOME/.bash_profile
-cd ${keep_path} && npm install dotenv axios --silent > /dev/null 2>&1
-rm $HOME/domains/keep.${USERNAME}.serv00.net/public_nodejs/public/index.html > /dev/null 2>&1
-#devil www options keep.${USERNAME}.serv00.net sslonly on > /dev/null 2>&1
-devil www restart keep.${USERNAME}.serv00.net
+if [ -z "$(command -v pm2)" ]; then
+    mkdir -p /home/${USERNAME}/.npm-global
+    npm config set prefix '/home/${USERNAME}/.npm-global'
+    grep ".npm-global/bin" /home/${USERNAME}/.profile > /dev/null
+    if [ $? -ne 0 ]; then
+        echo 'export PATH=/home/${USERNAME}/.npm-global/bin:$PATH' >> /home/${USERNAME}/.profile
+    . /home/${USERNAME}/.profile
+    fi
+    npm install -g pm2
+fi
+. /home/${USERNAME}/.profile
+
+devil www del ${USERNAME}.serv00.net
+rm -rf /home/${USERNAME}/domains/${USERNAME}.serv00.net
+
+devil www add ${LC_USERNAME}.serv00.net nodejs $(command -v node22) production
+mv /home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs/public /home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs/static
+curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/web.js -o $HOME/domains/${USERNAME}.serv00.net/public_nodejs/app.js
+sed -i '' "s/USERNAME_TO_REPLACE/${USERNAME}/g" "/home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs/app.js"
+cd /home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs
+npm22 install express
 }
 
 showsbclash(){
