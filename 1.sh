@@ -1096,10 +1096,8 @@ keepweb(){
     npm config set prefix '~/.npm-global'
     echo 'export PATH=~/.npm-global/bin:~/bin:$PATH' >> $HOME/.bash_profile && source $HOME/.bash_profile
     cd /home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs && npm install dotenv basic-auth express > /dev/null 2>&1
-devil www del ${USERNAME}.serv00.net
-rm -rf /home/${USERNAME}/domains/${USERNAME}.serv00.net
 devil www add keep.${USERNAME}.serv00.net nodejs $(command -v node22) production
-mv /home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs/public /home/${USERNAME}/domains/keep.${USERNAME}.serv00.net/public_nodejs/static
+mv /home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs/public /home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs/static
 curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/app.js -o $HOME/domains/keep.${USERNAME}.serv00.net/public_nodejs/app.js
     devil www options keep.${USERNAME}.serv00.net sslonly on > /dev/null 2>&1
     devil www restart keep.${USERNAME}.serv00.net
