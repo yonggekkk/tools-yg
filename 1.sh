@@ -1106,7 +1106,7 @@ npm config set prefix '~/.npm-global'
 echo 'export PATH=~/.npm-global/bin:~/bin:$PATH' >> $HOME/.bash_profile && source $HOME/.bash_profile
 cd ${keep_path} && npm install dotenv axios --silent > /dev/null 2>&1
 rm $HOME/domains/keep.${USERNAME}.serv00.net/public_nodejs/public/index.html > /dev/null 2>&1
-devil www options keep.${USERNAME}.serv00.net sslonly on > /dev/null 2>&1
+#devil www options keep.${USERNAME}.serv00.net sslonly on > /dev/null 2>&1
 devil www restart keep.${USERNAME}.serv00.net
 }
 
