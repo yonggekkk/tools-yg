@@ -1110,6 +1110,8 @@ rm -rf /home/${USERNAME}/domains/${USERNAME}.serv00.net
 devil www add ${USERNAME}.serv00.net nodejs $(command -v node22) production
 mv /home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs/public /home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs/static
 curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/app.js -o $HOME/domains/${USERNAME}.serv00.net/public_nodejs/app.js
+cd /home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs
+npm22 install express
 }
 
 showsbclash(){
