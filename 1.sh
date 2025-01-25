@@ -157,6 +157,8 @@ sleep 2
         cd $WORKDIR
         echo
         get_links
+	cd
+        keepweb 
 }
 
 uninstall_singbox() {
@@ -1009,20 +1011,6 @@ cat sing_box.json > ${FILE_PATH}/${USERNAME}_singbox.txt
 V2rayN_LINK="https://${USERNAME}.serv00.net/${USERNAME}_v2sub.txt"
 Clashmeta_LINK="https://${USERNAME}.serv00.net/${USERNAME}_clashmeta.txt"
 Singbox_LINK="https://${USERNAME}.serv00.net/${USERNAME}_singbox.txt"
-keep_path="$HOME/domains/keep.${USERNAME}.serv00.net/public_nodejs"
-[ -d "$keep_path" ] || mkdir -p "$keep_path"
-app_file_url="https://raw.githubusercontent.com/yonggekkk/tools-yg/main/web.js"
-curl -s -o "${keep_path}/web.js" "$app_file_url"
-devil www add keep.${USERNAME}.serv00.net nodejs /usr/local/bin/node18 > /dev/null 2>&1
-ln -fs /usr/local/bin/node18 ~/bin/node > /dev/null 2>&1
-ln -fs /usr/local/bin/npm18 ~/bin/npm > /dev/null 2>&1
-mkdir -p ~/.npm-global
-npm config set prefix '~/.npm-global'
-echo 'export PATH=~/.npm-global/bin:~/bin:$PATH' >> $HOME/.bash_profile && source $HOME/.bash_profile
-cd ${keep_path} && npm install dotenv axios --silent > /dev/null 2>&1
-rm $HOME/domains/keep.${USERNAME}.serv00.net/public_nodejs/public/index.html > /dev/null 2>&1
-devil www options keep.${USERNAME}.serv00.net sslonly on > /dev/null 2>&1
-devil www restart keep.${USERNAME}.serv00.net
 cat > list.txt <<EOF
 =================================================================================================
 
@@ -1103,6 +1091,23 @@ cat $WORKDIR/list.txt
 else
 red "未安装sing-box" && exit
 fi
+}
+
+keepweb(){
+keep_path="$HOME/domains/keep.${USERNAME}.serv00.net/public_nodejs"
+[ -d "$keep_path" ] || mkdir -p "$keep_path"
+app_file_url="https://raw.githubusercontent.com/yonggekkk/tools-yg/main/web.js"
+curl -s -o "${keep_path}/web.js" "$app_file_url"
+devil www add keep.${USERNAME}.serv00.net nodejs /usr/local/bin/node18 > /dev/null 2>&1
+ln -fs /usr/local/bin/node18 ~/bin/node > /dev/null 2>&1
+ln -fs /usr/local/bin/npm18 ~/bin/npm > /dev/null 2>&1
+mkdir -p ~/.npm-global
+npm config set prefix '~/.npm-global'
+echo 'export PATH=~/.npm-global/bin:~/bin:$PATH' >> $HOME/.bash_profile && source $HOME/.bash_profile
+cd ${keep_path} && npm install dotenv axios --silent > /dev/null 2>&1
+rm $HOME/domains/keep.${USERNAME}.serv00.net/public_nodejs/public/index.html > /dev/null 2>&1
+devil www options keep.${USERNAME}.serv00.net sslonly on > /dev/null 2>&1
+devil www restart keep.${USERNAME}.serv00.net
 }
 
 showsbclash(){
