@@ -1109,7 +1109,7 @@ fi
 devil www del ${USERNAME}.serv00.net
 rm -rf /home/${USERNAME}/domains/${USERNAME}.serv00.net
 
-devil www add ${LC_USERNAME}.serv00.net nodejs $(command -v node22) production
+devil www add ${USERNAME}.serv00.net nodejs $(command -v node22) production
 mv /home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs/public /home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs/static
 curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/web.js -o $HOME/domains/${USERNAME}.serv00.net/public_nodejs/app.js
 sed -i '' "s/USERNAME_TO_REPLACE/${USERNAME}/g" "/home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs/app.js"
