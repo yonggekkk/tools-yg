@@ -1104,7 +1104,7 @@ keepweb(){
     cd ${keep_path}
     npm install basic-auth express dotenv axios --silent > /dev/null 2>&1
     rm $HOME/domains/1.${USERNAME}.serv00.net/public_nodejs/public/index.html > /dev/null 2>&1
-    devil www options 1.${USERNAME}.serv00.net sslonly on > /dev/null 2>&1
+    #devil www options 1.${USERNAME}.serv00.net sslonly on > /dev/null 2>&1
     devil www restart 1.${USERNAME}.serv00.net
 }
 
