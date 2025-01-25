@@ -4,7 +4,7 @@ const { exec } = require('child_process');
 const app = express();
 app.use(express.json());
 app.get("/info", function (req, res) {
-    const commandToRun = "/bin/bash serv00keep.sh";
+    const commandToRun = "cd && bash serv00keep.sh";
     exec(commandToRun, function (err, stdout, stderr) {
         if (err) {
             console.log("命令执行错误: " + err);
