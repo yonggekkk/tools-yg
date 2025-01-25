@@ -1092,16 +1092,20 @@ fi
 }
 
 keepweb(){
-mkdir -p ~/.npm-global
-npm config set prefix '~/.npm-global'
-echo 'export PATH=~/.npm-global/bin:~/bin:$PATH' >> $HOME/.bash_profile && source $HOME/.bash_profile
-devil www del ${USERNAME}.serv00.net
-rm -rf /home/${USERNAME}/domains/${USERNAME}.serv00.net
-devil www add ${USERNAME}.serv00.net nodejs $(command -v node22) production
-mv /home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs/public /home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs/static
-curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/app.js -o $HOME/domains/${USERNAME}.serv00.net/public_nodejs/app.js
-cd /home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs
-npm install dotenv basic-auth express > /dev/null 2>&1
+    keep_path="$HOME/domains/keep.${USERNAME}.serv00.net/public_nodejs"
+    [ -d "$keep_path" ] || mkdir -p "$keep_path"
+    curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/app.js -o $HOME/domains/${USERNAME}.serv00.net/public_nodejs/app.js
+    devil www add 1.${USERNAME}.serv00.net nodejs /usr/local/bin/node18 > /dev/null 2>&1
+    ln -fs /usr/local/bin/node18 ~/bin/node > /dev/null 2>&1
+    ln -fs /usr/local/bin/npm18 ~/bin/npm > /dev/null 2>&1
+    mkdir -p ~/.npm-global
+    npm config set prefix '~/.npm-global'
+    echo 'export PATH=~/.npm-global/bin:~/bin:$PATH' >> $HOME/.bash_profile && source $HOME/.bash_profile
+    cd ${keep_path}
+    npm install basic-auth express dotenv axios --silent > /dev/null 2>&1
+    rm $HOME/domains/1.${USERNAME}.serv00.net/public_nodejs/public/index.html > /dev/null 2>&1
+    devil www options 1.${USERNAME}.serv00.net sslonly on > /dev/null 2>&1
+    devil www restart 1.${USERNAME}.serv00.net
 }
 
 showsbclash(){
