@@ -1112,7 +1112,6 @@ mv /home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs/public /home/$
 curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/app.js -o $HOME/domains/${USERNAME}.serv00.net/public_nodejs/app.js
 sed -i '' "s/USERNAME_TO_REPLACE/${USERNAME}/g" "/home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs/app.js"
 cd /home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs
-npm22 install express
 }
 
 showsbclash(){
