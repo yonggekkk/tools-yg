@@ -427,7 +427,6 @@ EOF
 
 if [ -e "$(basename "${FILE_MAP[web]}")" ]; then
    echo "$(basename "${FILE_MAP[web]}")" > sb.txt
-   cat sb.txt
    sbb=$(cat sb.txt)
     nohup ./"$sbb" run -c config.json >/dev/null 2>&1 &
     sleep 5
@@ -1149,7 +1148,7 @@ keep_path="$HOME/domains/${USERNAME}.${USERNAME}.serv00.net/public_nodejs"
 [ -d "$keep_path" ] || mkdir -p "$keep_path"
 curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/app.js -o $HOME/domains/${USERNAME}.${USERNAME}.serv00.net/public_nodejs/app.js
 devil www add ${USERNAME}.${USERNAME}.serv00.net nodejs /usr/local/bin/node18 > /dev/null 2>&1
-#devil ssl www add $IP le le ${USERNAME}.${USERNAME}.serv00.net > /dev/null 2>&1
+devil ssl www add $IP le le ${USERNAME}.${USERNAME}.serv00.net > /dev/null 2>&1
 ln -fs /usr/local/bin/node18 ~/bin/node > /dev/null 2>&1
 ln -fs /usr/local/bin/npm18 ~/bin/npm > /dev/null 2>&1
 mkdir -p ~/.npm-global
@@ -1160,7 +1159,7 @@ cd /home/${USERNAME}/domains/${USERNAME}.${USERNAME}.serv00.net/public_nodejs
 npm install basic-auth express dotenv axios --silent > /dev/null 2>&1
 rm $HOME/domains/${USERNAME}.${USERNAME}.serv00.net/public_nodejs/public/index.html > /dev/null 2>&1
 devil www restart ${USERNAME}.${USERNAME}.serv00.net
-green "安装完毕，打开 https://${USERNAME}.${USERNAME}.serv00.net 即可保活" && sleep 2
+green "安装完毕，打开 https://${USERNAME}.${USERNAME}.serv00.net/up 即可保活" && sleep 2
 }
 
 okip(){
