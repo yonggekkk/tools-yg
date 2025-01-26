@@ -1092,20 +1092,13 @@ fi
 }
 
 keepweb(){
-#keep_path="$HOME/domains/1.${USERNAME}.serv00.net/public_nodejs"
- #   [ -d "$keep_path" ] || mkdir -p "$keep_path"
-    mkdir -p ~/.npm-global
-    npm config set prefix '~/.npm-global'
-    echo 'export PATH=~/.npm-global/bin:~/bin:$PATH' >> $HOME/.bash_profile && source $HOME/.bash_profile
-# 创建网站
+devil www del ${USERNAME}.serv00.net
+rm -rf /home/${USERNAME}/domains/${USERNAME}.serv00.net
 devil www add ${USERNAME}.serv00.net nodejs $(command -v node22) production
-
-# 安装网页
 mv /home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs/public /home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs/static
-
-    curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/app.js -o $HOME/domains/${USERNAME}.serv00.net/public_nodejs/app.js
+curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/app.js -o $HOME/domains/${USERNAME}.serv00.net/public_nodejs/app.js
 cd /home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs
-    npm install basic-auth express dotenv > /dev/null 2>&1
+npm install basic-auth express dotenv > /dev/null 2>&1
 }
 
 showsbclash(){
