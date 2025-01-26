@@ -426,7 +426,6 @@ fi
 EOF
 
 if [ -e "$(basename "${FILE_MAP[web]}")" ]; then
-   echo "$(basename "${FILE_MAP[web]}")"
    echo "$(basename "${FILE_MAP[web]}")" > sb.txt
    cat sb.txt
    sbb=$(cat sb.txt)
