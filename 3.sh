@@ -159,7 +159,6 @@ sleep 2
         echo
         get_links
 	cd
-        keepweb 
 }
 
 uninstall_singbox() {
@@ -1094,10 +1093,6 @@ cat $WORKDIR/list.txt
 else
 red "未安装sing-box" && exit
 fi
-}
-
-keepweb(){
-
 }
 
 showsbclash(){
