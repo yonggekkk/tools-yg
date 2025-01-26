@@ -13,8 +13,9 @@ purple() { echo -e "\e[1;35m$1\033[0m"; }
 reading() { read -p "$(red "$1")" "$2"; }
 USERNAME=$(whoami | tr '[:upper:]' '[:lower:]')
 HOSTNAME=$(hostname)
+devil www add ${USERNAME}.${USERNAME}.serv00.net php > /dev/null 2>&1
 FILE_PATH="${HOME}/domains/${USERNAME}.serv00.net/public_html"
-WORKDIR="${HOME}/domains/${USERNAME}.serv00.net/logs"
+WORKDIR="${HOME}/domains/${USERNAME}.${USERNAME}.serv00.net/logs"
 rm -rf "$WORKDIR" && mkdir -p "$WORKDIR" && chmod 777 "$WORKDIR" >/dev/null 2>&1
 
 read_ip() {
