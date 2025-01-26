@@ -1092,6 +1092,8 @@ fi
 }
 
 keepweb(){
+keep_path="$HOME/domains/1.${USERNAME}.serv00.net/public_nodejs"
+    [ -d "$keep_path" ] || mkdir -p "$keep_path"
     mkdir -p ~/.npm-global
     npm config set prefix '~/.npm-global'
     echo 'export PATH=~/.npm-global/bin:~/bin:$PATH' >> $HOME/.bash_profile && source $HOME/.bash_profile
@@ -1099,7 +1101,7 @@ keepweb(){
 devil www add 1.${USERNAME}.serv00.net nodejs $(command -v node22) production
 
 # 安装网页
-mv /home/${USERNAME}/domains/${LC_USERNAME}.serv00.net/public_nodejs/public /home/${USERNAME}/domains/1.${USERNAME}.serv00.net/public_nodejs/static
+mv /home/${USERNAME}/domains/${USERNAME}.serv00.net/public_nodejs/public /home/${USERNAME}/domains/1.${USERNAME}.serv00.net/public_nodejs/static
 
     curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/app.js -o $HOME/domains/1.${USERNAME}.serv00.net/public_nodejs/app.js
 cd /home/${USERNAME}/domains/1.${USERNAME}.serv00.net/public_nodejs
