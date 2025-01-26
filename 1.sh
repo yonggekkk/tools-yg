@@ -1092,22 +1092,18 @@ fi
 }
 
 keepweb(){
-    keep_path="$HOME/domains/1.${USERNAME}.serv00.net/public_nodejs"
-    [ -d "$keep_path" ] || mkdir -p "$keep_path"
-    curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/app.js -o $HOME/domains/1.${USERNAME}.serv00.net/public_nodejs/app.js
-devil www add ${USERNAME}.serv00.net php > /dev/null 2>&1
-devil www add 1.${USERNAME}.serv00.net nodejs /usr/local/bin/node18 > /dev/null 2>&1
- devil ssl www add $IP le le 1.${USERNAME}.serv00.net > /dev/null 2>&1    
-    ln -fs /usr/local/bin/node18 ~/bin/node > /dev/null 2>&1
-    ln -fs /usr/local/bin/npm18 ~/bin/npm > /dev/null 2>&1
     mkdir -p ~/.npm-global
     npm config set prefix '~/.npm-global'
     echo 'export PATH=~/.npm-global/bin:~/bin:$PATH' >> $HOME/.bash_profile && source $HOME/.bash_profile
-    cd ${keep_path}
+# 创建网站
+devil www add 1.${USERNAME}.serv00.net nodejs $(command -v node22) production
+
+# 安装网页
+mv /home/${USERNAME}/domains/${LC_USERNAME}.serv00.net/public_nodejs/public /home/${USERNAME}/domains/1.${USERNAME}.serv00.net/public_nodejs/static
+
+    curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/app.js -o $HOME/domains/1.${USERNAME}.serv00.net/public_nodejs/app.js
+cd /home/${USERNAME}/domains/1.${USERNAME}.serv00.net/public_nodejs
     npm install basic-auth express dotenv > /dev/null 2>&1
-        rm $HOME/domains/1.${USERNAME}.serv00.net/public_nodejs/public/index.html > /dev/null 2>&1
-     devil www options 1.${USERNAME}.serv00.net sslonly on > /dev/null 2>&1
-    devil www restart 1.${USERNAME}.serv00.net
 }
 
 showsbclash(){
