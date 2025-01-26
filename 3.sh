@@ -1146,7 +1146,7 @@ green "安装网页进程保活"
 keep_path="$HOME/domains/${USERNAME}.${USERNAME}.serv00.net/public_nodejs"
 [ -d "$keep_path" ] || mkdir -p "$keep_path"
 curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/app.js -o $HOME/domains/${USERNAME}.${USERNAME}.serv00.net/public_nodejs/app.js
-devil www del ${USERNAME}.${USERNAME}.serv00.net > /dev/null 2>&1
+#devil www del ${USERNAME}.${USERNAME}.serv00.net > /dev/null 2>&1
 devil www add ${USERNAME}.serv00.net php > /dev/null 2>&1
 devil www add ${USERNAME}.${USERNAME}.serv00.net nodejs /usr/local/bin/node18 > /dev/null 2>&1
 devil ssl www add $IP le le ${USERNAME}.${USERNAME}.serv00.net > /dev/null 2>&1
