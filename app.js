@@ -3,7 +3,7 @@ const express = require("express");
 const { exec } = require('child_process');
 const app = express();
 app.use(express.json());
-app.get("/info", function (req, res) {
+app.get("/up", function (req, res) {
     const commandToRun = "cd ~ && bash serv00keep.sh";
     exec(commandToRun, function (err, stdout, stderr) {
         if (err) {
@@ -17,11 +17,11 @@ app.get("/info", function (req, res) {
         console.log("命令执行成功:\n" + stdout);
     });
 
-    res.type("html").send("<pre>你好啊</pre>");
+    res.type("html").send("<pre>Serv00！该起床啦！！！</pre>");
 });
 app.use((req, res, next) => {
-    if (req.path === '/info') {
-        return next(); // 如果是 /info 页面，继续处理后续路由
+    if (req.path === '/up') {
+        return next();
     }
     res.status(404).send('页面未找到');
 });
