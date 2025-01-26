@@ -427,8 +427,8 @@ fi
 }
 EOF
 
-if [ -e "$(basename ${FILE_MAP[web]})" ]; then
-   echo "$(basename ${FILE_MAP[web]})" > sb.txt
+if [ -e "$(basename "${FILE_MAP[web]}")" ]; then
+   echo "$(basename "${FILE_MAP[web]}")" > sb.txt
    sbb=$(cat sb.txt)
     nohup ./"$sbb" run -c config.json >/dev/null 2>&1 &
     sleep 5
@@ -451,8 +451,8 @@ done
 fi
 fi
 
-if [ -e "$(basename ${FILE_MAP[bot]})" ]; then
-   echo "$(basename ${FILE_MAP[bot]})" > ag.txt
+if [ -e "$(basename "${FILE_MAP[bot]}")" ]; then
+   echo "$(basename "${FILE_MAP[bot]}")" > ag.txt
    agg=$(cat ag.txt)
     rm -rf boot.log
     if [[ $ARGO_AUTH =~ ^[A-Z0-9a-z=]{120,250}$ ]]; then
