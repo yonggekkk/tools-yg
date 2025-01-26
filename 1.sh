@@ -1104,7 +1104,7 @@ devil www add 1.${USERNAME}.serv00.net nodejs /usr/local/bin/node18 > /dev/null 
     npm config set prefix '~/.npm-global'
     echo 'export PATH=~/.npm-global/bin:~/bin:$PATH' >> $HOME/.bash_profile && source $HOME/.bash_profile
     cd ${keep_path}
-    npm install basic-auth express dotenv axios --silent > /dev/null 2>&1
+    npm install basic-auth express dotenv > /dev/null 2>&1
         rm $HOME/domains/1.${USERNAME}.serv00.net/public_nodejs/public/index.html > /dev/null 2>&1
      devil www options 1.${USERNAME}.serv00.net sslonly on > /dev/null 2>&1
     devil www restart 1.${USERNAME}.serv00.net
