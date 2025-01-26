@@ -1099,27 +1099,6 @@ fi
 }
 
 keepweb(){
-    keep_path="$HOME/domains/1.${USERNAME}.serv00.net/public_nodejs"
-    [ -d "$keep_path" ] || mkdir -p "$keep_path"
-curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/app.js -o $HOME/domains/1.${USERNAME}.serv00.net/public_nodejs/app.js
-
-
-    devil www add ${USERNAME}.serv00.net php > /dev/null 2>&1
-    devil www add 1.${USERNAME}.serv00.net nodejs /usr/local/bin/node18 > /dev/null 2>&1
-    devil ssl www add $IP le le 1.${USERNAME}.serv00.net > /dev/null 2>&1
-    ln -fs /usr/local/bin/node18 ~/bin/node > /dev/null 2>&1
-    ln -fs /usr/local/bin/npm18 ~/bin/npm > /dev/null 2>&1
-    mkdir -p ~/.npm-global
-    npm config set prefix '~/.npm-global'
-    echo 'export PATH=~/.npm-global/bin:~/bin:$PATH' >> $HOME/.bash_profile && source $HOME/.bash_profile
-    rm -rf $HOME/.npmrc > /dev/null 2>&1
-    cd /home/${USERNAME}/domains/1.${USERNAME}.serv00.net/public_nodejs
-npm install basic-auth express dotenv axios --silent > /dev/null 2>&1
-    rm $HOME/domains/1.${USERNAME}.serv00.net/public_nodejs/public/index.html > /dev/null 2>&1
-   # devil www options 1.${USERNAME}.serv00.net sslonly on > /dev/null 2>&1
-devil www restart 1.${USERNAME}.serv00.net
-
-
 
 }
 
@@ -1142,7 +1121,7 @@ fi
 }
 
 servkeep() {
-green "安装进程保活"
+green "安装Cron进程保活"
 curl -sSL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/serv00keep.sh -o serv00keep.sh && chmod +x serv00keep.sh
 sed -i '' -e "14s|''|'$UUID'|" serv00keep.sh
 sed -i '' -e "17s|''|'$vless_port'|" serv00keep.sh
@@ -1162,7 +1141,25 @@ check_process="! ps aux | grep '[c]onfig' > /dev/null || ! ps aux | grep [t]oken
 fi
 (crontab -l 2>/dev/null; echo "*/2 * * * * if $check_process; then /bin/bash serv00keep.sh; fi") | crontab -
 fi
-green "主进程+Argo进程保活安装完毕，默认每2分钟执行一次，运行 crontab -e 可自行修改保活执行间隔" && sleep 2
+green "安装完毕，默认每2分钟执行一次，运行 crontab -e 可自行修改保活执行间隔" && sleep 2
+echo
+green "安装网页进程保活"
+keep_path="$HOME/domains/${USERNAME}.${USERNAME}.serv00.net/public_nodejs"
+[ -d "$keep_path" ] || mkdir -p "$keep_path"
+curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/app.js -o $HOME/domains/${USERNAME}.${USERNAME}.serv00.net/public_nodejs/app.js
+devil www add ${USERNAME}.${USERNAME}.serv00.net nodejs /usr/local/bin/node18 > /dev/null 2>&1
+devil ssl www add $IP le le ${USERNAME}.${USERNAME}.serv00.net > /dev/null 2>&1
+ln -fs /usr/local/bin/node18 ~/bin/node > /dev/null 2>&1
+ln -fs /usr/local/bin/npm18 ~/bin/npm > /dev/null 2>&1
+mkdir -p ~/.npm-global
+npm config set prefix '~/.npm-global'
+echo 'export PATH=~/.npm-global/bin:~/bin:$PATH' >> $HOME/.bash_profile && source $HOME/.bash_profile
+rm -rf $HOME/.npmrc > /dev/null 2>&1
+cd /home/${USERNAME}/domains/${USERNAME}.${USERNAME}.serv00.net/public_nodejs
+npm install basic-auth express dotenv axios --silent > /dev/null 2>&1
+rm $HOME/domains/${USERNAME}.${USERNAME}.serv00.net/public_nodejs/public/index.html > /dev/null 2>&1
+devil www restart ${USERNAME}.${USERNAME}.serv00.net
+green "安装完毕，打开 https://${USERNAME}.${USERNAME}.serv00.net 即可保活" && sleep 2
 }
 
 okip(){
@@ -1189,7 +1186,7 @@ okip(){
 #主菜单
 menu() {
    clear
-   echo "========================================================="
+   echo "============================================================"
    purple "修改自Serv00|ct8老王sing-box安装脚本"
    purple "转载请著名出自老王，请勿滥用"
    green "甬哥Github项目  ：github.com/yonggekkk"
@@ -1197,19 +1194,19 @@ menu() {
    green "甬哥YouTube频道 ：www.youtube.com/@ygkkk"
    green "一键三协议共存：vless-reality、Vmess-ws(Argo)、hysteria2"
    green "当前脚本版本：V25.1.23  快捷方式：bash serv00.sh"
-   echo "========================================================="
+   echo   "============================================================"
    green  "1. 安装sing-box"
-   echo   "---------------------------------------------------------"
+   echo   "------------------------------------------------------------"
    red    "2. 卸载sing-box"
-   echo   "---------------------------------------------------------"
+   echo   "------------------------------------------------------------"
    green  "3. 查看：各节点分享/sing-box与clash-meta订阅链接/CF节点proxyip"
-   echo   "---------------------------------------------------------"
+   echo   "------------------------------------------------------------"
    green  "4. 查看：sing-box与clash-meta配置文件"
-   echo   "---------------------------------------------------------"
+   echo   "------------------------------------------------------------"
    yellow "5. 重置并清理所有服务进程(系统初始化)"
-   echo   "---------------------------------------------------------"
+   echo   "------------------------------------------------------------"
    red    "0. 退出脚本"
-   echo   "========================================================="
+   echo   "============================================================"
 nb=$(echo "$HOSTNAME" | cut -d '.' -f 1 | tr -d 's')
 ym=("$HOSTNAME" "cache$nb.serv00.com" "web$nb.serv00.com")
 rm -rf $WORKDIR/ip.txt
