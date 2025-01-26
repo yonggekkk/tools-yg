@@ -428,7 +428,13 @@ fi
 EOF
 
 if [ -e "$(basename "${FILE_MAP[web]}")" ]; then
+echo 1
+   echo "$(basename "${FILE_MAP[web]}")"
+   echo 2
    echo "$(basename "${FILE_MAP[web]}")" > sb.txt
+   echo 3
+   cat sb.txt
+   echo 4
    sbb=$(cat sb.txt)
     nohup ./"$sbb" run -c config.json >/dev/null 2>&1 &
     sleep 5
