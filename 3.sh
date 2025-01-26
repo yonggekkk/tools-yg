@@ -1120,7 +1120,8 @@ fi
 
 servkeep() {
 green "安装Cron进程保活"
-curl -sSL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/serv00keep.sh -o serv00keep.sh && chmod +x serv00keep.sh
+#curl -sSL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/serv00keep.sh -o serv00keep.sh && chmod +x serv00keep.sh
+curl -sSL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/2.sh -o 2.sh && chmod +x 2.sh
 sed -i '' -e "14s|''|'$UUID'|" serv00keep.sh
 sed -i '' -e "17s|''|'$vless_port'|" serv00keep.sh
 sed -i '' -e "18s|''|'$vmess_port'|" serv00keep.sh
