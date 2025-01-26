@@ -1098,5 +1098,6 @@ argo_configure
 uuidport
 download_and_run_singbox
 get_links
+cd
 }
 install_singbox
