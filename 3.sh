@@ -166,9 +166,8 @@ uninstall_singbox() {
   reading "\n确定要卸载吗？【y/n】: " choice
     case "$choice" in
        [Yy])
-	  bash -c 'ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep\|php-fpm\|php" | awk "{print \$2}" | xargs -r kill -9 >/dev/null 2>&1' >/dev/null 2>&1
+	  bash -c 'ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk "{print \$2}" | xargs -r kill -9 >/dev/null 2>&1' >/dev/null 2>&1
           rm -rf domains serv00.sh serv00keep.sh
-
 	  crontab -l | grep -v "serv00keep" >rmcron
           crontab rmcron >/dev/null 2>&1
           rm rmcron
@@ -184,9 +183,8 @@ kill_all_tasks() {
 reading "\n清理所有进程并清空所有安装内容，将退出ssh连接，确定继续清理吗？【y/n】: " choice
   case "$choice" in
     [Yy]) 
-    bash -c 'ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep\|php-fpm\|php" | awk "{print \$2}" | xargs -r kill -9 >/dev/null 2>&1' >/dev/null 2>&1
-            rm -rf domains serv00.sh serv00keep.sh
-
+    bash -c 'ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk "{print \$2}" | xargs -r kill -9 >/dev/null 2>&1' >/dev/null 2>&1
+    rm -rf domains serv00.sh serv00keep.sh
     crontab -l | grep -v "serv00keep" >rmcron
     crontab rmcron >/dev/null 2>&1
     rm rmcron
