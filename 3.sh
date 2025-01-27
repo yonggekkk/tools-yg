@@ -1,6 +1,4 @@
 #!/bin/bash
-
-# 定义颜色
 re="\033[0m"
 red="\033[1;91m"
 green="\e[1;32m"
@@ -1108,49 +1106,35 @@ fi
 }
 
 servkeep() {
-green "安装Cron进程保活"
-#curl -sSL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/serv00keep.sh -o serv00keep.sh && chmod +x serv00keep.sh
-curl -sSL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/2.sh -o 2.sh && chmod +x 2.sh
-#sed -i '' -e "14s|''|'$UUID'|" serv00keep.sh
-#sed -i '' -e "17s|''|'$vless_port'|" serv00keep.sh
-#sed -i '' -e "18s|''|'$vmess_port'|" serv00keep.sh
-#sed -i '' -e "19s|''|'$hy2_port'|" serv00keep.sh
-#sed -i '' -e "20s|''|'$IP'|" serv00keep.sh
-#sed -i '' -e "21s|''|'$reym'|" serv00keep.sh
-#if [ ! -f "$WORKDIR/boot.log" ]; then
-#sed -i '' -e "15s|''|'${ARGO_DOMAIN}'|" serv00keep.sh
-#sed -i '' -e "16s|''|'${ARGO_AUTH}'|" serv00keep.sh
-#fi
-
-sed -i '' -e "14s|''|'$UUID'|" 2.sh
-sed -i '' -e "17s|''|'$vless_port'|" 2.sh
-sed -i '' -e "18s|''|'$vmess_port'|" 2.sh
-sed -i '' -e "19s|''|'$hy2_port'|" 2.sh
-sed -i '' -e "20s|''|'$IP'|" 2.sh
-sed -i '' -e "21s|''|'$reym'|" 2.sh
+green "开始安装Cron进程保活"
+curl -sSL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/serv00keep.sh -o serv00keep.sh && chmod +x serv00keep.sh
+sed -i '' -e "14s|''|'$UUID'|" serv00keep.sh
+sed -i '' -e "17s|''|'$vless_port'|" serv00keep.sh
+sed -i '' -e "18s|''|'$vmess_port'|" serv00keep.sh
+sed -i '' -e "19s|''|'$hy2_port'|" serv00keep.sh
+sed -i '' -e "20s|''|'$IP'|" serv00keep.sh
+sed -i '' -e "21s|''|'$reym'|" serv00keep.sh
 if [ ! -f "$WORKDIR/boot.log" ]; then
-sed -i '' -e "15s|''|'${ARGO_DOMAIN}'|" 2.sh
-sed -i '' -e "16s|''|'${ARGO_AUTH}'|" 2.sh
+sed -i '' -e "15s|''|'${ARGO_DOMAIN}'|" serv00keep.sh
+sed -i '' -e "16s|''|'${ARGO_AUTH}'|" serv00keep.sh
 fi
-
 if ! crontab -l 2>/dev/null | grep -q 'serv00keep'; then
 if [ -f "$WORKDIR/boot.log" ] || grep -q "trycloudflare.com" "$WORKDIR/boot.log" 2>/dev/null; then
 check_process="! ps aux | grep '[c]onfig' > /dev/null || ! ps aux | grep [l]ocalhost > /dev/null"
 else
 check_process="! ps aux | grep '[c]onfig' > /dev/null || ! ps aux | grep [t]oken > /dev/null"
 fi
-(crontab -l 2>/dev/null; echo "*/5 * * * * if $check_process; then /bin/bash serv00keep.sh; fi") | crontab -
+(crontab -l 2>/dev/null; echo "*/10 * * * * if $check_process; then /bin/bash serv00keep.sh; fi") | crontab -
 fi
-green "安装完毕，默认每5分钟执行一次，运行 crontab -e 可自行修改保活执行间隔" && sleep 2
+green "安装完毕，默认每10分钟执行一次，运行 crontab -e 可自行修改保活执行间隔" && sleep 2
 echo
-green "安装网页进程保活"
+green "开始安装网页进程保活"
 keep_path="$HOME/domains/${USERNAME}.${USERNAME}.serv00.net/public_nodejs"
 [ -d "$keep_path" ] || mkdir -p "$keep_path"
 curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/app.js -o $HOME/domains/${USERNAME}.${USERNAME}.serv00.net/public_nodejs/app.js
 devil www del ${USERNAME}.${USERNAME}.serv00.net > /dev/null 2>&1
 devil www add ${USERNAME}.serv00.net php > /dev/null 2>&1
 devil www add ${USERNAME}.${USERNAME}.serv00.net nodejs /usr/local/bin/node18 > /dev/null 2>&1
-#devil ssl www add $IP le le ${USERNAME}.${USERNAME}.serv00.net > /dev/null 2>&1
 ln -fs /usr/local/bin/node18 ~/bin/node > /dev/null 2>&1
 ln -fs /usr/local/bin/npm18 ~/bin/npm > /dev/null 2>&1
 mkdir -p ~/.npm-global
@@ -1160,9 +1144,8 @@ rm -rf $HOME/.npmrc > /dev/null 2>&1
 cd /home/${USERNAME}/domains/${USERNAME}.${USERNAME}.serv00.net/public_nodejs
 npm install basic-auth express dotenv axios --silent > /dev/null 2>&1
 rm $HOME/domains/${USERNAME}.${USERNAME}.serv00.net/public_nodejs/public/index.html > /dev/null 2>&1
-#devil www options ${USERNAME}.${USERNAME}.serv00.net sslonly on > /dev/null 2>&1
 devil www restart ${USERNAME}.${USERNAME}.serv00.net
-green "安装完毕，打开 https://${USERNAME}.${USERNAME}.serv00.net/up 即可保活" && sleep 2
+green "安装完毕，打开 http://${USERNAME}.${USERNAME}.serv00.net/up 即可保活" && sleep 2
 }
 
 okip(){
@@ -1196,7 +1179,7 @@ menu() {
    green "甬哥Blogger博客 ：ygkkk.blogspot.com"
    green "甬哥YouTube频道 ：www.youtube.com/@ygkkk"
    green "一键三协议共存：vless-reality、Vmess-ws(Argo)、hysteria2"
-   green "当前脚本版本：V25.1.23  快捷方式：bash serv00.sh"
+   green "当前脚本版本：V25.1.27  快捷方式：bash serv00.sh"
    echo   "============================================================"
    green  "1. 安装sing-box"
    echo   "------------------------------------------------------------"
@@ -1239,7 +1222,7 @@ cat $WORKDIR/ip.txt
 echo
 if [[ -e $WORKDIR/list.txt ]]; then
 green "已安装sing-box"
-ps aux | grep '[c]onfig' > /dev/null && green "主进程运行正常" || yellow "主进程启动中…………2分钟后可再次进入脚本查看"
+ps aux | grep '[c]onfig' > /dev/null && green "主进程运行正常" || yellow "主进程启动中…………1分钟后可再次进入脚本查看"
 if [ -f "$WORKDIR/boot.log" ] && grep -q "trycloudflare.com" "$WORKDIR/boot.log" 2>/dev/null && ps aux | grep [l]ocalhost > /dev/null; then
 argosl=$(cat "$WORKDIR/boot.log" 2>/dev/null | grep -a trycloudflare.com | awk 'NR==2{print}' | awk -F// '{print $2}' | awk '{print $1}')
 checkhttp=$(curl -o /dev/null -s -w "%{http_code}\n" "https://$argosl")
@@ -1265,10 +1248,11 @@ else
 check_process="! ps aux | grep '[c]onfig' > /dev/null || ! ps aux | grep [t]oken > /dev/null"
 fi
 (crontab -l 2>/dev/null; echo "*/2 * * * * if $check_process; then /bin/bash serv00keep.sh; fi") | crontab -
-purple "Serv00开大招了，把Cron保活重置清空了！但现已修复成功！"
-purple "主进程与Argo进程启动中…………2分钟后可再次进入脚本查看"
+purple "发现Serv00开大招了，Cron保活被重置清空了"
+purple "目前Cron保活已修复成功。打开 http://${USERNAME}.${USERNAME}.serv00.net/up 也可实时保活"
+purple "主进程与Argo进程启动中…………1分钟后可再次进入脚本查看"
 else
-green "Cron保活运行正常"
+green "Cron保活运行正常。打开 http://${USERNAME}.${USERNAME}.serv00.net/up 也可实时保活"
 fi
 else
 red "未安装sing-box，请选择 1 进行安装" 
