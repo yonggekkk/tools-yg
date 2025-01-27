@@ -13,6 +13,7 @@ purple() { echo -e "\e[1;35m$1\033[0m"; }
 reading() { read -p "$(red "$1")" "$2"; }
 USERNAME=$(whoami | tr '[:upper:]' '[:lower:]')
 HOSTNAME=$(hostname)
+devil www add ${USERNAME}.serv00.net php > /dev/null 2>&1
 FILE_PATH="${HOME}/domains/${USERNAME}.serv00.net/public_html"
 WORKDIR="${HOME}/domains/${USERNAME}.serv00.net/logs"
 [ -d "$WORKDIR" ] || (mkdir -p "$WORKDIR" && chmod 777 "$WORKDIR")
@@ -1146,10 +1147,10 @@ green "安装网页进程保活"
 keep_path="$HOME/domains/${USERNAME}.${USERNAME}.serv00.net/public_nodejs"
 [ -d "$keep_path" ] || mkdir -p "$keep_path"
 curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/app.js -o $HOME/domains/${USERNAME}.${USERNAME}.serv00.net/public_nodejs/app.js
-#devil www del ${USERNAME}.${USERNAME}.serv00.net > /dev/null 2>&1
-#devil www add ${USERNAME}.serv00.net php > /dev/null 2>&1
+devil www del ${USERNAME}.${USERNAME}.serv00.net > /dev/null 2>&1
+devil www add ${USERNAME}.serv00.net php > /dev/null 2>&1
 devil www add ${USERNAME}.${USERNAME}.serv00.net nodejs /usr/local/bin/node18 > /dev/null 2>&1
-devil ssl www add $IP le le ${USERNAME}.${USERNAME}.serv00.net > /dev/null 2>&1
+#devil ssl www add $IP le le ${USERNAME}.${USERNAME}.serv00.net > /dev/null 2>&1
 ln -fs /usr/local/bin/node18 ~/bin/node > /dev/null 2>&1
 ln -fs /usr/local/bin/npm18 ~/bin/npm > /dev/null 2>&1
 mkdir -p ~/.npm-global
@@ -1159,7 +1160,7 @@ rm -rf $HOME/.npmrc > /dev/null 2>&1
 cd /home/${USERNAME}/domains/${USERNAME}.${USERNAME}.serv00.net/public_nodejs
 npm install basic-auth express dotenv axios --silent > /dev/null 2>&1
 rm $HOME/domains/${USERNAME}.${USERNAME}.serv00.net/public_nodejs/public/index.html > /dev/null 2>&1
-devil www options ${USERNAME}.${USERNAME}.serv00.net sslonly on > /dev/null 2>&1
+#devil www options ${USERNAME}.${USERNAME}.serv00.net sslonly on > /dev/null 2>&1
 devil www restart ${USERNAME}.${USERNAME}.serv00.net
 green "安装完毕，打开 https://${USERNAME}.${USERNAME}.serv00.net/up 即可保活" && sleep 2
 }
