@@ -1131,7 +1131,8 @@ echo
 green "开始安装网页进程保活"
 keep_path="$HOME/domains/${USERNAME}.${USERNAME}.serv00.net/public_nodejs"
 [ -d "$keep_path" ] || mkdir -p "$keep_path"
-curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/app.js -o $HOME/domains/${USERNAME}.${USERNAME}.serv00.net/public_nodejs/app.js
+curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/app.js -o "$keep_path"/app.js
+sed -i "26s/name/$USERNAME/" "$keep_path"
 devil www del ${USERNAME}.${USERNAME}.serv00.net > /dev/null 2>&1
 devil www add ${USERNAME}.serv00.net php > /dev/null 2>&1
 devil www add ${USERNAME}.${USERNAME}.serv00.net nodejs /usr/local/bin/node18 > /dev/null 2>&1
@@ -1141,7 +1142,7 @@ mkdir -p ~/.npm-global
 npm config set prefix '~/.npm-global'
 echo 'export PATH=~/.npm-global/bin:~/bin:$PATH' >> $HOME/.bash_profile && source $HOME/.bash_profile
 rm -rf $HOME/.npmrc > /dev/null 2>&1
-cd /home/${USERNAME}/domains/${USERNAME}.${USERNAME}.serv00.net/public_nodejs
+cd "$keep_path"
 npm install basic-auth express dotenv axios --silent > /dev/null 2>&1
 rm $HOME/domains/${USERNAME}.${USERNAME}.serv00.net/public_nodejs/public/index.html > /dev/null 2>&1
 devil www restart ${USERNAME}.${USERNAME}.serv00.net
