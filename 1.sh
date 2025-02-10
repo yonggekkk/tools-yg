@@ -153,6 +153,7 @@ sleep 2
         download_and_run_singbox
 	cd
         fastrun
+	green "创建快捷方式：sb"
 	echo
 	servkeep
         cd $WORKDIR
@@ -1234,7 +1235,6 @@ fastrun(){
       echo "export PATH=\"\$HOME/bin:\$PATH\"" >> "$HOME/.bashrc"
       source "$HOME/.bashrc"
   fi
-  green "快捷方式：sb"
 }
 #主菜单
 menu() {
