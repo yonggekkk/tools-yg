@@ -1325,7 +1325,7 @@ green "保活网页：http://${snb}.${USERNAME}.serv00.net/up"
 else
 red "未安装sing-box，请选择 1 进行安装" 
 fi
-curl -sSL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/serv00.sh -o serv00.sh && chmod +x serv00.sh
+#curl -sSL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/serv00.sh -o serv00.sh && chmod +x serv00.sh
    echo   "========================================================="
    reading "请输入选择【0-5】: " choice
    echo ""
