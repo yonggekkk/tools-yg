@@ -1269,7 +1269,7 @@ dig @8.8.8.8 +time=2 +short $ip >> $WORKDIR/hy2ip.txt
 sleep 1  
 done
 for host in "${ym[@]}"; do
-response=$(curl -sL --connect-timeout 5 --max-time 7 "https://ss.serv0***.us.kg/api/getip?host=$host")
+response=$(curl -sL --connect-timeout 5 --max-time 7 "https://ss.serv0.us.kg/api/getip?host=$host")
 if [[ -z "$response" || "$response" == *unknown* ]]; then
 dig @8.8.8.8 +time=2 +short $host >> $WORKDIR/ip.txt
 sleep 1 
