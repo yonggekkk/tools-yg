@@ -166,8 +166,7 @@ uninstall_singbox() {
     case "$choice" in
        [Yy])
 	  bash -c 'ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk "{print \$2}" | xargs -r kill -9 >/dev/null 2>&1' >/dev/null 2>&1
-          rm -rf domains serv00.sh serv00keep.sh
-	  [ -d "${HOME}/bin" ] && [ -z "$(ls -A "${HOME}/bin")" ] && rmdir "${HOME}/bin"
+          rm -rf domains bin serv00keep.sh
           sed -i '/export PATH="\$HOME\/bin:\$PATH"/d' "${HOME}/.bashrc" >/dev/null 2>&1
           source "${HOME}/.bashrc"
 	  #crontab -l | grep -v "serv00keep" >rmcron
@@ -186,8 +185,7 @@ reading "\n清理所有进程并清空所有安装内容，将退出ssh连接，
   case "$choice" in
     [Yy]) 
     bash -c 'ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk "{print \$2}" | xargs -r kill -9 >/dev/null 2>&1' >/dev/null 2>&1
-    rm -rf domains serv00.sh serv00keep.sh
-    [ -d "${HOME}/bin" ] && [ -z "$(ls -A "${HOME}/bin")" ] && rmdir "${HOME}/bin"
+    rm -rf domains bin serv00keep.sh
     sed -i '/export PATH="\$HOME\/bin:\$PATH"/d' "${HOME}/.bashrc" >/dev/null 2>&1
     source "${HOME}/.bashrc"    
     #crontab -l | grep -v "serv00keep" >rmcron
