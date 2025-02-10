@@ -166,6 +166,9 @@ uninstall_singbox() {
        [Yy])
 	  bash -c 'ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk "{print \$2}" | xargs -r kill -9 >/dev/null 2>&1' >/dev/null 2>&1
           rm -rf domains serv00.sh serv00keep.sh
+	  [ -d "${HOME}/bin" ] && [ -z "$(ls -A "${HOME}/bin")" ] && rmdir "${HOME}/bin"
+          sed -i '/export PATH="\$HOME\/bin:\$PATH"/d' "${HOME}/.bashrc" >/dev/null 2>&1
+          source "${HOME}/.bashrc"
 	  #crontab -l | grep -v "serv00keep" >rmcron
           #crontab rmcron >/dev/null 2>&1
           #rm rmcron
@@ -183,6 +186,9 @@ reading "\n清理所有进程并清空所有安装内容，将退出ssh连接，
     [Yy]) 
     bash -c 'ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk "{print \$2}" | xargs -r kill -9 >/dev/null 2>&1' >/dev/null 2>&1
     rm -rf domains serv00.sh serv00keep.sh
+    [ -d "${HOME}/bin" ] && [ -z "$(ls -A "${HOME}/bin")" ] && rmdir "${HOME}/bin"
+    sed -i '/export PATH="\$HOME\/bin:\$PATH"/d' "${HOME}/.bashrc" >/dev/null 2>&1
+    source "${HOME}/.bashrc"    
     #crontab -l | grep -v "serv00keep" >rmcron
     #crontab rmcron >/dev/null 2>&1
     #rm rmcron
@@ -1218,6 +1224,17 @@ okip(){
     echo "$IP"
     }
 
+fastrun(){
+  COMMAND="sb"
+  SCRIPT_PATH="$HOME/bin/$COMMAND"
+  mkdir -p "$HOME/bin"
+  curl -Ls https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/serv00.sh > "$SCRIPT_PATH"
+  chmod +x "$SCRIPT_PATH"
+  if [[ ":$PATH:" != *":$HOME/bin:"* ]]; then
+      echo "export PATH=\"\$HOME/bin:\$PATH\"" >> "$HOME/.bashrc"
+      source "$HOME/.bashrc"
+  fi
+}
 #主菜单
 menu() {
    clear
