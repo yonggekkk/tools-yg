@@ -1249,10 +1249,10 @@ for ip in "${ym[@]}"; do
 dig @8.8.8.8 +time=2 +short $ip >> $WORKDIR/hy2ip.txt
 sleep 1  
 done
-for ip in "${ym[@]}"; do
-response=$(curl -sL --connect-timeout 5 --max-time 7 "https://ss.serv0.us.kg/api/getip?host=$ym")
+for host in "${ym[@]}"; do
+response=$(curl -sL --connect-timeout 5 --max-time 7 "https://ss.serv0.us.kg/api/getip?host=$host")
 if [[ -z "$response" || "$response" == *unknown* ]]; then
-dig @8.8.8.8 +time=2 +short $ip >> $WORKDIR/ip.txt
+dig @8.8.8.8 +time=2 +short $host >> $WORKDIR/ip.txt
 sleep 1 
 else
 echo "$response" | while IFS='|' read -r ip status; do
