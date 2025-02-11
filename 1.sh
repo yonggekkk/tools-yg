@@ -1303,7 +1303,7 @@ echo -e "当前 serv00-sb-yg 脚本版本号：${purple}${insV}${plain}"
 echo -e "检测到最新 serv00-sb-yg 脚本版本号：${yellow}${latestV}${plain} (可选择7进行更新)"
 echo -e "${yellow}$(curl -sL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/version)${plain}"
 fi
-echo   "========================================================="
+echo -e "========================================================="
 ps aux | grep '[r]un -c con' > /dev/null && green "主进程运行正常" || yellow "主进程未启动…………请刷新一下保活网页"
 if [ -f "$WORKDIR/boot.log" ] && grep -q "trycloudflare.com" "$WORKDIR/boot.log" 2>/dev/null && ps aux | grep '[t]unnel --u' > /dev/null; then
 argosl=$(cat "$WORKDIR/boot.log" 2>/dev/null | grep -a trycloudflare.com | awk 'NR==2{print}' | awk -F// '{print $2}' | awk '{print $1}')
