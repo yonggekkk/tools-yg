@@ -312,7 +312,7 @@ openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=
 
 nb=$(hostname | cut -d '.' -f 1 | tr -d 's')
 if [[ "$nb" =~ (14|15|16) ]]; then
-ytb='"jnn-pa.googleapis.com","gemini.google.com","aistudio.google.com",'
+ytb='"jnn-pa.googleapis.com",'
 fi
 hy1p=$(sed -n '1p' hy2ip.txt)
 hy2p=$(sed -n '2p' hy2ip.txt)
