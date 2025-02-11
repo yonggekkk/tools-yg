@@ -1225,6 +1225,7 @@ okip(){
     }
 
 fastrun(){
+if [[ -e $WORKDIR/sing_box.json ]]; then
   COMMAND="sb"
   SCRIPT_PATH="$HOME/bin/$COMMAND"
   mkdir -p "$HOME/bin"
@@ -1235,28 +1236,34 @@ fastrun(){
       echo "export PATH=\"\$HOME/bin:\$PATH\"" >> "$HOME/.bashrc"
       source "$HOME/.bashrc"
   fi
+  curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/sversion | awk -F "更新内容" '{print $1}' | head -n 1 > $WORKDIR/v
+  else
+  red "未安装sing-box" && exit
+  fi
 }
 #主菜单
 menu() {
    clear
    echo "============================================================"
-   purple "修改自Serv00|ct8老王sing-box安装脚本"
+   purple "修改自Serv00老王sing-box安装脚本"
    purple "转载请著名出自老王，请勿滥用"
    green "甬哥Github项目  ：github.com/yonggekkk"
    green "甬哥Blogger博客 ：ygkkk.blogspot.com"
    green "甬哥YouTube频道 ：www.youtube.com/@ygkkk"
-   green "一键三协议共存：vless-reality、Vmess-ws(Argo)、hysteria2"
-   green "脚本版本：V25.1.27  快捷方式：sb"
+   green "serv00-sb-yg一键三协议共存：vless-reality、Vmess-ws(Argo)、hysteria2"
+   green "脚本版本：V25.2.11  快捷方式：sb"
    echo   "============================================================"
-   green  "1. 安装sing-box"
+   green  "1. 一键安装serv00-sb-yg"
    echo   "------------------------------------------------------------"
-   red    "2. 卸载sing-box"
+   red    "2. 卸载删除serv00-sb-yg"
    echo   "------------------------------------------------------------"
-   green  "3. 查看：各节点分享/sing-box与clash-meta订阅链接/CF节点proxyip"
+   green  "3. 更新serv00-sb-yg脚本"
    echo   "------------------------------------------------------------"
-   green  "4. 查看：sing-box与clash-meta配置文件"
+   green  "4. 查看各节点分享/sing-box与clash-meta订阅链接/CF节点proxyip"
    echo   "------------------------------------------------------------"
-   yellow "5. 重置并清理所有服务进程(系统初始化)"
+   green  "5. 查看sing-box与clash-meta配置文件"
+   echo   "------------------------------------------------------------"
+   yellow "6. 重置并清理所有服务进程(系统初始化)"
    echo   "------------------------------------------------------------"
    red    "0. 退出脚本"
    echo   "============================================================"
@@ -1286,8 +1293,17 @@ green "Serv00服务器名称：$snb"
 green "当前可选择的IP如下："
 cat $WORKDIR/ip.txt
 echo
-if [[ -e $WORKDIR/list.txt ]]; then
-green "已安装sing-box"
+insV=$(cat $WORKDIR/v 2>/dev/null)
+latestV=$(curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/sversion | awk -F "更新内容" '{print $1}' | head -n 1)
+if [ -f $WORKDIR/v ]; then
+if [ "$insV" = "$latestV" ]; then
+echo -e "当前 serv00-sb-yg 脚本最新版：${purple}${insV}${plain} (已安装)"
+else
+echo -e "当前 serv00-sb-yg 脚本版本号：${purple}${insV}${plain}"
+echo -e "检测到最新 serv00-sb-yg 脚本版本号：${yellow}${latestV}${plain} (可选择7进行更新)"
+echo -e "${yellow}$(curl -sL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/version)${plain}"
+fi
+echo   "========================================================="
 ps aux | grep '[r]un -c con' > /dev/null && green "主进程运行正常" || yellow "主进程未启动…………请刷新一下保活网页"
 if [ -f "$WORKDIR/boot.log" ] && grep -q "trycloudflare.com" "$WORKDIR/boot.log" 2>/dev/null && ps aux | grep '[t]unnel --u' > /dev/null; then
 argosl=$(cat "$WORKDIR/boot.log" 2>/dev/null | grep -a trycloudflare.com | awk 'NR==2{print}' | awk -F// '{print $2}' | awk '{print $1}')
@@ -1322,7 +1338,8 @@ green "保活网页：http://${snb}.${USERNAME}.serv00.net/up"
 #green "Cron保活运行正常。打开 http://${USERNAME}.${USERNAME}.serv00.net/up 也可实时保活"
 #fi
 else
-red "未安装sing-box，请选择 1 进行安装" 
+echo -e "当前 serv00-sb-yg 脚本版本号：${purple}${latestV}${plain}"
+yellow "未安装 serv00-sb-yg 脚本！请先选择 1 安装"
 fi
 #curl -sSL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/serv00.sh -o serv00.sh && chmod +x serv00.sh
    echo   "========================================================="
@@ -1331,11 +1348,12 @@ fi
     case "${choice}" in
         1) install_singbox ;;
         2) uninstall_singbox ;; 
-        3) showlist ;;
-	4) showsbclash ;;
-        5) kill_all_tasks ;;
+	3) fastrun && green "脚本已更新" && sb ;; 
+        4) showlist ;;
+	5) showsbclash ;;
+        6) kill_all_tasks ;;
 	0) exit 0 ;;
-        *) red "无效的选项，请输入 0 到 5" ;;
+        *) red "无效的选项，请输入 0 到 6" ;;
     esac
 }
 menu
