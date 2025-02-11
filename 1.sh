@@ -1343,7 +1343,7 @@ yellow "未安装 serv00-sb-yg 脚本！请先选择 1 安装"
 fi
 #curl -sSL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/serv00.sh -o serv00.sh && chmod +x serv00.sh
    echo   "========================================================="
-   reading "请输入选择【0-5】: " choice
+   reading "请输入选择【0-6】: " choice
    echo ""
     case "${choice}" in
         1) install_singbox ;;
