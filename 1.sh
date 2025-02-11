@@ -1342,9 +1342,9 @@ echo -e "当前 serv00-sb-yg 脚本版本号：${purple}${latestV}${plain}"
 yellow "未安装 serv00-sb-yg 脚本！请先选择 1 安装"
 fi
 #curl -sSL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/serv00.sh -o serv00.sh && chmod +x serv00.sh
-   echo   "========================================================="
+   echo -e "========================================================="
    reading "请输入选择【0-6】: " choice
-   echo ""
+   echo
     case "${choice}" in
         1) install_singbox ;;
         2) uninstall_singbox ;; 
