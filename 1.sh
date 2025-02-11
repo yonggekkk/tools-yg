@@ -1238,7 +1238,7 @@ if [[ -e $WORKDIR/config.json ]]; then
   fi
   curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/sversion | awk -F "更新内容" '{print $1}' | head -n 1 > $WORKDIR/v
   else
-  red "未安装sing-box" && exit
+  red "未安装脚本" && exit
   fi
 }
 #主菜单
@@ -1348,7 +1348,7 @@ fi
     case "${choice}" in
         1) install_singbox ;;
         2) uninstall_singbox ;; 
-	3) fastrun && green "脚本已更新" && sb ;; 
+	3) fastrun && green "脚本已更新成功" && sleep 2 && sb ;; 
         4) showlist ;;
 	5) showsbclash ;;
         6) kill_all_tasks ;;
