@@ -464,6 +464,8 @@ hy3p=$(sed -n '3p' hy2ip.txt)
     {
      "domain": [
      $ytb
+     "gemini.google.com",
+     "ip.me",
      "oh.my.god"
       ],
      "outbound": "wg"
