@@ -477,7 +477,7 @@ hy3p=$(sed -n '3p' hy2ip.txt)
       ],
       "rule_set":[
       $gog
-      "oh.my.god"
+      "ohmygod"
       ],
      "outbound": "wg"
     }
