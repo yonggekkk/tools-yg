@@ -312,8 +312,7 @@ openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=
 
 nb=$(hostname | cut -d '.' -f 1 | tr -d 's')
 if [[ "$nb" =~ (14|15|16) ]]; then
-ytb='"jnn-pa.googleapis.com",'
-gmi='"geosite-google-gemini",'
+ytb='"jnn-pa.googleapis.com","gemini.google.com","aistudio.google.com",'
 fi
 hy1p=$(sed -n '1p' hy2ip.txt)
 hy2p=$(sed -n '2p' hy2ip.txt)
@@ -461,25 +460,12 @@ hy3p=$(sed -n '3p' hy2ip.txt)
     }
   ],
    "route": {
-    "rule_set": [
-      {
-        "tag": "geosite-google-gemini",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-google-gemini.srs",
-        "download_detour": "direct"
-      }
-    ],
     "rules": [
     {
      "domain": [
      $ytb
      "oh.my.god"
       ],
-     "rule_set":[
-     $gmi
-     "ohmhygod"
-     ],
      "outbound": "wg"
     }
     ],
@@ -1254,6 +1240,24 @@ if [[ -e $WORKDIR/config.json ]]; then
   red "未安装脚本，请选择1进行安装" && exit
   fi
 }
+
+resservsb(){
+if [[ -e $WORKDIR/config.json ]]; then
+cd $WORKDIR
+ps aux | grep '[r]un -c con' | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
+sbb=$(cat sb.txt)
+nohup ./"$sbb" run -c config.json >/dev/null 2>&1 &
+sleep 3
+if pgrep -x "$sbb" > /dev/null; then
+green "$sbb 主进程重启成功"
+else
+red "$sbb 主进程重启失败"
+fi
+cd
+else
+red "未安装脚本，请选择1进行安装" && exit
+fi
+}
 #主菜单
 menu() {
    clear
@@ -1263,20 +1267,22 @@ menu() {
    green "甬哥Github项目  ：github.com/yonggekkk"
    green "甬哥Blogger博客 ：ygkkk.blogspot.com"
    green "甬哥YouTube频道 ：www.youtube.com/@ygkkk"
-   green "serv00-sb-yg三协议共存：vless-reality、Vmess-ws(Argo)、Hy2"
+   green "Serv00-sb-yg三协议共存：vless-reality、Vmess-ws(Argo)、Hy2"
    green "脚本快捷方式：sb"
    echo   "============================================================"
-   green  "1. 一键安装 serv00-sb-yg"
+   green  "1. 一键安装 Serv00-sb-yg"
    echo   "------------------------------------------------------------"
-   red    "2. 卸载删除 serv00-sb-yg"
+   red    "2. 卸载删除 Serv00-sb-yg"
    echo   "------------------------------------------------------------"
-   green  "3. 升级更新 serv00-sb-yg"
+   green  "3. 重启 Serv00-sb-yg 主程序"
    echo   "------------------------------------------------------------"
-   green  "4. 查看各节点分享/sing-box与clash订阅链接/CF节点proxyip"
+   green  "4. 更新 Serv00-sb-yg 脚本"
    echo   "------------------------------------------------------------"
-   green  "5. 查看sing-box与clash配置文件"
+   green  "5. 查看各节点分享/sing-box与clash订阅链接/CF节点proxyip"
    echo   "------------------------------------------------------------"
-   yellow "6. 重置并清理所有服务进程(系统初始化)"
+   green  "6. 查看sing-box与clash配置文件"
+   echo   "------------------------------------------------------------"
+   yellow "7. 重置并清理所有服务进程(系统初始化)"
    echo   "------------------------------------------------------------"
    red    "0. 退出脚本"
    echo   "============================================================"
@@ -1310,10 +1316,10 @@ insV=$(cat $WORKDIR/v 2>/dev/null)
 latestV=$(curl -sL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/sversion | awk -F "更新内容" '{print $1}' | head -n 1)
 if [ -f $WORKDIR/v ]; then
 if [ "$insV" = "$latestV" ]; then
-echo -e "当前 serv00-sb-yg 脚本最新版：${purple}${insV}${re} (已安装)"
+echo -e "当前 Serv00-sb-yg 脚本最新版：${purple}${insV}${re} (已安装)"
 else
-echo -e "当前 serv00-sb-yg 脚本版本号：${purple}${insV}${re}"
-echo -e "检测到最新 serv00-sb-yg 脚本版本号：${yellow}${latestV}${re} (可选择3进行更新)"
+echo -e "当前 Serv00-sb-yg 脚本版本号：${purple}${insV}${re}"
+echo -e "检测到最新 Serv00-sb-yg 脚本版本号：${yellow}${latestV}${re} (可选择4进行更新)"
 echo -e "${yellow}$(curl -sL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/sversion)${re}"
 fi
 echo -e "========================================================="
@@ -1351,22 +1357,23 @@ green "保活网页：http://${snb}.${USERNAME}.serv00.net/up"
 #green "Cron保活运行正常。打开 http://${USERNAME}.${USERNAME}.serv00.net/up 也可实时保活"
 #fi
 else
-echo -e "当前 serv00-sb-yg 脚本版本号：${purple}${latestV}${re}"
-yellow "未安装 serv00-sb-yg 脚本！请先选择 1 安装"
+echo -e "当前 Serv00-sb-yg 脚本版本号：${purple}${latestV}${re}"
+yellow "未安装 Serv00-sb-yg 脚本！请先选择 1 安装"
 fi
 #curl -sSL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/serv00.sh -o serv00.sh && chmod +x serv00.sh
    echo -e "========================================================="
-   reading "请输入选择【0-6】: " choice
+   reading "请输入选择【0-7】: " choice
    echo
     case "${choice}" in
         1) install_singbox ;;
         2) uninstall_singbox ;; 
-	3) fastrun && green "脚本已更新成功" && sleep 2 && sb ;; 
-        4) showlist ;;
-	5) showsbclash ;;
-        6) kill_all_tasks ;;
+	3) resservsb ;;
+	4) fastrun && green "脚本已更新成功" && sleep 2 && sb ;; 
+        5) showlist ;;
+	6) showsbclash ;;
+        7) kill_all_tasks ;;
 	0) exit 0 ;;
-        *) red "无效的选项，请输入 0 到 6" ;;
+        *) red "无效的选项，请输入 0 到 7" ;;
     esac
 }
 menu
