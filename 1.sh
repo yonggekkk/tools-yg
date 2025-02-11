@@ -1301,7 +1301,7 @@ echo -e "当前 serv00-sb-yg 脚本最新版：${purple}${insV}${re} (已安装)
 else
 echo -e "当前 serv00-sb-yg 脚本版本号：${purple}${insV}${re}"
 echo -e "检测到最新 serv00-sb-yg 脚本版本号：${yellow}${latestV}${re} (可选择7进行更新)"
-echo -e "${yellow}$(curl -sL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/version)${re}"
+echo -e "${yellow}$(curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/sversion)${re}"
 fi
 echo -e "========================================================="
 ps aux | grep '[r]un -c con' > /dev/null && green "主进程运行正常" || yellow "主进程未启动…………请刷新一下保活网页"
