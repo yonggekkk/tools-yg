@@ -1297,11 +1297,11 @@ insV=$(cat $WORKDIR/v 2>/dev/null)
 latestV=$(curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/sversion | awk -F "更新内容" '{print $1}' | head -n 1)
 if [ -f $WORKDIR/v ]; then
 if [ "$insV" = "$latestV" ]; then
-echo -e "当前 serv00-sb-yg 脚本最新版：${purple}${insV}${plain} (已安装)"
+echo -e "当前 serv00-sb-yg 脚本最新版：${purple}${insV}${re} (已安装)"
 else
-echo -e "当前 serv00-sb-yg 脚本版本号：${purple}${insV}${plain}"
-echo -e "检测到最新 serv00-sb-yg 脚本版本号：${yellow}${latestV}${plain} (可选择7进行更新)"
-echo -e "${yellow}$(curl -sL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/version)${plain}"
+echo -e "当前 serv00-sb-yg 脚本版本号：${purple}${insV}${re}"
+echo -e "检测到最新 serv00-sb-yg 脚本版本号：${yellow}${latestV}${re} (可选择7进行更新)"
+echo -e "${yellow}$(curl -sL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/version)${re}"
 fi
 echo -e "========================================================="
 ps aux | grep '[r]un -c con' > /dev/null && green "主进程运行正常" || yellow "主进程未启动…………请刷新一下保活网页"
@@ -1338,7 +1338,7 @@ green "保活网页：http://${snb}.${USERNAME}.serv00.net/up"
 #green "Cron保活运行正常。打开 http://${USERNAME}.${USERNAME}.serv00.net/up 也可实时保活"
 #fi
 else
-echo -e "当前 serv00-sb-yg 脚本版本号：${purple}${latestV}${plain}"
+echo -e "当前 serv00-sb-yg 脚本版本号：${purple}${latestV}${re}"
 yellow "未安装 serv00-sb-yg 脚本！请先选择 1 安装"
 fi
 #curl -sSL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/serv00.sh -o serv00.sh && chmod +x serv00.sh
