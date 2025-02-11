@@ -1251,7 +1251,7 @@ menu() {
    green "甬哥Blogger博客 ：ygkkk.blogspot.com"
    green "甬哥YouTube频道 ：www.youtube.com/@ygkkk"
    green "serv00-sb-yg三协议共存：vless-reality、Vmess-ws(Argo)、Hy2"
-   green "脚本版本：V25.2.11  快捷方式：sb"
+   green "脚本快捷方式：sb"
    echo   "============================================================"
    green  "1. 一键安装 serv00-sb-yg"
    echo   "------------------------------------------------------------"
