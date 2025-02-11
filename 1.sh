@@ -1300,7 +1300,7 @@ if [ "$insV" = "$latestV" ]; then
 echo -e "当前 serv00-sb-yg 脚本最新版：${purple}${insV}${re} (已安装)"
 else
 echo -e "当前 serv00-sb-yg 脚本版本号：${purple}${insV}${re}"
-echo -e "检测到最新 serv00-sb-yg 脚本版本号：${yellow}${latestV}${re} (可选择7进行更新)"
+echo -e "检测到最新 serv00-sb-yg 脚本版本号：${yellow}${latestV}${re} (可选择3进行更新)"
 echo -e "${yellow}$(curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/sversion)${re}"
 fi
 echo -e "========================================================="
