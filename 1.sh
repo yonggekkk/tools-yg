@@ -1225,7 +1225,7 @@ okip(){
     }
 
 fastrun(){
-if [[ -e $WORKDIR/sing_box.json ]]; then
+if [[ -e $WORKDIR/config.json ]]; then
   COMMAND="sb"
   SCRIPT_PATH="$HOME/bin/$COMMAND"
   mkdir -p "$HOME/bin"
@@ -1253,15 +1253,15 @@ menu() {
    green "serv00-sb-yg一键三协议共存：vless-reality、Vmess-ws(Argo)、Hy2"
    green "脚本版本：V25.2.11  快捷方式：sb"
    echo   "============================================================"
-   green  "1. 一键安装serv00-sb-yg"
+   green  "1. 一键安装 serv00-sb-yg"
    echo   "------------------------------------------------------------"
-   red    "2. 卸载删除serv00-sb-yg"
+   red    "2. 卸载删除 serv00-sb-yg"
    echo   "------------------------------------------------------------"
-   green  "3. 更新serv00-sb-yg脚本"
+   green  "3. 升级更新 serv00-sb-yg"
    echo   "------------------------------------------------------------"
-   green  "4. 查看各节点分享/sing-box与clash-meta订阅链接/CF节点proxyip"
+   green  "4. 查看各节点分享/sing-box与clash订阅链接/CF节点proxyip"
    echo   "------------------------------------------------------------"
-   green  "5. 查看sing-box与clash-meta配置文件"
+   green  "5. 查看sing-box与clash配置文件"
    echo   "------------------------------------------------------------"
    yellow "6. 重置并清理所有服务进程(系统初始化)"
    echo   "------------------------------------------------------------"
