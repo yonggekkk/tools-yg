@@ -1238,7 +1238,7 @@ if [[ -e $WORKDIR/config.json ]]; then
   fi
   curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/sversion | awk -F "更新内容" '{print $1}' | head -n 1 > $WORKDIR/v
   else
-  red "未安装脚本" && exit
+  red "未安装脚本，请选择1进行安装" && exit
   fi
 }
 #主菜单
