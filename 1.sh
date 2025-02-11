@@ -1134,7 +1134,7 @@ if [[ -e $WORKDIR/list.txt ]]; then
 green "查看节点及proxyip/非标端口反代ip信息"
 cat $WORKDIR/list.txt
 else
-red "未安装sing-box" && exit
+red "未安装脚本，请选择1进行安装" && exit
 fi
 }
 
@@ -1152,7 +1152,7 @@ sleep 2
 cat $WORKDIR/clash_meta.yaml
 echo
 else
-red "未安装sing-box" && exit
+red "未安装脚本，请选择1进行安装" && exit
 fi
 }
 
