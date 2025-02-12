@@ -456,12 +456,24 @@ hy3p=$(sed -n '3p' hy2ip.txt)
     }
   ],
    "route": {
+       "rule_set": [
+      {
+        "tag": "geosite-google-gemini",
+        "type": "local",
+        "format": "binary",
+        "path": "geosite-google-gemini.srs"
+      }
+    ],
     "rules": [
     {
      "domain": [
      $ytb
      "oh.my.god"
       ],
+     "outbound": "wg"
+     },
+     {
+     "rule_set":"geosite-google-gemini",
      "outbound": "wg"
     }
     ],
