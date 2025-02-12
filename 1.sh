@@ -456,12 +456,13 @@ hy3p=$(sed -n '3p' hy2ip.txt)
     }
   ],
    "route": {
-       "rule_set": [
+    "rule_set": [
       {
         "tag": "geosite-google-gemini",
-        "type": "local",
+        "type": "remote",
         "format": "binary",
-        "path": "geosite-google-gemini.srs"
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-google-gemini.srs",
+        "download_detour": "direct"
       }
     ],
     "rules": [
