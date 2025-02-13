@@ -36,10 +36,19 @@ app.get("/re", (req, res) => {
 app.get("/list", (req, res) => {
     const listCommands = `
         USERNAME=$(whoami | tr '[:upper:]' '[:lower:]')
-        cat domains/\${USERNAME}.serv00.net/logs/list.txt
+        FULL_PATH="/home/\${USERNAME}/domains/\${USERNAME}.serv00.net/logs/list.txt"
+        if [ -f "\$FULL_PATH" ]; then
+            cat "\$FULL_PATH"
+        else
+            echo "ERROR: File not found at \$FULL_PATH" >&2
+            exit 1
+        fi
     `;
     exec(listCommands, (err, stdout, stderr) => {
-        if (err) return res.status(500).send('错误: ' + err.message);
+        if (err) {
+            console.error(`路径验证失败: ${stderr}`);
+            return res.status(404).send(stderr);
+        }
         res.type('text').send(stdout);
     });
 });
