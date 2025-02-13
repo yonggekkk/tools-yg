@@ -1069,9 +1069,10 @@ cat sing_box.json > ${FILE_PATH}/${UUID}_singbox.txt
 V2rayN_LINK="https://${USERNAME}.serv00.net/${UUID}_v2sub.txt"
 Clashmeta_LINK="https://${USERNAME}.serv00.net/${UUID}_clashmeta.txt"
 Singbox_LINK="https://${USERNAME}.serv00.net/${UUID}_singbox.txt"
+allip=$(cat domains/$(whoami).serv00.net/logs/ip.txt)
 cat > list.txt <<EOF
 =================================================================================================
-cat domains/$(whoami).serv00.net/logs/ip.txt;
+$allip
 如默认节点IP被墙，可在客户端地址更换以上任意一个显示可用的IP
 -------------------------------------------------------------------------------------------------
 
