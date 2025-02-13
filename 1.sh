@@ -453,10 +453,14 @@ hy3p=$(sed -n '3p' hy2ip.txt)
     {
       "type": "direct",
       "tag": "direct"
+    },
+    {
+      "type": "block",
+      "tag": "block"
     }
   ],
    "route": {
-    "rule_set": [
+       "rule_set": [
       {
         "tag": "geosite-google-gemini",
         "type": "remote",
