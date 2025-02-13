@@ -1200,7 +1200,7 @@ fi
 green "开始安装网页进程保活"
 keep_path="$HOME/domains/${snb}.${USERNAME}.serv00.net/public_nodejs"
 [ -d "$keep_path" ] || mkdir -p "$keep_path"
-curl -sL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/app.js -o "$keep_path"/app.js
+curl -sL https://raw.githubusercontent.com/yonggekkk/tools-yg/main/app.js -o "$keep_path"/app.js
 #sed -i '' "28s/name/$USERNAME/g" "$keep_path"/app.js
 #sed -i '' "28s/where/$snb/g" "$keep_path"/app.js
 #sed -i '' "22s/name/$snb/g" "$keep_path"/app.js
