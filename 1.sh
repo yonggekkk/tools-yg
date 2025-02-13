@@ -565,7 +565,7 @@ get_argodomain() {
       sleep 2
     done  
     if [ -z ${argodomain} ]; then
-    argodomain="Argo临时域名暂时获取失败，Argo节点暂不可用"
+    argodomain="Argo临时域名暂时获取失败，Argo节点暂不可用，其他节点依旧可用"
     fi
     echo "$argodomain"
   fi
@@ -1069,11 +1069,12 @@ cat sing_box.json > ${FILE_PATH}/${UUID}_singbox.txt
 V2rayN_LINK="https://${USERNAME}.serv00.net/${UUID}_v2sub.txt"
 Clashmeta_LINK="https://${USERNAME}.serv00.net/${UUID}_clashmeta.txt"
 Singbox_LINK="https://${USERNAME}.serv00.net/${UUID}_singbox.txt"
-allip=$(cat domains/$(whoami).serv00.net/logs/ip.txt)
+allip=$(cat hy2ip.txt)
 cat > list.txt <<EOF
 =================================================================================================
+
+当前客户端正在使用的IP：$IP ,如默认节点IP被墙，可在客户端地址更换以下其他IP
 $allip
-如默认节点IP被墙，可在客户端地址更换以上任意一个显示可用的IP
 -------------------------------------------------------------------------------------------------
 
 一、Vless-reality分享链接如下：
@@ -1092,7 +1093,7 @@ CF节点落地到CF网站的地区为：$IP所在地区
 CF节点的TLS必须开启
 CF节点落地到非CF网站的地区为：$IP所在地区
 
-注：如果serv00的IP被墙，proxyip依旧有效，但用于客户端地址与端口的非标端口反代IP将不可用
+注：如果Serv00的IP被墙，proxyip依旧有效，但用于客户端地址与端口的非标端口反代IP将不可用
 注：可能有大佬会扫Serv00的反代IP作为其共享IP库或者出售，请慎重将reality域名设置为CF域名
 -------------------------------------------------------------------------------------------------
 
@@ -1200,9 +1201,9 @@ green "开始安装网页进程保活"
 keep_path="$HOME/domains/${snb}.${USERNAME}.serv00.net/public_nodejs"
 [ -d "$keep_path" ] || mkdir -p "$keep_path"
 curl -sL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/app.js -o "$keep_path"/app.js
-sed -i '' "28s/name/$USERNAME/g" "$keep_path"/app.js
-sed -i '' "28s/where/$snb/g" "$keep_path"/app.js
-sed -i '' "22s/name/$snb/g" "$keep_path"/app.js
+#sed -i '' "28s/name/$USERNAME/g" "$keep_path"/app.js
+#sed -i '' "28s/where/$snb/g" "$keep_path"/app.js
+#sed -i '' "22s/name/$snb/g" "$keep_path"/app.js
 devil www del ${snb}.${USERNAME}.serv00.net > /dev/null 2>&1
 devil www add ${USERNAME}.serv00.net php > /dev/null 2>&1
 devil www add ${snb}.${USERNAME}.serv00.net nodejs /usr/local/bin/node18 > /dev/null 2>&1
@@ -1312,7 +1313,7 @@ sleep 1
 done
 for host in "${ym[@]}"; do
 response=$(curl -sL --connect-timeout 5 --max-time 7 "https://ss.serv0.us.kg/api/getip?host=$host")
-if [[ -z "$response" || "$response" == *unknown* ]]; then
+if [[ "$response" =~ ^$|unknown|not|error ]]; then
 dig @8.8.8.8 +time=2 +short $host >> $WORKDIR/ip.txt
 sleep 1 
 else
@@ -1328,6 +1329,9 @@ done
 green "Serv00服务器名称：$snb"
 green "当前可选择的IP如下："
 cat $WORKDIR/ip.txt
+if [[ -e $WORKDIR/config.json ]]; then
+echo "如默认节点IP被墙，可在客户端地址更换以上任意一个显示可用的IP"
+fi
 echo
 insV=$(cat $WORKDIR/v 2>/dev/null)
 latestV=$(curl -sL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/sversion | awk -F "更新内容" '{print $1}' | head -n 1)
