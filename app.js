@@ -1,0 +1,56 @@
+require('dotenv').config();
+const express = require("express");
+const { exec } = require('child_process');
+const app = express();
+app.use(express.json());
+
+const commandToRun = "cd ~ && bash serv00keep.sh";
+
+function runCustomCommand() {
+    exec(commandToRun, (err, stdout, stderr) => {
+        if (err) console.error("执行错误:", err);
+        else console.log("执行成功:", stdout);
+    });
+}
+
+app.get("/up", (req, res) => {
+    runCustomCommand();
+    res.send("<pre>Serv00服务器保活已启动</pre>");
+});
+
+app.get("/re", (req, res) => {
+    const additionalCommands = `
+        USERNAME=$(whoami | tr '[:upper:]' '[:lower:]')
+        cd domains/\${USERNAME}.serv00.net/logs
+        ps aux | grep '[r]un -c con' | awk '{print \$2}' | xargs -r kill -9
+        sbb=\$(cat sb.txt)
+        nohup ./"\$sbb" run -c config.json >/dev/null 2>&1 &
+        sleep 3
+    `;
+    exec(additionalCommands, (err, stdout, stderr) => {
+        if (err) return res.status(500).send('错误: ' + err.message);
+        res.send("附加命令执行成功:\n" + stdout);
+    });
+});
+
+app.get("/list", (req, res) => {
+    const listCommands = `
+        USERNAME=$(whoami | tr '[:upper:]' '[:lower:]')
+        cat domains/\${USERNAME}.serv00.net/logs/list.txt
+    `;
+    exec(listCommands, (err, stdout, stderr) => {
+        if (err) return res.status(500).send('错误: ' + err.message);
+        res.type('text').send(stdout);
+    });
+});
+
+app.use((req, res) => {
+    res.status(404).send('路径未找到');
+});
+
+setInterval(runCustomCommand, 3 * 60 * 1000);
+
+app.listen(3000, () => {
+    console.log("服务器运行在端口 3000");
+    runCustomCommand();
+});
