@@ -1071,6 +1071,9 @@ Clashmeta_LINK="https://${USERNAME}.serv00.net/${UUID}_clashmeta.txt"
 Singbox_LINK="https://${USERNAME}.serv00.net/${UUID}_singbox.txt"
 cat > list.txt <<EOF
 =================================================================================================
+cat domains/$(whoami).serv00.net/logs/ip.txt;
+如默认节点IP被墙，可在客户端地址更换以上任意一个显示可用的IP
+-------------------------------------------------------------------------------------------------
 
 一、Vless-reality分享链接如下：
 $vl_link
