@@ -28,7 +28,6 @@ app.get("/re", (req, res) => {
            nohup ./"\$sbb" run -c config.json >/dev/null 2>&1 &
           sleep 3
           echo '重启成功'
-          cd
 `;
       exec(additionalCommands, (err, stdout, stderr) => {
         if (err) {
