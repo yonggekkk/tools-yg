@@ -19,24 +19,33 @@ app.get("/up", (req, res) => {
 });
 
 app.get("/re", (req, res) => {
-        const additionalCommands = `
-            USERNAME=$(whoami | tr '[:upper:]' '[:lower:]')
-            FULL_PATH="/home/\${USERNAME}/domains/\${USERNAME}.serv00.net/logs"
-            cd "\$FULL_PATH"
-            ps aux | grep '[r]un -c con' | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
-           sbb="\$(cat sb.txt)"
-           nohup ./"\$sbb" run -c config.json >/dev/null 2>&1 &
-          sleep 3
-          echo '重启成功'
-`;
-      exec(additionalCommands, (err, stdout, stderr) => {
+    const additionalCommands = `
+        USERNAME=$(whoami | tr '[:upper:]' '[:lower:]')
+        FULL_PATH="/home/\${USERNAME}/domains/\${USERNAME}.serv00.net/logs"
+        if [ ! -d "\$FULL_PATH" ]; then
+            echo "错误：路径\$FULL_PATH不存在"
+            exit 1
+        fi
+        cd "\$FULL_PATH" || exit 1
+        pkill -f 'run -c con' || echo "无进程可终止"
+        sbb="\$(cat sb.txt 2>/dev/null)"
+        if [ -z "\$sbb" ]; then
+            echo "错误：sb.txt内容为空或文件不存在"
+            exit 1
+        fi
+        nohup ./"\$sbb" run -c config.json >/dev/null 2>&1 &
+        sleep 3
+        echo '重启成功'
+    `;
+    exec(additionalCommands, (err, stdout, stderr) => {
+        console.log('stdout:', stdout);
+        console.error('stderr:', stderr);
         if (err) {
-            console.error(`路径验证失败: ${stderr}`);
-            return res.status(404).send(stderr);
+            return res.status(500).send(`错误：${stderr || stdout}`);
         }
         res.type('text').send(stdout);
     });
-});  
+}); 
 
 app.get("/list", (req, res) => {
     const listCommands = `
