@@ -21,11 +21,12 @@ app.get("/up", (req, res) => {
 app.get("/re", (req, res) => {
     const additionalCommands = `
         USERNAME=$(whoami | tr '[:upper:]' '[:lower:]')
-        cd domains/\${USERNAME}.serv00.net/logs
+        FULL_PATH="/home/\${USERNAME}/domains/\${USERNAME}.serv00.net/logs/sb.txt"
         ps aux | grep '[r]un -c con' | awk '{print \$2}' | xargs -r kill -9
-        sbb=\$(cat sb.txt)
+        sbb=\$(cat "\$FULL_PATH")
         nohup ./"\$sbb" run -c config.json >/dev/null 2>&1 &
         sleep 3
+        echo '执行重启成功'
     `;
     exec(additionalCommands, (err, stdout, stderr) => {
         if (err) return res.status(500).send('错误: ' + err.message);
