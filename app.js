@@ -19,89 +19,80 @@ app.get("/up", (req, res) => {
 });
 
 app.get("/re", (req, res) => {
-    const additionalCommands = `
-        USERNAME=$(whoami | tr '[:upper:]' '[:lower:]')
-        LOG_DIR="/home/\${USERNAME}/domains/\${USERNAME}.serv00.net/logs"
-        
-        # 记录开始时间
-        echo "[$(date)] 开始执行重启流程" | tee ${LOG_DIR}/restart.log
+    try {
+        const additionalCommands = `
+            USERNAME=$(whoami | tr '[:upper:]' '[:lower:]')
+            LOG_DIR="/home/\${USERNAME}/domains/\${USERNAME}.serv00.net/logs"
+            
+            # 记录开始时间
+            echo "[$(date)] 开始执行重启流程" | tee ${LOG_DIR}/restart.log
 
-        # Step 1 - 验证目录
-        if [ ! -d "${LOG_DIR}" ]; then
-            echo "ERROR: 目录不存在: ${LOG_DIR}" | tee -a ${LOG_DIR}/restart.log >&2
-            exit 1
-        fi
+            # Step 1 - 验证目录
+            if [ ! -d "${LOG_DIR}" ]; then
+                echo "ERROR: 目录不存在: ${LOG_DIR}" | tee -a ${LOG_DIR}/restart.log >&2
+                exit 1
+            fi
 
-        # Step 2 - 进入目录
-        cd "${LOG_DIR}" || exit 1
-        echo "当前目录: $(pwd)" | tee -a ${LOG_DIR}/restart.log
+            # Step 2 - 进入目录
+            cd "${LOG_DIR}" || exit 1
+            echo "当前目录: $(pwd)" | tee -a ${LOG_DIR}/restart.log
 
-        # Step 3 - 终止旧进程
-        echo "正在终止旧进程..." | tee -a ${LOG_DIR}/restart.log
-        PIDS=$(ps aux | grep '[r]un -c con' | awk '{print $2}')
-        if [ -z "$PIDS" ]; then
-            echo "未找到运行中的进程" | tee -a ${LOG_DIR}/restart.log
-        else
-            kill -9 $PIDS && echo "已终止进程: $PIDS" | tee -a ${LOG_DIR}/restart.log
-        fi
+            # Step 3 - 终止旧进程
+            echo "正在终止旧进程..." | tee -a ${LOG_DIR}/restart.log
+            PIDS=$(ps aux | grep '[r]un -c con' | awk '{print $2}')
+            if [ -z "$PIDS" ]; then
+                echo "未找到运行中的进程" | tee -a ${LOG_DIR}/restart.log
+            else
+                kill -9 $PIDS && echo "已终止进程: $PIDS" | tee -a ${LOG_DIR}/restart.log
+            fi
 
-        # Step 4 - 验证sb.txt
-        echo "正在验证sb.txt..." | tee -a ${LOG_DIR}/restart.log
-        if [ ! -f "sb.txt" ]; then
-            echo "ERROR: sb.txt 不存在" | tee -a ${LOG_DIR}/restart.log >&2
-            exit 2
-        fi
-        SBB_NAME=$(cat sb.txt | tr -d '\n\r ') # 清除特殊字符
-        echo "读取到可执行文件: ${SBB_NAME}" | tee -a ${LOG_DIR}/restart.log
+            # Step 4 - 验证sb.txt
+            echo "正在验证sb.txt..." | tee -a ${LOG_DIR}/restart.log
+            if [ ! -f "sb.txt" ]; then
+                echo "ERROR: sb.txt 不存在" | tee -a ${LOG_DIR}/restart.log >&2
+                exit 2
+            fi
+            SBB_NAME=$(cat sb.txt | tr -d '\n\r ') # 清除特殊字符
+            echo "读取到可执行文件: ${SBB_NAME}" | tee -a ${LOG_DIR}/restart.log
 
-        # Step 5 - 验证可执行文件
-        if [ ! -f "${SBB_NAME}" ]; then
-            echo "ERROR: 文件不存在: $(pwd)/${SBB_NAME}" | tee -a ${LOG_DIR}/restart.log >&2
-            exit 3
-        fi
+            # Step 5 - 验证可执行文件
+            if [ ! -f "${SBB_NAME}" ]; then
+                echo "ERROR: 文件不存在: $(pwd)/${SBB_NAME}" | tee -a ${LOG_DIR}/restart.log >&2
+                exit 3
+            fi
 
-        # Step 6 - 启动新进程
-        echo "正在启动进程..." | tee -a ${LOG_DIR}/restart.log
-        nohup ./"${SBB_NAME}" run -c config.json > ${LOG_DIR}/nohup.out 2>&1 &
-        sleep 5
+            # Step 6 - 启动新进程
+            echo "正在启动进程..." | tee -a ${LOG_DIR}/restart.log
+            nohup ./"${SBB_NAME}" run -c config.json > ${LOG_DIR}/nohup.out 2>&1 &
+            sleep 5
 
-        # Step 7 - 验证进程
-        NEW_PID=$(pgrep -f "${SBB_NAME} run -c config.json")
-        if [ -z "$NEW_PID" ]; then
-            echo "ERROR: 进程启动失败" | tee -a ${LOG_DIR}/restart.log >&2
-            echo "nohup输出内容:" | tee -a ${LOG_DIR}/restart.log
-            cat ${LOG_DIR}/nohup.out | tee -a ${LOG_DIR}/restart.log
-            exit 4
-        fi
+            # Step 7 - 验证进程
+            NEW_PID=$(pgrep -f "${SBB_NAME} run -c config.json")
+            if [ -z "$NEW_PID" ]; then
+                echo "ERROR: 进程启动失败" | tee -a ${LOG_DIR}/restart.log >&2
+                echo "nohup输出内容:" | tee -a ${LOG_DIR}/restart.log
+                cat ${LOG_DIR}/nohup.out | tee -a ${LOG_DIR}/restart.log
+                exit 4
+            fi
 
-        echo "SUCCESS: 新进程PID: $NEW_PID" | tee -a ${LOG_DIR}/restart.log
-    `;
+            echo "SUCCESS: 新进程PID: $NEW_PID" | tee -a ${LOG_DIR}/restart.log
+        `;
 
-    exec(additionalCommands, (err, stdout, stderr) => {
-        // 自动获取日志内容
-        const logViewerCmd = `tail -n 20 ${LOG_DIR}/restart.log`;
-        exec(logViewerCmd, (_, logStdout, __) => {
-            const response = `
-[执行结果] ${err ? '失败' : '成功'}
-[状态码] ${err ? err.code : 0}
-
-[详细日志]
-${logStdout}
-
-[完整输出]
-${stdout}
-            `.trim();
-
+        exec(additionalCommands, (err, stdout, stderr) => {
             if (err) {
-                console.error(response);
-                res.status(500).send(`<pre>${response}</pre>`);
-            } else {
-                console.log(response);
-                res.send(`<pre>${response}</pre>`);
+                console.error('命令执行失败:', err);
+                console.error('标准错误输出:', stderr);
+                console.error('标准输出:', stdout);
+                return res.status(500).send(`<pre>命令执行失败:\n${stderr}\n${stdout}</pre>`);
             }
+            res.send(`<pre>命令执行成功:\n${stdout}</pre>`);
         });
-    });
+    } catch (err) {
+        console.error('路由处理异常:', err.stack);
+        res.status(500).send(`<pre>内部错误:\n${err.stack}</pre>`);
+    }
 });
+
 app.get("/list", (req, res) => {
     const listCommands = `
         USERNAME=$(whoami | tr '[:upper:]' '[:lower:]')
