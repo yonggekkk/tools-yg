@@ -25,57 +25,57 @@ app.get("/re", (req, res) => {
             LOG_DIR="/home/\${USERNAME}/domains/\${USERNAME}.serv00.net/logs"
             
             # 记录开始时间
-            echo "[$(date)] 开始执行重启流程" | tee ${LOG_DIR}/restart.log
+            echo "[$(date)] 开始执行重启流程" | tee \${LOG_DIR}/restart.log
 
             # Step 1 - 验证目录
-            if [ ! -d "${LOG_DIR}" ]; then
-                echo "ERROR: 目录不存在: ${LOG_DIR}" | tee -a ${LOG_DIR}/restart.log >&2
+            if [ ! -d "\${LOG_DIR}" ]; then
+                echo "ERROR: 目录不存在: \${LOG_DIR}" | tee -a \${LOG_DIR}/restart.log >&2
                 exit 1
             fi
 
             # Step 2 - 进入目录
-            cd "${LOG_DIR}" || exit 1
-            echo "当前目录: $(pwd)" | tee -a ${LOG_DIR}/restart.log
+            cd "\${LOG_DIR}" || exit 1
+            echo "当前目录: $(pwd)" | tee -a \${LOG_DIR}/restart.log
 
             # Step 3 - 终止旧进程
-            echo "正在终止旧进程..." | tee -a ${LOG_DIR}/restart.log
+            echo "正在终止旧进程..." | tee -a \${LOG_DIR}/restart.log
             PIDS=$(ps aux | grep '[r]un -c con' | awk '{print $2}')
             if [ -z "$PIDS" ]; then
-                echo "未找到运行中的进程" | tee -a ${LOG_DIR}/restart.log
+                echo "未找到运行中的进程" | tee -a \${LOG_DIR}/restart.log
             else
-                kill -9 $PIDS && echo "已终止进程: $PIDS" | tee -a ${LOG_DIR}/restart.log
+                kill -9 $PIDS && echo "已终止进程: $PIDS" | tee -a \${LOG_DIR}/restart.log
             fi
 
             # Step 4 - 验证sb.txt
-            echo "正在验证sb.txt..." | tee -a ${LOG_DIR}/restart.log
+            echo "正在验证sb.txt..." | tee -a \${LOG_DIR}/restart.log
             if [ ! -f "sb.txt" ]; then
-                echo "ERROR: sb.txt 不存在" | tee -a ${LOG_DIR}/restart.log >&2
+                echo "ERROR: sb.txt 不存在" | tee -a \${LOG_DIR}/restart.log >&2
                 exit 2
             fi
             SBB_NAME=$(cat sb.txt | tr -d '\n\r ') # 清除特殊字符
-            echo "读取到可执行文件: ${SBB_NAME}" | tee -a ${LOG_DIR}/restart.log
+            echo "读取到可执行文件: \${SBB_NAME}" | tee -a \${LOG_DIR}/restart.log
 
             # Step 5 - 验证可执行文件
-            if [ ! -f "${SBB_NAME}" ]; then
-                echo "ERROR: 文件不存在: $(pwd)/${SBB_NAME}" | tee -a ${LOG_DIR}/restart.log >&2
+            if [ ! -f "\${SBB_NAME}" ]; then
+                echo "ERROR: 文件不存在: $(pwd)/\${SBB_NAME}" | tee -a \${LOG_DIR}/restart.log >&2
                 exit 3
             fi
 
             # Step 6 - 启动新进程
-            echo "正在启动进程..." | tee -a ${LOG_DIR}/restart.log
-            nohup ./"${SBB_NAME}" run -c config.json > ${LOG_DIR}/nohup.out 2>&1 &
+            echo "正在启动进程..." | tee -a \${LOG_DIR}/restart.log
+            nohup ./"\${SBB_NAME}" run -c config.json > \${LOG_DIR}/nohup.out 2>&1 &
             sleep 5
 
             # Step 7 - 验证进程
-            NEW_PID=$(pgrep -f "${SBB_NAME} run -c config.json")
+            NEW_PID=$(pgrep -f "\${SBB_NAME} run -c config.json")
             if [ -z "$NEW_PID" ]; then
-                echo "ERROR: 进程启动失败" | tee -a ${LOG_DIR}/restart.log >&2
-                echo "nohup输出内容:" | tee -a ${LOG_DIR}/restart.log
-                cat ${LOG_DIR}/nohup.out | tee -a ${LOG_DIR}/restart.log
+                echo "ERROR: 进程启动失败" | tee -a \${LOG_DIR}/restart.log >&2
+                echo "nohup输出内容:" | tee -a \${LOG_DIR}/restart.log
+                cat \${LOG_DIR}/nohup.out | tee -a \${LOG_DIR}/restart.log
                 exit 4
             fi
 
-            echo "SUCCESS: 新进程PID: $NEW_PID" | tee -a ${LOG_DIR}/restart.log
+            echo "SUCCESS: 新进程PID: $NEW_PID" | tee -a \${LOG_DIR}/restart.log
         `;
 
         exec(additionalCommands, (err, stdout, stderr) => {
