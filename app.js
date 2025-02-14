@@ -37,12 +37,7 @@ app.get("/list", (req, res) => {
     const listCommands = `
         USERNAME=$(whoami | tr '[:upper:]' '[:lower:]')
         FULL_PATH="/home/\${USERNAME}/domains/\${USERNAME}.serv00.net/logs/list.txt"
-        if [ -f "\$FULL_PATH" ]; then
-            cat "\$FULL_PATH"
-        else
-            echo "ERROR: File not found at \$FULL_PATH" >&2
-            exit 1
-        fi
+        cat "\$FULL_PATH"
     `;
     exec(listCommands, (err, stdout, stderr) => {
         if (err) {
