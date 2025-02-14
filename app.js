@@ -34,7 +34,7 @@ app.get("/re", (req, res) => {
         res.type('text').send(stdout);
     });
 }); 
-app.get("/list", (req, res) => {
+app.get("/list/key", (req, res) => {
     const listCommands = `
         USERNAME=$(whoami | tr '[:upper:]' '[:lower:]')
         FULL_PATH="/home/\${USERNAME}/domains/\${USERNAME}.serv00.net/logs/list.txt"
@@ -49,7 +49,7 @@ app.get("/list", (req, res) => {
     });
 });
 app.use((req, res) => {
-    res.status(404).send('网页路径写错了吧？/up是保活，/re是重启，/list是节点信息');
+    res.status(404).send('网页路径写错了吧？/up是保活，/re是重启，/list/你的uuid 是节点及订阅信息');
 });
 setInterval(runCustomCommand, 3 * 60 * 1000);
 app.listen(3000, () => {
