@@ -21,16 +21,67 @@ app.get("/up", (req, res) => {
 app.get("/re", (req, res) => {
     const additionalCommands = `
         USERNAME=$(whoami | tr '[:upper:]' '[:lower:]')
-        FULL_PATH="/home/\${USERNAME}/domains/\${USERNAME}.serv00.net/logs/sb.txt"
-        ps aux | grep '[r]un -c con' | awk '{print \$2}' | xargs -r kill -9
-        sbb=\$(cat "\$FULL_PATH")
-        nohup ./"\$sbb" run -c config.json >/dev/null 2>&1 &
+        LOG_DIR="/home/\${USERNAME}/domains/\${USERNAME}.serv00.net/logs"
+        
+        # Step 1 - 验证日志目录是否存在
+        if [ ! -d "\${LOG_DIR}" ]; then
+            echo "ERROR: 目录不存在: \${LOG_DIR}" >&2
+            exit 1
+        fi
+
+        # Step 2 - 进入目录
+        cd "\${LOG_DIR}" || exit 1
+
+        # Step 3 - 终止旧进程 (静默模式)
+        ps aux | grep '[r]un -c con' | awk '{print \$2}' | xargs -r kill -9 2>/dev/null
+
+        # Step 4 - 验证sb.txt存在
+        if [ ! -f "sb.txt" ]; then
+            echo "ERROR: sb.txt 文件不存在于 \${LOG_DIR}" >&2
+            exit 2
+        fi
+
+        # Step 5 - 读取启动文件名
+        SBB_NAME=$(cat sb.txt)
+        if [ -z "\${SBB_NAME}" ]; then
+            echo "ERROR: sb.txt 内容为空" >&2
+            exit 3
+        fi
+
+        # Step 6 - 验证可执行文件存在
+        if [ ! -f "\${SBB_NAME}" ]; then
+            echo "ERROR: 可执行文件不存在: \${LOG_DIR}/\${SBB_NAME}" >&2
+            exit 4
+        fi
+
+        # Step 7 - 启动新进程
+        nohup ./"\${SBB_NAME}" run -c config.json >/dev/null 2>&1 &
         sleep 3
-        echo '执行重启成功'
+
+        # Step 8 - 验证进程是否运行
+        if ! pgrep -f "\${SBB_NAME} run -c config.json" >/dev/null; then
+            echo "ERROR: 进程启动失败" >&2
+            exit 5
+        fi
+
+        echo "SUCCESS: 服务已重启"
     `;
-    exec(additionalCommands, (err, stdout, stderr) => {
-        if (err) return res.status(500).send('错误: ' + err.message);
-        res.send("附加命令执行成功:\n" + stdout);
+   exec(additionalCommands, (err, stdout, stderr) => {
+        const result = `
+[标准输出]
+${stdout}
+
+[错误输出]
+${stderr}
+        `.trim();
+
+        if (err) {
+            console.error(`/re 执行失败 (CODE:${err.code}):\n${result}`);
+            return res.status(500).send(`<pre>重启失败:\n${result}</pre>`);
+        }
+
+        console.log(`/re 执行成功:\n${result}`);
+        res.send(`<pre>重启成功:\n${result}</pre>`);
     });
 });
 
