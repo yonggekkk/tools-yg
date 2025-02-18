@@ -1351,7 +1351,7 @@ echo
 portlist=$(devil port list | grep -E '^[0-9]+[[:space:]]+[a-zA-Z]+' | sed 's/^[[:space:]]*//')
 if [[ -n $portlist ]]; then
 green "已设置的端口如下："
-echo $portlist
+echo -e "$portlist"
 else
 yellow "未设置端口！请先选择 7 随机生成端口"
 fi
