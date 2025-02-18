@@ -1313,7 +1313,7 @@ menu() {
    echo   "------------------------------------------------------------"
    green  "6. 查看sing-box与clash配置文件"
    echo   "------------------------------------------------------------"
-   green  "7. 删除所有端口并随机生成新端口"
+   yellow "7. 删除所有端口并随机生成新端口"
    echo   "------------------------------------------------------------"
    yellow "8. 重置并清理所有服务进程(系统初始化)"
    echo   "------------------------------------------------------------"
@@ -1346,6 +1346,14 @@ green "当前可选择的IP如下："
 cat $WORKDIR/ip.txt
 if [[ -e $WORKDIR/config.json ]]; then
 echo "如默认节点IP被墙，可在客户端地址更换以上任意一个显示可用的IP"
+fi
+echo
+portlist=$(devil port list | grep -E '^[0-9]+[[:space:]]+[a-zA-Z]+' | sed 's/^[[:space:]]*//')
+if [[ -n $portlist ]]; then
+green "已设置的端口如下："
+echo $portlist
+else
+yellow "未设置端口！请先选择 7 随机生成端口"
 fi
 echo
 insV=$(cat $WORKDIR/v 2>/dev/null)
