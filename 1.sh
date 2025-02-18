@@ -68,20 +68,6 @@ fi
 }
 
 check_port () {
-while true; do
-yellow "方式一：继续使用原有端口(如没有则随机生成)：输入回车"
-yellow "方式二：删除原有端口并随机生成新端口：输入p"
-reading "【请选择 p 或者 回车】: " checkport
-if [[ "$checkport" != "p" && "$checkport" != "P" && -n "$checkport" ]]; then
-red "无效的选择，请输入 p 或回车"
-continue
-fi
-if [[ "$checkport" == "p" || "$checkport" == "P" ]]; then
-delallport
-fi
-break
-done
-
 port_list=$(devil port list)
 tcp_ports=$(echo "$port_list" | grep -c "tcp")
 udp_ports=$(echo "$port_list" | grep -c "udp")
@@ -140,6 +126,7 @@ if [[ $tcp_ports -ne 2 || $udp_ports -ne 1 ]]; then
     green "端口已调整完成,将断开ssh连接,请重新连接shh重新执行脚本"
     devil binexec on >/dev/null 2>&1
     kill -9 $(ps -o ppid= -p $$) >/dev/null 2>&1
+    sleep 2
 else
     tcp_ports=$(echo "$port_list" | awk '/tcp/ {print $1}')
     tcp_port1=$(echo "$tcp_ports" | sed -n '1p')
@@ -149,21 +136,18 @@ else
     purple "当前TCP端口: $tcp_port1 和 $tcp_port2"
     purple "当前UDP端口: $udp_port"
 fi
-
 export vless_port=$tcp_port1
 export vmess_port=$tcp_port2
 export hy2_port=$udp_port
 green "你的vless-reality端口: $vless_port"
 green "你的vmess-ws端口(设置Argo固定域名端口): $vmess_port"
 green "你的hysteria2端口: $hy2_port"
-sleep 2
 }
 
 install_singbox() {
 if [[ -e $WORKDIR/list.txt ]]; then
 yellow "已安装sing-box，请先选择2卸载，再执行安装" && exit
 fi
-yellow "为确保节点可用性，建议在Serv00网页不设置端口，脚本会随机生成有效端口"
 sleep 2
         cd $WORKDIR
 	echo
