@@ -69,8 +69,8 @@ fi
 
 check_port () {
 while true; do
-yellow "回车表示：继续使用原有端口(如没有则随机生成)"
-yellow "输入p表示：删除原有端口并随机生成新端口"
+yellow "方式一：继续使用原有端口(如没有则随机生成)：输入回车"
+yellow "方式二：删除原有端口并随机生成新端口：输入p"
 reading "【请选择 p 或者 回车】: " checkport
 if [[ "$checkport" != "p" && "$checkport" != "P" && -n "$checkport" ]]; then
 red "无效的选择，请输入 p 或回车"
@@ -234,10 +234,10 @@ reading "\n清理所有进程并清空所有安装内容，将退出ssh连接，
 # Generating argo Config
 argo_configure() {
   while true; do
-    yellow "方式一：Argo临时隧道 (无需域名，推荐)"
-    yellow "方式二：Argo固定隧道 (需要域名，需要CF设置提取Token)"
+    yellow "方式一：Argo临时隧道 (无需域名，推荐)：输入回车"
+    yellow "方式二：Argo固定隧道 (需要域名，需要CF设置提取Token)：输入g"
     echo -e "${red}注意：${purple}Argo固定隧道使用Token时，需要在cloudflare后台设置隧道端口，该端口必须与vmess-ws的tcp端口 $vmess_port 一致)${re}"
-    reading "输入 g 表示使用Argo固定隧道，回车跳过表示使用Argo临时隧道 【请选择 g 或者 回车】: " argo_choice
+    reading "【请选择 g 或者 回车】: " argo_choice
     if [[ "$argo_choice" != "g" && "$argo_choice" != "G" && -n "$argo_choice" ]]; then
         red "无效的选择，请输入 g 或回车"
         continue
