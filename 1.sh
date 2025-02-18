@@ -53,7 +53,35 @@ read_reym() {
 	green "你的reality域名为: $reym"
 }
 
+delallport(){
+portlist=$(devil port list | grep -E '^[0-9]+[[:space:]]+[a-zA-Z]+' | sed 's/^[[:space:]]*//')
+if [[ -z "$portlist" ]]; then
+yellow "无端口"
+else
+while read -r line; do
+port=$(echo "$line" | awk '{print $1}')
+port_type=$(echo "$line" | awk '{print $2}')
+yellow "删除端口 $port ($port_type)"
+devil port del "$port_type" "$port"
+done <<< "$portlist"
+fi  
+}
+
 check_port () {
+while true; do
+yellow "回车表示：继续使用原有端口(如没有则随机生成)"
+yellow "输入p表示：删除原有端口并随机生成新端口"
+reading "【请选择 p 或者 回车】: " checkport
+if [[ "$checkport" != "p" && "$checkport" != "P" && -n "$checkport" ]]; then
+red "无效的选择，请输入 p 或回车"
+continue
+fi
+if [[ "$checkport" == "p" || "$checkport" == "P" ]]; then
+delallport
+fi
+break
+done
+
 port_list=$(devil port list)
 tcp_ports=$(echo "$port_list" | grep -c "tcp")
 udp_ports=$(echo "$port_list" | grep -c "udp")
@@ -1278,12 +1306,10 @@ else
 red "未安装脚本，请选择1进行安装" && exit
 fi
 }
-#主菜单
+
 menu() {
    clear
    echo "============================================================"
-   purple "修改自Serv00老王sing-box安装脚本"
-   purple "转载请著名出自老王，请勿滥用"
    green "甬哥Github项目  ：github.com/yonggekkk"
    green "甬哥Blogger博客 ：ygkkk.blogspot.com"
    green "甬哥YouTube频道 ：www.youtube.com/@ygkkk"
@@ -1294,15 +1320,17 @@ menu() {
    echo   "------------------------------------------------------------"
    red    "2. 卸载删除 Serv00-sb-yg"
    echo   "------------------------------------------------------------"
-   green  "3. 重启 Serv00-sb-yg 主程序"
+   green  "3. 重启主程序"
    echo   "------------------------------------------------------------"
-   green  "4. 更新 Serv00-sb-yg 脚本"
+   green  "4. 更新脚本"
    echo   "------------------------------------------------------------"
    green  "5. 查看各节点分享/sing-box与clash订阅链接/CF节点proxyip"
    echo   "------------------------------------------------------------"
    green  "6. 查看sing-box与clash配置文件"
    echo   "------------------------------------------------------------"
-   yellow "7. 重置并清理所有服务进程(系统初始化)"
+   green  "7. 删除所有端口"
+   echo   "------------------------------------------------------------"
+   yellow "8. 重置并清理所有服务进程(系统初始化)"
    echo   "------------------------------------------------------------"
    red    "0. 退出脚本"
    echo   "============================================================"
@@ -1386,7 +1414,7 @@ yellow "未安装 Serv00-sb-yg 脚本！请先选择 1 安装"
 fi
 #curl -sSL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/serv00.sh -o serv00.sh && chmod +x serv00.sh
    echo -e "========================================================="
-   reading "请输入选择【0-7】: " choice
+   reading "请输入选择【0-8】: " choice
    echo
     case "${choice}" in
         1) install_singbox ;;
@@ -1395,9 +1423,10 @@ fi
 	4) fastrun && green "脚本已更新成功" && sleep 2 && sb ;; 
         5) showlist ;;
 	6) showsbclash ;;
-        7) kill_all_tasks ;;
+        7) delallport ;;
+        8) kill_all_tasks ;;
 	0) exit 0 ;;
-        *) red "无效的选项，请输入 0 到 7" ;;
+        *) red "无效的选项，请输入 0 到 8" ;;
     esac
 }
 menu
