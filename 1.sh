@@ -1353,7 +1353,7 @@ if [[ -n $portlist ]]; then
 green "已设置的端口如下："
 echo -e "$portlist"
 else
-yellow "未设置端口！请先选择 7 随机生成端口"
+yellow "未设置端口！请先选择 7 随机生成端口，再选择 1 安装脚本"
 fi
 echo
 insV=$(cat $WORKDIR/v 2>/dev/null)
@@ -1403,7 +1403,7 @@ green "请在浏览器输入多功能主页地址：http://${snb}.${USERNAME}.se
 #fi
 else
 echo -e "当前 Serv00-sb-yg 脚本版本号：${purple}${latestV}${re}"
-yellow "未安装 Serv00-sb-yg 脚本！请先选择 1 安装"
+yellow "未安装 Serv00-sb-yg 脚本！请选择 1 安装"
 fi
 #curl -sSL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/serv00.sh -o serv00.sh && chmod +x serv00.sh
    echo -e "========================================================="
