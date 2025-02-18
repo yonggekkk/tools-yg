@@ -53,7 +53,7 @@ read_reym() {
 	green "你的reality域名为: $reym"
 }
 
-delallport(){
+resallport(){
 portlist=$(devil port list | grep -E '^[0-9]+[[:space:]]+[a-zA-Z]+' | sed 's/^[[:space:]]*//')
 if [[ -z "$portlist" ]]; then
 yellow "无端口"
@@ -64,7 +64,8 @@ port_type=$(echo "$line" | awk '{print $2}')
 yellow "删除端口 $port ($port_type)"
 devil port del "$port_type" "$port"
 done <<< "$portlist"
-fi  
+fi
+check_port
 }
 
 check_port () {
@@ -1312,7 +1313,7 @@ menu() {
    echo   "------------------------------------------------------------"
    green  "6. 查看sing-box与clash配置文件"
    echo   "------------------------------------------------------------"
-   green  "7. 删除所有端口"
+   green  "7. 删除所有端口并随机生成新端口"
    echo   "------------------------------------------------------------"
    yellow "8. 重置并清理所有服务进程(系统初始化)"
    echo   "------------------------------------------------------------"
@@ -1407,7 +1408,7 @@ fi
 	4) fastrun && green "脚本已更新成功" && sleep 2 && sb ;; 
         5) showlist ;;
 	6) showsbclash ;;
-        7) delallport ;;
+        7) resallport ;;
         8) kill_all_tasks ;;
 	0) exit 0 ;;
         *) red "无效的选项，请输入 0 到 8" ;;
