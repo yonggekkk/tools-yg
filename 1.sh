@@ -1369,7 +1369,9 @@ fi
 done <<< "$response"
 fi
 done
+if [[ "$response" =~ ^$|unknown|not|error ]]; then
 grep ':' $WORKDIR/ip.txt | sort -u -o $WORKDIR/ip.txt
+fi
 green "${hona}服务器名称：${snb}"
 echo
 green "当前可选择的IP如下："
