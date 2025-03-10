@@ -205,6 +205,7 @@ sleep 2
         echo
         get_links
 	cd
+        export PATH="$HOME/bin:$PATH"
         purple "************************************************************"
         purple "${hona}-sb-yg脚本安装结束！再次进入脚本时，请输入快捷方式：sb"
 	purple "************************************************************"
@@ -1287,7 +1288,6 @@ if [[ -e $WORKDIR/config.json ]]; then
   mkdir -p "$HOME/bin"
   curl -Ls https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/serv00.sh > "$SCRIPT_PATH"
   chmod +x "$SCRIPT_PATH"
-export PATH="$HOME/bin:$PATH"
 curl -sL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/app.js -o "$keep_path"/app.js
 sed -i '' "15s/name/$snb/g" "$keep_path"/app.js
 sed -i '' "60s/key/$UUID/g" "$keep_path"/app.js
