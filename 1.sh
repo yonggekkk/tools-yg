@@ -200,7 +200,7 @@ sleep 2
         fastrun
 	green "创建快捷方式：sb"
 	echo
-	servkeep
+	#servkeep
         cd $WORKDIR
         echo
         get_links
@@ -1278,7 +1278,7 @@ sed -i '' "15s/name/$snb/g" "$keep_path"/app.js
 sed -i '' "60s/key/$UUID/g" "$keep_path"/app.js
 sed -i '' "75s/name/$USERNAME/g" "$keep_path"/app.js
 sed -i '' "75s/where/$snb/g" "$keep_path"/app.js
-curl -sSL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/serv00keep.sh -o serv00keep.sh && chmod +x serv00keep.sh
+#curl -sSL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/serv00keep.sh -o serv00keep.sh && chmod +x serv00keep.sh
 curl -sL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/index.html -o "$FILE_PATH"/index.html
 curl -sL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/sversion | awk -F "更新内容" '{print $1}' | head -n 1 > $WORKDIR/v
 else
@@ -1387,7 +1387,7 @@ if pgrep -x "$sbb" > /dev/null; then
 green "Sing-box主进程运行正常"
 green "UUID密码：$showuuid" 
 else
-yellow "Sing-box主进程启动失败，尝试运行下保活网页、重启、重置端口"
+yellow "Sing-box主进程启动失败"
 fi
 if [ -f "$WORKDIR/boot.log" ] && grep -q "trycloudflare.com" "$WORKDIR/boot.log"; then
 argosl=$(cat "$WORKDIR/boot.log" 2>/dev/null | grep -a trycloudflare.com | awk 'NR==2{print}' | awk -F// '{print $2}' | awk '{print $1}')
@@ -1396,7 +1396,7 @@ checkhttp=$(curl -o /dev/null -s -w "%{http_code}\n" "https://$argosl")
 green "Argo临时域名：$argosl  $check"
 fi
 if [ -f "$WORKDIR/boot.log" ] && ! grep -q "trycloudflare.com" "$WORKDIR/boot.log"; then
-yellow "Argo临时域名暂时不存在，保活过程中会自动恢复"
+yellow "Argo临时域名暂时不存在"
 fi
 if [ ! -f "$WORKDIR/boot.log" ]; then
 argogd=$(cat $WORKDIR/gdym.log 2>/dev/null)
@@ -1404,8 +1404,8 @@ checkhttp=$(curl --max-time 2 -o /dev/null -s -w "%{http_code}\n" "https://$argo
 [ "$checkhttp" -eq 404 ] && check="域名有效" || check="域名可能无效"
 green "Argo固定域名：$argogd $check"
 fi
-green "多功能主页如下 (支持保活、重启、重置端口、节点查询)"
-purple "http://${snb}.${USERNAME}.${hona}.net"
+#green "多功能主页如下 (支持保活、重启、重置端口、节点查询)"
+#purple "http://${snb}.${USERNAME}.${hona}.net"
 else
 echo -e "当前 ${hona}-sb-yg 脚本版本号：${purple}${latestV}${re}"
 yellow "未安装 ${hona}-sb-yg 脚本！请选择 1 安装"
