@@ -12,11 +12,11 @@ reading() { read -p "$(red "$1")" "$2"; }
 USERNAME=$(whoami | tr '[:upper:]' '[:lower:]')
 hona=$(hostname | cut -d. -f2)
 HOSTNAME=$(hostname)
-WORKDIR="${HOME}/domains/${USERNAME}.${hona}.net/logs"
+WORKDIR="${HOME}/domains/${USERNAME}.useruno.com/logs"
 snb=$(hostname | awk -F '.' '{print $1}')
 nb=$(hostname | cut -d '.' -f 1 | tr -d 's')
-devil www add ${USERNAME}.${hona}.net php > /dev/null 2>&1
-FILE_PATH="${HOME}/domains/${USERNAME}.${hona}.net/public_html"
+devil www add ${USERNAME}.useruno.com php > /dev/null 2>&1
+FILE_PATH="${HOME}/domains/${USERNAME}.useruno.com/public_html"
 #keep_path="${HOME}/domains/${snb}.${USERNAME}.${hona}.net/public_nodejs"
 #[ -d "$keep_path" ] || mkdir -p "$keep_path"
 [ -d "$FILE_PATH" ] || mkdir -p "$FILE_PATH"
@@ -53,7 +53,7 @@ read_reym() {
         yellow "方式三：支持其他域名，注意要符合reality域名规则：输入域名"
         reading "请输入reality域名 【请选择 回车 或者 s 或者 输入域名】: " reym
         if [[ -z "$reym" ]]; then
-	    reym=$USERNAME.${hona}.net
+	    reym=$USERNAME.useruno.com
 	elif [[ "$reym" == "s" || "$reym" == "S" ]]; then
 	    reym=www.speedtest.net
         fi
@@ -233,8 +233,8 @@ reading "\n清理所有进程并清空所有安装内容，将退出ssh连接，
   case "$choice" in
     [Yy]) 
     bash -c 'ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk "{print \$2}" | xargs -r kill -9 >/dev/null 2>&1' >/dev/null 2>&1
-    devil www del ${snb}.${USERNAME}.${hona}.net > /dev/null 2>&1
-    devil www del ${USERNAME}.${hona}.net > /dev/null 2>&1
+    #devil www del ${snb}.${USERNAME}.${hona}.net > /dev/null 2>&1
+    devil www del ${USERNAME}.useruno.com > /dev/null 2>&1
     purple "************************************************************"
     purple "${hona}-sb-yg清理重置完成！"
     purple "欢迎继续使用脚本：bash <(curl -Ls https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/serv00.sh)"
@@ -330,7 +330,7 @@ public_key=$(echo "${output}" | awk '/PublicKey:/ {print $2}')
 echo "${private_key}" > private_key.txt
 echo "${public_key}" > public_key.txt
 openssl ecparam -genkey -name prime256v1 -out "private.key"
-openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=$USERNAME.${hona}.net"
+openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=$USERNAME.useruno.com"
   cat > config.json << EOF
 {
   "log": {
@@ -1086,9 +1086,9 @@ v2sub=$(cat jh.txt)
 echo "$v2sub" > ${FILE_PATH}/${UUID}_v2sub.txt
 cat clash_meta.yaml > ${FILE_PATH}/${UUID}_clashmeta.txt
 cat sing_box.json > ${FILE_PATH}/${UUID}_singbox.txt
-V2rayN_LINK="https://${USERNAME}.${hona}.net/${UUID}_v2sub.txt"
-Clashmeta_LINK="https://${USERNAME}.${hona}.net/${UUID}_clashmeta.txt"
-Singbox_LINK="https://${USERNAME}.${hona}.net/${UUID}_singbox.txt"
+V2rayN_LINK="https://${USERNAME}.useruno.com/${UUID}_v2sub.txt"
+Clashmeta_LINK="https://${USERNAME}.useruno.com/${UUID}_clashmeta.txt"
+Singbox_LINK="https://${USERNAME}.useruno.com/${UUID}_singbox.txt"
 cat > list.txt <<EOF
 =================================================================================================
 
