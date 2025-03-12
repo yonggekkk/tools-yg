@@ -17,9 +17,9 @@ snb=$(hostname | awk -F '.' '{print $1}')
 nb=$(hostname | cut -d '.' -f 1 | tr -d 's')
 devil www add ${USERNAME}.${hona}.net php > /dev/null 2>&1
 FILE_PATH="${HOME}/domains/${USERNAME}.${hona}.net/public_html"
-keep_path="${HOME}/domains/${snb}.${USERNAME}.${hona}.net/public_nodejs"
+#keep_path="${HOME}/domains/${snb}.${USERNAME}.${hona}.net/public_nodejs"
+#[ -d "$keep_path" ] || mkdir -p "$keep_path"
 [ -d "$FILE_PATH" ] || mkdir -p "$FILE_PATH"
-[ -d "$keep_path" ] || mkdir -p "$keep_path"
 [ -d "$WORKDIR" ] || (mkdir -p "$WORKDIR" && chmod 777 "$WORKDIR")
 curl -sk "http://${snb}.${USERNAME}.${hona}.net/up" > /dev/null 2>&1
 devil binexec on >/dev/null 2>&1
@@ -1273,11 +1273,11 @@ if [[ -e $WORKDIR/config.json ]]; then
       echo "export PATH=\"\$HOME/bin:\$PATH\"" >> "$HOME/.bashrc"
       source "$HOME/.bashrc"
   fi
-curl -sL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/app.js -o "$keep_path"/app.js
-sed -i '' "15s/name/$snb/g" "$keep_path"/app.js
-sed -i '' "60s/key/$UUID/g" "$keep_path"/app.js
-sed -i '' "75s/name/$USERNAME/g" "$keep_path"/app.js
-sed -i '' "75s/where/$snb/g" "$keep_path"/app.js
+#curl -sL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/app.js -o "$keep_path"/app.js
+#sed -i '' "15s/name/$snb/g" "$keep_path"/app.js
+#sed -i '' "60s/key/$UUID/g" "$keep_path"/app.js
+#sed -i '' "75s/name/$USERNAME/g" "$keep_path"/app.js
+#sed -i '' "75s/where/$snb/g" "$keep_path"/app.js
 #curl -sSL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/serv00keep.sh -o serv00keep.sh && chmod +x serv00keep.sh
 curl -sL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/index.html -o "$FILE_PATH"/index.html
 curl -sL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/sversion | awk -F "更新内容" '{print $1}' | head -n 1 > $WORKDIR/v
