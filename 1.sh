@@ -1052,11 +1052,11 @@ proxy-groups:
   interval: 300
   strategy: round-robin
   proxies:
-    - vless-reality-vision-$snb                              
-    - vmess-ws-$snb
-    - hysteria2-$snb
-    - vmess-tls-argo-$snb
-    - vmess-argo-$snb
+    - vless-reality-vision-$snb-$USERNAME                              
+    - vmess-ws-$snb-$USERNAME
+    - hysteria2-$snb-$USERNAME
+    - vmess-tls-argo-$snb-$USERNAME
+    - vmess-argo-$snb-$USERNAME
 
 - name: Auto
   type: url-test
