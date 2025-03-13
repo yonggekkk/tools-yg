@@ -1323,9 +1323,10 @@ argogdshow(){
 if [ -f ARGO_AUTH.log ]; then
 echo
 argoport=$(jq -r '.inbounds[4].listen_port' config.json)
-yellow "已设置Argo固定域名：$(cat gdym.log)"
-yellow "固定隧道token：$(cat ARGO_AUTH.log)"
-yellow "切记：CF官网把ARGO固定隧道端口设置为：$argoport"
+purple "如果你想设置原先的Argo固定隧道，请明确以下三点"
+purple "1：已设置Argo固定域名：$(cat gdym.log)"
+purple "2：固定隧道token：$(cat ARGO_AUTH.log)"
+purple "3：检查CF官网的ARGO固定隧道端口：$argoport"
 echo
 fi
 }
