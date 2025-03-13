@@ -573,8 +573,8 @@ fi
 sleep 2
 if ! pgrep -x "$(cat sb.txt)" > /dev/null; then
 red "主进程未启动，根据以下情况一一排查"
-yellow "1、选择7重置端口，自动生成随机可用端口（重要）"
-yellow "2、选择8重置"
+yellow "1、选择8重置端口，自动生成随机可用端口（重要）"
+yellow "2、选择9重置"
 yellow "3、当前${hona}服务器炸了？等会再试"
 red "4、以上都试了，哥直接躺平，交给进程保活，过会再来看"
 sleep 6
@@ -1443,7 +1443,7 @@ if [ "$insV" = "$latestV" ]; then
 echo -e "当前 ${hona}-sb-yg 脚本最新版：${purple}${insV}${re} (已安装)"
 else
 echo -e "当前 ${hona}-sb-yg 脚本版本号：${purple}${insV}${re}"
-echo -e "检测到最新 ${hona}-sb-yg 脚本版本号：${yellow}${latestV}${re} (可选择4进行更新)"
+echo -e "检测到最新 ${hona}-sb-yg 脚本版本号：${yellow}${latestV}${re} (可选择5进行更新)"
 echo -e "${yellow}$(curl -sL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/sversion)${re}"
 fi
 echo -e "========================================================="
@@ -1453,7 +1453,7 @@ if pgrep -x "$sbb" > /dev/null; then
 green "Sing-box主进程运行正常"
 green "UUID密码：$showuuid" 
 else
-yellow "Sing-box主进程启动失败"
+yellow "Sing-box主进程启动失败，建议选择8重置端口，再选择9卸载重装"
 fi
 if [ -f "$WORKDIR/boot.log" ] && grep -q "trycloudflare.com" "$WORKDIR/boot.log"; then
 argosl=$(cat "$WORKDIR/boot.log" 2>/dev/null | grep -a trycloudflare.com | awk 'NR==2{print}' | awk -F// '{print $2}' | awk '{print $1}')
