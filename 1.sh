@@ -262,7 +262,6 @@ argo_configure() {
     yellow "方式一：(推荐)无需域名的Argo临时隧道：输入回车"
     yellow "方式二：需要域名的Argo固定隧道(需要CF设置提取Token)：输入g"
     reading "【请选择 g 或者 回车】: " argo_choice
-    #declare -g whichargo="$argo_choice"
     if [[ "$argo_choice" != "g" && "$argo_choice" != "G" && -n "$argo_choice" ]]; then
         red "无效的选择，请输入 g 或回车"
         continue
@@ -1358,12 +1357,12 @@ for ((i=1; i<=5; i++)); do
         break
     fi
     if [[ $i -eq 5 ]]; then
-        red "$agg Argo进程重启失败，Argo节点暂不可用(保活过程中会自动恢复)，其他节点依旧可用"
+        red "$agg Argo进程重启失败，Argo节点暂不可用，其他节点依旧可用"
     fi
 done
 fi
 curl -sk "http://${snb}.${USERNAME}.${hona}.net/up" > /dev/null 2>&1
-get_argodomain
+purple "Argo域名：get_argodomain"
 cd
 else
 red "未安装脚本，请选择1进行安装" && exit
