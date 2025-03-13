@@ -1339,9 +1339,17 @@ ps aux | grep '[t]unnel --u' | awk '{print $2}' | xargs -r kill -9 > /dev/null 2
 ps aux | grep '[t]unnel --n' | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
 agg=$(cat ag.txt)
 if [[ ! -f boot.log ]] && [[ "$argo_choice" =~ (G|g) ]]; then
+if [ "$hona" = "serv00" ]; then
+sed -i '' -e "15s|''|'$(cat gdym.log)'|" ~/serv00keep.sh
+sed -i '' -e "16s|''|'$(cat ARGO_AUTH.log)'|" ~/serv00keep.sh
+fi
 args="tunnel --no-autoupdate run --token $(cat ARGO_AUTH.log)"
 else
 rm -rf boot.log
+if [ "$hona" = "serv00" ]; then
+sed -i '' -e "15s|'$(cat gdym.log)'|''|" ~/serv00keep.sh
+sed -i '' -e "16s|'$(cat ARGO_AUTH.log)'|''|" ~/serv00keep.sh
+fi
 args="tunnel --url http://localhost:$(jq -r '.inbounds[4].listen_port' config.json) --no-autoupdate --logfile boot.log --loglevel info"
 fi
     nohup ./"$agg" $args >/dev/null 2>&1 &
