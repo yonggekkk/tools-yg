@@ -99,7 +99,7 @@ ps aux | grep '[r]un -c con' > /dev/null && green "主进程启动成功，单�
 if [ -f "$WORKDIR/boot.log" ]; then
 ps aux | grep '[t]unnel --u' > /dev/null && green "Argo临时隧道启动成功，单节点用户在客户端host/sni更换临时域名，订阅链接用户更新下订阅即可" || yellow "Argo临时隧道启动失败"
 else
-ps aux | grep '[t]unnel --n' > /dev/null && green "Argo固定隧道启动成功" || yellow "Argo固定隧道启动失败，请先在CF更改隧道端口：$vmess_port"
+ps aux | grep '[t]unnel --n' > /dev/null && green "Argo固定隧道启动成功" || yellow "Argo固定隧道启动失败，请先在CF更改隧道端口：$vmess_port，再重启下Argo隧道"
 fi
 fi
 }
@@ -268,9 +268,12 @@ argo_configure() {
     fi
     if [[ "$argo_choice" == "g" || "$argo_choice" == "G" ]]; then
         reading "请输入argo固定隧道域名: " ARGO_DOMAIN
+	echo "$ARGO_DOMAIN" > gdym.log
         green "你的argo固定隧道域名为: $ARGO_DOMAIN"
         reading "请输入argo固定隧道密钥（当你粘贴Token时，必须以ey开头）: " ARGO_AUTH
+	echo "$ARGO_AUTH" > ARGO_AUTH.log
         green "你的argo固定隧道密钥为: $ARGO_AUTH"
+	rm -rf boot.log
     else
         green "使用Argo临时隧道"
     fi
@@ -540,7 +543,6 @@ fi
 if [ -e "$(basename "${FILE_MAP[bot]}")" ]; then
    echo "$(basename "${FILE_MAP[bot]}")" > ag.txt
    agg=$(cat ag.txt)
-    rm -rf boot.log
     if [[ $ARGO_AUTH =~ ^[A-Z0-9a-z=]{120,250}$ ]]; then
       #args="tunnel --edge-ip-version auto --no-autoupdate --protocol http2 run --token ${ARGO_AUTH}"
       args="tunnel --no-autoupdate run --token ${ARGO_AUTH}"
@@ -581,7 +583,6 @@ fi
 
 get_argodomain() {
   if [[ -n $ARGO_AUTH ]]; then
-    echo "$ARGO_DOMAIN" > gdym.log
     echo "$ARGO_DOMAIN"
   else
     local retry=0
@@ -1315,6 +1316,52 @@ red "未安装脚本，请选择1进行安装" && exit
 fi
 }
 
+resargo(){
+if [[ -e $WORKDIR/config.json ]]; then
+cd $WORKDIR
+if [ -f boot.log ]; then
+green "当前正在使用Argo临时隧道"
+else
+green "当前正在使用Argo固定隧道"
+yellow "已设置的固定域名：$(cat gdym.log)"
+yellow "固定隧道token：$(cat ARGO_AUTH.log)"
+fi
+argo_configure
+ps aux | grep '[t]unnel --u' | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
+ps aux | grep '[t]unnel --n' | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
+agg=$(cat ag.txt)
+if [[ ! -f boot.log ]] || [[ "$argo_choice" =~ (G|g) ]]; then
+args="tunnel --no-autoupdate run --token $(cat ARGO_AUTH.log)"
+else
+rm -rf boot.log
+args="tunnel --url http://localhost:$(jq -r '.inbounds[4].listen_port' config.json) --no-autoupdate --logfile boot.log --loglevel info"
+fi
+    nohup ./"$agg" $args >/dev/null 2>&1 &
+    sleep 10
+if pgrep -x "$agg" > /dev/null; then
+    green "$agg Argo进程已启动"
+else
+for ((i=1; i<=5; i++)); do
+    red "$agg Argo进程未启动, 重启中...(尝试次数: $i)"
+    pkill -x "$agg"
+    nohup ./"$agg" "${args}" >/dev/null 2>&1 &
+    sleep 5
+    if pgrep -x "$agg" > /dev/null; then
+        purple "$agg Argo进程已成功重启"
+        break
+    fi
+    if [[ $i -eq 5 ]]; then
+        red "$agg Argo进程重启失败，Argo节点暂不可用(保活过程中会自动恢复)，其他节点依旧可用"
+    fi
+done
+fi
+curl -sk "http://${snb}.${USERNAME}.${hona}.net/up" > /dev/null 2>&1
+cd
+else
+red "未安装脚本，请选择1进行安装" && exit
+fi
+}
+
 menu() {
    clear
    echo "============================================================"
@@ -1328,17 +1375,19 @@ menu() {
    echo   "------------------------------------------------------------"
    red    "2. 卸载删除 ${hona}-sb-yg"
    echo   "------------------------------------------------------------"
-   green  "3. 重启主进程 (修复节点)"
+   green  "3. 重启主进程 (修复主节点)"
    echo   "------------------------------------------------------------"
-   green  "4. 更新脚本"
+   green  "4. 切换并重启Argo临时/固定隧道"
    echo   "------------------------------------------------------------"
-   green  "5. 查看各节点分享/sing-box与clash订阅链接/反代IP/ProxyIP"
+   green  "5. 更新脚本"
    echo   "------------------------------------------------------------"
-   green  "6. 查看sing-box与clash配置文件"
+   green  "6. 查看各节点分享/sing-box与clash订阅链接/反代IP/ProxyIP"
    echo   "------------------------------------------------------------"
-   yellow "7. 重置并随机生成新端口 (脚本安装前后都可执行)"
+   green  "7. 查看sing-box与clash配置文件"
    echo   "------------------------------------------------------------"
-   yellow "8. 清理所有服务进程与文件 (系统初始化)"
+   yellow "8. 重置并随机生成新端口 (脚本安装前后都可执行)"
+   echo   "------------------------------------------------------------"
+   yellow "9. 清理所有服务进程与文件 (系统初始化)"
    echo   "------------------------------------------------------------"
    red    "0. 退出脚本"
    echo   "============================================================"
@@ -1421,19 +1470,20 @@ echo -e "当前 ${hona}-sb-yg 脚本版本号：${purple}${latestV}${re}"
 yellow "未安装 ${hona}-sb-yg 脚本！请选择 1 安装"
 fi
    echo -e "========================================================="
-   reading "请输入选择【0-8】: " choice
+   reading "请输入选择【0-9】: " choice
    echo
     case "${choice}" in
         1) install_singbox ;;
         2) uninstall_singbox ;; 
 	3) resservsb ;;
-	4) fastrun && green "脚本已更新成功" && sleep 2 && sb ;; 
-        5) showlist ;;
-	6) showsbclash ;;
-        7) resallport ;;
-        8) kill_all_tasks ;;
+        4) resargo ;;
+	5) fastrun && green "脚本已更新成功" && sleep 2 && sb ;; 
+        6) showlist ;;
+	7) showsbclash ;;
+        8) resallport ;;
+        9) kill_all_tasks ;;
 	0) exit 0 ;;
-        *) red "无效的选项，请输入 0 到 8" ;;
+        *) red "无效的选项，请输入 0 到 9" ;;
     esac
 }
 menu
