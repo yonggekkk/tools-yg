@@ -213,9 +213,9 @@ sleep 2
 	cd
         purple "************************************************************"
         purple "${hona}-sb-yg脚本安装结束，退出SHH"
-	purple "再次进入脚本时，请输入快捷方式：sb"
+	purple "请重新连接SSH，再次进入脚本时，输入快捷方式：sb"
 	purple "************************************************************"
-        #kill -9 $(ps -o ppid= -p $$) >/dev/null 2>&1
+        kill -9 $(ps -o ppid= -p $$) >/dev/null 2>&1
 }
 
 uninstall_singbox() {
