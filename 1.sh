@@ -262,7 +262,7 @@ argo_configure() {
     yellow "方式一：(推荐)无需域名的Argo临时隧道：输入回车"
     yellow "方式二：需要域名的Argo固定隧道(需要CF设置提取Token)：输入g"
     reading "【请选择 g 或者 回车】: " argo_choice
-    declare -g whichargo="$argo_choice"
+    #declare -g whichargo="$argo_choice"
     if [[ "$argo_choice" != "g" && "$argo_choice" != "G" && -n "$argo_choice" ]]; then
         red "无效的选择，请输入 g 或回车"
         continue
@@ -1320,18 +1320,24 @@ fi
 resargo(){
 if [[ -e $WORKDIR/config.json ]]; then
 cd $WORKDIR
-if [ -f boot.log ]; then
-green "当前正在使用Argo临时隧道"
-else
-green "当前正在使用Argo固定隧道"
+argogdshow(){
+if [ -f ARGO_AUTH.log ]; then
 yellow "已设置的固定域名：$(cat gdym.log)"
 yellow "固定隧道token：$(cat ARGO_AUTH.log)"
+fi
+}
+if [ -f boot.log ]; then
+green "当前正在使用Argo临时隧道"
+argogdshow
+else
+green "当前正在使用Argo固定隧道"
+argogdshow
 fi
 argo_configure
 ps aux | grep '[t]unnel --u' | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
 ps aux | grep '[t]unnel --n' | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
 agg=$(cat ag.txt)
-if [[ ! -f boot.log ]] && [[ "$whichargo" =~ (G|g) ]]; then
+if [[ ! -f boot.log ]] && [[ "$argo_choice" =~ (G|g) ]]; then
 args="tunnel --no-autoupdate run --token $(cat ARGO_AUTH.log)"
 else
 rm -rf boot.log
