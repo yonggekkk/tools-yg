@@ -1363,6 +1363,7 @@ for ((i=1; i<=5; i++)); do
 done
 fi
 curl -sk "http://${snb}.${USERNAME}.${hona}.net/up" > /dev/null 2>&1
+get_argodomain
 cd
 else
 red "未安装脚本，请选择1进行安装" && exit
