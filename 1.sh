@@ -95,9 +95,9 @@ sed -i '' -e "19s|'$hyp'|'$hy2_port'|" serv00keep.sh
 fi
 resservsb
 green "端口替换完成！"
-ps aux | grep '[r]un -c con' > /dev/null && green "主进程启动成功，单节点用户修改下客户端三协议端口，订阅链接用户更新下订阅即可" || yellow "Sing-box主进程启动失败"
+ps aux | grep '[r]un -c con' > /dev/null && green "主进程启动成功，单节点用户修改下客户端三协议端口" || yellow "Sing-box主进程启动失败"
 if [ -f "$WORKDIR/boot.log" ]; then
-ps aux | grep '[t]unnel --u' > /dev/null && green "Argo临时隧道启动成功，单节点用户在客户端host/sni更换临时域名，订阅链接用户更新下订阅即可" || yellow "Argo临时隧道启动失败"
+ps aux | grep '[t]unnel --u' > /dev/null && green "Argo临时隧道启动成功，单节点用户在客户端host/sni更换临时域名" || yellow "Argo临时隧道启动失败"
 else
 ps aux | grep '[t]unnel --n' > /dev/null && green "Argo固定隧道启动成功" || yellow "Argo固定隧道启动失败，请先在CF更改隧道端口：$vmess_port，再重启下Argo隧道"
 fi
@@ -1321,8 +1321,10 @@ if [[ -e $WORKDIR/config.json ]]; then
 cd $WORKDIR
 argogdshow(){
 if [ -f ARGO_AUTH.log ]; then
-yellow "已设置的固定域名：$(cat gdym.log)"
+echo
+yellow "已设置Argo固定域名：$(cat gdym.log)"
 yellow "固定隧道token：$(cat ARGO_AUTH.log)"
+echo
 fi
 }
 if [ -f boot.log ]; then
