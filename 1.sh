@@ -1331,7 +1331,7 @@ argo_configure
 ps aux | grep '[t]unnel --u' | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
 ps aux | grep '[t]unnel --n' | awk '{print $2}' | xargs -r kill -9 > /dev/null 2>&1
 agg=$(cat ag.txt)
-if [[ ! -f boot.log ]] || [[ "$whichargo" =~ (G|g) ]]; then
+if [[ ! -f boot.log ]] && [[ "$whichargo" =~ (G|g) ]]; then
 args="tunnel --no-autoupdate run --token $(cat ARGO_AUTH.log)"
 else
 rm -rf boot.log
