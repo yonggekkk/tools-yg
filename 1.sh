@@ -1322,8 +1322,10 @@ cd $WORKDIR
 argogdshow(){
 if [ -f ARGO_AUTH.log ]; then
 echo
+argoport=$(jq -r '.inbounds[4].listen_port' config.json)
 yellow "已设置Argo固定域名：$(cat gdym.log)"
 yellow "固定隧道token：$(cat ARGO_AUTH.log)"
+yellow "切记：CF官网把ARGO固定隧道端口设置为：$argoport"
 echo
 fi
 }
@@ -1350,7 +1352,7 @@ if [ "$hona" = "serv00" ]; then
 sed -i '' -e "15s|'$(cat gdym.log)'|''|" ~/serv00keep.sh
 sed -i '' -e "16s|'$(cat ARGO_AUTH.log)'|''|" ~/serv00keep.sh
 fi
-args="tunnel --url http://localhost:$(jq -r '.inbounds[4].listen_port' config.json) --no-autoupdate --logfile boot.log --loglevel info"
+args="tunnel --url http://localhost:$argoport --no-autoupdate --logfile boot.log --loglevel info"
 fi
     nohup ./"$agg" $args >/dev/null 2>&1 &
     sleep 10
