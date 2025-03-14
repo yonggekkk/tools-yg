@@ -213,8 +213,10 @@ sleep 2
 	cd
         purple "************************************************************"
         purple "${hona}-sb-yg脚本安装结束"
-	purple "再次进入脚本时，输入快捷方式：sb"
+	purple "退出SSH"
+	purple "请再次连接SSH，查看主菜单，请输入快捷方式：sb" && sleep 2
 	purple "************************************************************"
+        kill -9 $(ps -o ppid= -p $$) >/dev/null 2>&1
 }
 
 uninstall_singbox() {
@@ -1281,7 +1283,7 @@ if [[ -e $WORKDIR/config.json ]]; then
   chmod +x "$SCRIPT_PATH"
 if [[ ":$PATH:" != *":$HOME/bin:"* ]]; then
     echo 'export PATH="$HOME/bin:$PATH"' >> "$HOME/.bashrc"
-    grep -qxF 'source ~/.bashrc' ~/.bash_profile || echo 'source ~/.bashrc' >> ~/.bash_profile
+    grep -qxF 'source ~/.bashrc' ~/.bash_profile 2>/dev/null || echo 'source ~/.bashrc' >> ~/.bash_profile
     source ~/.bashrc
 fi
 if [ "$hona" = "serv00" ]; then
