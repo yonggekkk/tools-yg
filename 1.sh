@@ -223,6 +223,8 @@ uninstall_singbox() {
        [Yy])
 	  bash -c 'ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk "{print \$2}" | xargs -r kill -9 >/dev/null 2>&1' >/dev/null 2>&1
           rm -rf domains bin serv00keep.sh webport.sh
+	  sed -i '' '/export PATH="\$HOME\/bin:\$PATH"/d' ~/.bashrc
+          source ~/.bashrc
           purple "************************************************************"
           purple "${hona}-sb-yg卸载完成！"
           purple "欢迎继续使用脚本：bash <(curl -Ls https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/serv00.sh)"
@@ -240,6 +242,8 @@ reading "\n清理所有进程并清空所有安装内容，将退出ssh连接，
     bash -c 'ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk "{print \$2}" | xargs -r kill -9 >/dev/null 2>&1' >/dev/null 2>&1
     devil www del ${snb}.${USERNAME}.${address} > /dev/null 2>&1
     devil www del ${USERNAME}.${address} > /dev/null 2>&1
+    sed -i '' '/export PATH="\$HOME\/bin:\$PATH"/d' ~/.bashrc
+    source ~/.bashrc
     purple "************************************************************"
     purple "${hona}-sb-yg清理重置完成！"
     purple "欢迎继续使用脚本：bash <(curl -Ls https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/serv00.sh)"
@@ -1277,7 +1281,7 @@ if [[ -e $WORKDIR/config.json ]]; then
   chmod +x "$SCRIPT_PATH"
 if [[ ":$PATH:" != *":$HOME/bin:"* ]]; then
     echo 'export PATH="$HOME/bin:$PATH"' >> "$HOME/.bashrc"
-    echo 'source ~/.bashrc' >> ~/.bash_profile
+    grep -qxF 'source ~/.bashrc' ~/.bash_profile || echo 'source ~/.bashrc' >> ~/.bash_profile
     source ~/.bashrc
 fi
 if [ "$hona" = "serv00" ]; then
