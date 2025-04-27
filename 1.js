@@ -1,3 +1,14 @@
+const { execSync } = require('child_process');
+function ensureModule(name) {
+    try {
+        require.resolve(name);
+    } catch (e) {
+        console.log(`Module '${name}' not found. Installing...`);
+        execSync(`npm install ${name}`, { stdio: 'inherit' });
+    }
+}
+ensureModule('axios');
+ensureModule('ws');
 const os = require('os');
 const http = require('http');
 const { Buffer } = require('buffer');
@@ -7,25 +18,24 @@ const path = require('path');
 const net = require('net');
 const { exec, execSync } = require('child_process');
 const { WebSocket, createWebSocketStream } = require('ws');
+const { randomUUID } = require('crypto');
 const logcb = (...args) => console.log.bind(this, ...args);
 const errcb = (...args) => console.error.bind(this, ...args);
 const NEZHA_SERVER = process.env.NEZHA_SERVER || '';
 const NEZHA_PORT = process.env.NEZHA_PORT || '';        
-const NEZHA_KEY = process.env.NEZHA_KEY || '';   
-const UUID = process.env.UUID || 'c5a8abcc-401c-4f0a-9fa7-b598437bf6fc'; 
-const DOMAIN = process.env.DOMAIN || '123456';
-const NAME = process.env.NAME || 'cf';
-const port = process.env.PORT || 8080;
+const NEZHA_KEY = process.env.NEZHA_KEY || '';
+const port = process.env.PORT || Math.floor(Math.random() * (65535 - 10000 + 1)) + 10000;
+const UUID = process.env.UUID || randomUUID();
+const NAME = process.env.NAME || os.hostname();
+const DOMAIN = process.env.DOMAIN || '';
 
 const httpServer = http.createServer((req, res) => {
     if (req.url === '/') {
         res.writeHead(200, { 'Content-Type': 'text/plain' });
         res.end('Hello, World\n');
     } else if (req.url === '/sub') {
-        const vlessURL = `vless://${UUID}@${DOMAIN}:443?encryption=none&security=tls&sni=${DOMAIN}&type=ws&host=${DOMAIN}&path=%2F#${NAME}`;
-
+        const vlessURL = `vless://${UUID}@${DOMAIN}:443?encryption=none&security=tls&sni=${DOMAIN}&type=ws&host=${DOMAIN}&path=%2F#Vl-ws-tls-${NAME}`;
         //const base64Content = Buffer.from(vlessURL).toString('base64');
-
         res.writeHead(200, { 'Content-Type': 'text/plain' });
         res.end(vlessURL + '\n');
     } else {
@@ -135,7 +145,7 @@ function authorizeFiles() {
                     console.error(`npm running error: ${error}`);
                 }
             } else {
-                console.log('NEZHA variable is empty,skip running');
+                console.log('skip running');
             }
         }
     });
