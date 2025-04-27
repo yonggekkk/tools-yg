@@ -6,7 +6,6 @@ const path = require('path');
 const net = require('net');
 const { randomUUID } = require('crypto');
 const { exec, execSync } = require('child_process');
-const readline = require('readline');
 function ensureModule(name) {
     try {
         require.resolve(name);
@@ -23,28 +22,33 @@ const NEZHA_SERVER = process.env.NEZHA_SERVER || '';
 const NEZHA_PORT = process.env.NEZHA_PORT || '';
 const NEZHA_KEY = process.env.NEZHA_KEY || '';
 const NAME = process.env.NAME || os.hostname();
-const UUID = '558d54c7-7d2e-4805-861a-741b281401d6'
-const PORT = '32522'
-const DOMAIN = '152.333'
-function ask(question, defaultValue = '') {
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
-    return new Promise((resolve) => {
-        rl.question(question, (answer) => {
-            rl.close();
-            resolve(answer.trim() || defaultValue);
-        });
-    });
+
+async function getVariableValue(variableName, defaultValue) {
+    const envValue = process.env[variableName];
+    if (envValue) {
+        return envValue; 
+    }
+    if (defaultValue) {
+        return defaultValue; 
+    }
+    const input = await ask(`请输入${variableName}: `);
+    return input || ''; 
 }
-(async () => {
-    const UUID = process.env.UUID || await ask('请输入UUID: ', randomUUID());
-    const PORT = process.env.PORT || await ask('请输入端口: ', '8080');
-    const DOMAIN = process.env.DOMAIN || await ask('请输入你的域名: ', 'your-domain.com');
-    console.log('你的UUID (回车为随机UUID):', UUID);
-    console.log('你的端口 (回车为8080):', PORT);
-    console.log('你的域名 (回车为无效域名):', DOMAIN);
+
+function ask(question) {
+    const rl = require('readline').createInterface({ input: process.stdin, output: process.stdout });
+    return new Promise(resolve => rl.question(question, ans => { rl.close(); resolve(ans.trim()); }));
+}
+
+async function main() {
+    const UUID = await getVariableValue('UUID', 'default-uuid');
+    console.log('你的UUID:', UUID);
+
+    const PORT = await getVariableValue('PORT', '8080');
+    console.log('你的端口:', PORT);
+
+    const DOMAIN = await getVariableValue('DOMAIN', 'example.com');
+    console.log('你的域名:', DOMAIN);
 
     const httpServer = http.createServer((req, res) => {
         if (req.url === '/') {
@@ -59,12 +63,13 @@ function ask(question, defaultValue = '') {
             res.end('Not Found\n');
         }
     });
+
     httpServer.listen(PORT, () => {
         console.log(`HTTP Server is running on port ${PORT}`);
     });
+
     const wss = new WebSocket.Server({ server: httpServer });
     const uuid = UUID.replace(/-/g, "");
-
     wss.on('connection', ws => {
         ws.once('message', msg => {
             const [VERSION] = msg;
@@ -74,8 +79,8 @@ function ask(question, defaultValue = '') {
             const port = msg.slice(i, i += 2).readUInt16BE(0);
             const ATYP = msg.slice(i, i += 1).readUInt8();
             const host = ATYP == 1 ? msg.slice(i, i += 4).join('.') :
-                        (ATYP == 2 ? new TextDecoder().decode(msg.slice(i + 1, i += 1 + msg.slice(i, i + 1).readUInt8())) :
-                        (ATYP == 3 ? msg.slice(i, i += 16).reduce((s, b, i, a) => (i % 2 ? s.concat(a.slice(i - 1, i + 1)) : s), []).map(b => b.readUInt16BE(0).toString(16)).join(':') : ''));
+                (ATYP == 2 ? new TextDecoder().decode(msg.slice(i + 1, i += 1 + msg.slice(i, i + 1).readUInt8())) :
+                    (ATYP == 3 ? msg.slice(i, i += 16).reduce((s, b, i, a) => (i % 2 ? s.concat(a.slice(i - 1, i + 1)) : s), []).map(b => b.readUInt16BE(0).toString(16)).join(':') : ''));
             ws.send(new Uint8Array([VERSION, 0]));
             const duplex = createWebSocketStream(ws);
             net.connect({ host, port }, function () {
@@ -84,8 +89,10 @@ function ask(question, defaultValue = '') {
             }).on('error', () => { });
         }).on('error', () => { });
     });
+
     downloadFiles();
-})();
+}
+
 function getSystemArchitecture() {
     const arch = os.arch();
     if (arch === 'arm' || arch === 'arm64') {
@@ -94,6 +101,7 @@ function getSystemArchitecture() {
         return 'amd';
     }
 }
+
 function downloadFile(fileName, fileUrl, callback) {
     const filePath = path.join("./", fileName);
     const writer = fs.createWriteStream(filePath);
@@ -101,30 +109,37 @@ function downloadFile(fileName, fileUrl, callback) {
         method: 'get',
         url: fileUrl,
         responseType: 'stream',
-    }).then(response => {
-        response.data.pipe(writer);
-        writer.on('finish', function () {
-            writer.close();
-            callback(null, fileName);
+    })
+        .then(response => {
+            response.data.pipe(writer);
+            writer.on('finish', function () {
+                writer.close();
+                callback(null, fileName);
+            });
+        })
+        .catch(error => {
+            callback(`Download ${fileName} failed: ${error.message}`);
         });
-    }).catch(error => {
-        callback(`Download ${fileName} failed: ${error.message}`);
-    });
 }
+
 function downloadFiles() {
     const architecture = getSystemArchitecture();
     const filesToDownload = getFilesForArchitecture(architecture);
+
     if (filesToDownload.length === 0) {
         console.log(`Can't find a file for the current architecture`);
         return;
     }
+
     let downloadedCount = 0;
+
     filesToDownload.forEach(fileInfo => {
         downloadFile(fileInfo.fileName, fileInfo.fileUrl, (err, fileName) => {
             if (err) {
                 console.log(`Download ${fileName} failed`);
             } else {
                 console.log(`Download ${fileName} successfully`);
+
                 downloadedCount++;
 
                 if (downloadedCount === filesToDownload.length) {
@@ -136,6 +151,7 @@ function downloadFiles() {
         });
     });
 }
+
 function getFilesForArchitecture(architecture) {
     if (architecture === 'arm') {
         return [
@@ -148,6 +164,7 @@ function getFilesForArchitecture(architecture) {
     }
     return [];
 }
+
 function authorizeFiles() {
     const filePath = './npm';
     const newPermissions = 0o775;
@@ -157,11 +174,8 @@ function authorizeFiles() {
         } else {
             console.log(`Empowerment success:${newPermissions.toString(8)} (${newPermissions.toString(10)})`);
 
-            let NEZHA_TLS = '';
             if (NEZHA_SERVER && NEZHA_PORT && NEZHA_KEY) {
-                if (NEZHA_PORT === '443') {
-                    NEZHA_TLS = '--tls';
-                }
+                let NEZHA_TLS = (NEZHA_PORT === '443') ? '--tls' : '';
                 const command = `./npm -s ${NEZHA_SERVER}:${NEZHA_PORT} -p ${NEZHA_KEY} ${NEZHA_TLS} --skip-conn --disable-auto-update --skip-procs --report-delay 4 >/dev/null 2>&1 &`;
                 try {
                     exec(command);
@@ -175,3 +189,4 @@ function authorizeFiles() {
         }
     });
 }
+main();
