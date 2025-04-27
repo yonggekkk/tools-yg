@@ -1,4 +1,11 @@
-const { execSync } = require('child_process');
+const os = require('os');
+const http = require('http');
+const { Buffer } = require('buffer');
+const fs = require('fs');
+const path = require('path');
+const net = require('net');
+const { randomUUID } = require('crypto');
+const { exec, execSync } = require('child_process');
 function ensureModule(name) {
     try {
         require.resolve(name);
@@ -9,25 +16,19 @@ function ensureModule(name) {
 }
 ensureModule('axios');
 ensureModule('ws');
-const os = require('os');
-const http = require('http');
-const { Buffer } = require('buffer');
-const fs = require('fs');
 const axios = require('axios');
-const path = require('path');
-const net = require('net');
-//const { exec, execSync } = require('child_process');
 const { WebSocket, createWebSocketStream } = require('ws');
-const { randomUUID } = require('crypto');
-const logcb = (...args) => console.log.bind(this, ...args);
-const errcb = (...args) => console.error.bind(this, ...args);
+//const logcb = (...args) => console.log.bind(this, ...args);
+//const errcb = (...args) => console.error.bind(this, ...args);
 const NEZHA_SERVER = process.env.NEZHA_SERVER || '';
 const NEZHA_PORT = process.env.NEZHA_PORT || '';        
 const NEZHA_KEY = process.env.NEZHA_KEY || '';
-const port = process.env.PORT || Math.floor(Math.random() * (65535 - 10000 + 1)) + 10000;
-const UUID = process.env.UUID || randomUUID();
 const NAME = process.env.NAME || os.hostname();
-const DOMAIN = process.env.DOMAIN || '';
+//const port = process.env.PORT || Math.floor(Math.random() * (65535 - 10000 + 1)) + 10000;
+const port = process.env.PORT || '8080';
+//const UUID = process.env.UUID || randomUUID();
+const UUID = process.env.UUID || 'f8b641de-ee59-45fd-b528-4a36e7721244';
+const DOMAIN = process.env.DOMAIN || '你的域名';
 
 const httpServer = http.createServer((req, res) => {
     if (req.url === '/') {
