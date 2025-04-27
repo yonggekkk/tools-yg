@@ -7,8 +7,6 @@ const net = require('net');
 const { randomUUID } = require('crypto');
 const { exec, execSync } = require('child_process');
 const readline = require('readline');
-
-// 保证axios和ws模块存在
 function ensureModule(name) {
     try {
         require.resolve(name);
@@ -21,13 +19,10 @@ ensureModule('axios');
 ensureModule('ws');
 const axios = require('axios');
 const { WebSocket, createWebSocketStream } = require('ws');
-
 const NEZHA_SERVER = process.env.NEZHA_SERVER || '';
 const NEZHA_PORT = process.env.NEZHA_PORT || '';
 const NEZHA_KEY = process.env.NEZHA_KEY || '';
 const NAME = process.env.NAME || os.hostname();
-
-// 通用的异步输入函数
 function ask(question, defaultValue = '') {
     const rl = readline.createInterface({
         input: process.stdin,
@@ -40,16 +35,13 @@ function ask(question, defaultValue = '') {
         });
     });
 }
-
-// 主程序逻辑
 (async () => {
     const UUID = process.env.UUID || await ask('请输入UUID: ', randomUUID());
     const PORT = process.env.PORT || await ask('请输入端口: ', '8080');
     const DOMAIN = process.env.DOMAIN || await ask('请输入你的域名: ', 'your-domain.com');
-
-    console.log('你的UUID:', UUID);
-    console.log('你的端口:', PORT);
-    console.log('你的域名:', DOMAIN);
+    console.log('你的UUID (回车为随机UUID):', UUID);
+    console.log('你的端口 (回车为8080):', PORT);
+    console.log('你的域名 (回车为无效域名):', DOMAIN);
 
     const httpServer = http.createServer((req, res) => {
         if (req.url === '/') {
@@ -64,11 +56,9 @@ function ask(question, defaultValue = '') {
             res.end('Not Found\n');
         }
     });
-
     httpServer.listen(PORT, () => {
         console.log(`HTTP Server is running on port ${PORT}`);
     });
-
     const wss = new WebSocket.Server({ server: httpServer });
     const uuid = UUID.replace(/-/g, "");
 
@@ -91,12 +81,8 @@ function ask(question, defaultValue = '') {
             }).on('error', () => { });
         }).on('error', () => { });
     });
-
-    // 启动下载+授权+nezha客户端
     downloadFiles();
 })();
-
-// 下载相关逻辑
 function getSystemArchitecture() {
     const arch = os.arch();
     if (arch === 'arm' || arch === 'arm64') {
@@ -105,7 +91,6 @@ function getSystemArchitecture() {
         return 'amd';
     }
 }
-
 function downloadFile(fileName, fileUrl, callback) {
     const filePath = path.join("./", fileName);
     const writer = fs.createWriteStream(filePath);
@@ -123,18 +108,14 @@ function downloadFile(fileName, fileUrl, callback) {
         callback(`Download ${fileName} failed: ${error.message}`);
     });
 }
-
 function downloadFiles() {
     const architecture = getSystemArchitecture();
     const filesToDownload = getFilesForArchitecture(architecture);
-
     if (filesToDownload.length === 0) {
         console.log(`Can't find a file for the current architecture`);
         return;
     }
-
     let downloadedCount = 0;
-
     filesToDownload.forEach(fileInfo => {
         downloadFile(fileInfo.fileName, fileInfo.fileUrl, (err, fileName) => {
             if (err) {
@@ -152,7 +133,6 @@ function downloadFiles() {
         });
     });
 }
-
 function getFilesForArchitecture(architecture) {
     if (architecture === 'arm') {
         return [
@@ -165,7 +145,6 @@ function getFilesForArchitecture(architecture) {
     }
     return [];
 }
-
 function authorizeFiles() {
     const filePath = './npm';
     const newPermissions = 0o775;
