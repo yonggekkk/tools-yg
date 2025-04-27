@@ -23,6 +23,9 @@ const NEZHA_SERVER = process.env.NEZHA_SERVER || '';
 const NEZHA_PORT = process.env.NEZHA_PORT || '';
 const NEZHA_KEY = process.env.NEZHA_KEY || '';
 const NAME = process.env.NAME || os.hostname();
+const UUID = '558d54c7-7d2e-4805-861a-741b281401d6'
+const PORT = '32522'
+const DOMAIN ='152.333'
 function ask(question, defaultValue = '') {
     const rl = readline.createInterface({
         input: process.stdin,
