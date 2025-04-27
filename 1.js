@@ -41,13 +41,13 @@ function ask(question) {
 }
 
 async function main() {
-    const UUID = await getVariableValue('UUID', 'f8b641de-ee59-45fd-b528-4a36e7721244');
+    const UUID = await getVariableValue('UUID', '');
     console.log('你的UUID:', UUID);
 
-    const PORT = await getVariableValue('PORT', '8080');
+    const PORT = await getVariableValue('PORT', '');
     console.log('你的端口:', PORT);
 
-    const DOMAIN = await getVariableValue('DOMAIN', 'example.com');
+    const DOMAIN = await getVariableValue('DOMAIN', '');
     console.log('你的域名:', DOMAIN);
 
     const httpServer = http.createServer((req, res) => {
