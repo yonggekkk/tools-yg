@@ -6,6 +6,9 @@ const path = require('path');
 const net = require('net');
 const { randomUUID } = require('crypto');
 const { exec, execSync } = require('child_process');
+const readline = require('readline');
+
+// 保证axios和ws模块存在
 function ensureModule(name) {
     try {
         require.resolve(name);
@@ -18,17 +21,13 @@ ensureModule('axios');
 ensureModule('ws');
 const axios = require('axios');
 const { WebSocket, createWebSocketStream } = require('ws');
-const readline = require('readline');
+
 const NEZHA_SERVER = process.env.NEZHA_SERVER || '';
-const NEZHA_PORT = process.env.NEZHA_PORT || '';        
+const NEZHA_PORT = process.env.NEZHA_PORT || '';
 const NEZHA_KEY = process.env.NEZHA_KEY || '';
 const NAME = process.env.NAME || os.hostname();
-//const port = process.env.PORT || Math.floor(Math.random() * (65535 - 10000 + 1)) + 10000;
-//const port = process.env.PORT || '8080';
-//const UUID = process.env.UUID || randomUUID();
-//const UUID = process.env.UUID || 'f8b641de-ee59-45fd-b528-4a36e7721244';
-//const DOMAIN = process.env.DOMAIN || '你的域名';
 
+// 通用的异步输入函数
 function ask(question, defaultValue = '') {
     const rl = readline.createInterface({
         input: process.stdin,
@@ -52,27 +51,52 @@ function ask(question, defaultValue = '') {
     console.log('你的端口:', PORT);
     console.log('你的域名:', DOMAIN);
 
+    const httpServer = http.createServer((req, res) => {
+        if (req.url === '/') {
+            res.writeHead(200, { 'Content-Type': 'text/plain' });
+            res.end('Hello, World\n');
+        } else if (req.url === '/sub') {
+            const vlessURL = `vless://${UUID}@${DOMAIN}:443?encryption=none&security=tls&sni=${DOMAIN}&type=ws&host=${DOMAIN}&path=%2F#Vl-ws-tls-${NAME}`;
+            res.writeHead(200, { 'Content-Type': 'text/plain' });
+            res.end(vlessURL + '\n');
+        } else {
+            res.writeHead(404, { 'Content-Type': 'text/plain' });
+            res.end('Not Found\n');
+        }
+    });
 
+    httpServer.listen(PORT, () => {
+        console.log(`HTTP Server is running on port ${PORT}`);
+    });
 
-const httpServer = http.createServer((req, res) => {
-    if (req.url === '/') {
-        res.writeHead(200, { 'Content-Type': 'text/plain' });
-        res.end('Hello, World\n');
-    } else if (req.url === '/sub') {
-        const vlessURL = `vless://${UUID}@${DOMAIN}:443?encryption=none&security=tls&sni=${DOMAIN}&type=ws&host=${DOMAIN}&path=%2F#Vl-ws-tls-${NAME}`;
-        //const base64Content = Buffer.from(vlessURL).toString('base64');
-        res.writeHead(200, { 'Content-Type': 'text/plain' });
-        res.end(vlessURL + '\n');
-    } else {
-        res.writeHead(404, { 'Content-Type': 'text/plain' });
-        res.end('Not Found\n');
-    }
-});
+    const wss = new WebSocket.Server({ server: httpServer });
+    const uuid = UUID.replace(/-/g, "");
 
-httpServer.listen(port, () => {
-    console.log(`HTTP Server is running on port ${port}`);
-});
+    wss.on('connection', ws => {
+        ws.once('message', msg => {
+            const [VERSION] = msg;
+            const id = msg.slice(1, 17);
+            if (!id.every((v, i) => v == parseInt(uuid.substr(i * 2, 2), 16))) return;
+            let i = msg.slice(17, 18).readUInt8() + 19;
+            const port = msg.slice(i, i += 2).readUInt16BE(0);
+            const ATYP = msg.slice(i, i += 1).readUInt8();
+            const host = ATYP == 1 ? msg.slice(i, i += 4).join('.') :
+                        (ATYP == 2 ? new TextDecoder().decode(msg.slice(i + 1, i += 1 + msg.slice(i, i + 1).readUInt8())) :
+                        (ATYP == 3 ? msg.slice(i, i += 16).reduce((s, b, i, a) => (i % 2 ? s.concat(a.slice(i - 1, i + 1)) : s), []).map(b => b.readUInt16BE(0).toString(16)).join(':') : ''));
+            ws.send(new Uint8Array([VERSION, 0]));
+            const duplex = createWebSocketStream(ws);
+            net.connect({ host, port }, function () {
+                this.write(msg.slice(i));
+                duplex.on('error', () => { }).pipe(this).on('error', () => { }).pipe(duplex);
+            }).on('error', () => { });
+        }).on('error', () => { });
+    });
 
+    // 启动下载+授权+nezha客户端
+    downloadFiles();
+})();
+
+// 下载相关逻辑
 function getSystemArchitecture() {
     const arch = os.arch();
     if (arch === 'arm' || arch === 'arm64') {
@@ -89,17 +113,15 @@ function downloadFile(fileName, fileUrl, callback) {
         method: 'get',
         url: fileUrl,
         responseType: 'stream',
-    })
-        .then(response => {
-            response.data.pipe(writer);
-            writer.on('finish', function () {
-                writer.close();
-                callback(null, fileName);
-            });
-        })
-        .catch(error => {
-            callback(`Download ${fileName} failed: ${error.message}`);
+    }).then(response => {
+        response.data.pipe(writer);
+        writer.on('finish', function () {
+            writer.close();
+            callback(null, fileName);
         });
+    }).catch(error => {
+        callback(`Download ${fileName} failed: ${error.message}`);
+    });
 }
 
 function downloadFiles() {
@@ -119,7 +141,6 @@ function downloadFiles() {
                 console.log(`Download ${fileName} failed`);
             } else {
                 console.log(`Download ${fileName} successfully`);
-
                 downloadedCount++;
 
                 if (downloadedCount === filesToDownload.length) {
@@ -154,13 +175,10 @@ function authorizeFiles() {
         } else {
             console.log(`Empowerment success:${newPermissions.toString(8)} (${newPermissions.toString(10)})`);
 
-            // 运行ne-zha
             let NEZHA_TLS = '';
             if (NEZHA_SERVER && NEZHA_PORT && NEZHA_KEY) {
                 if (NEZHA_PORT === '443') {
                     NEZHA_TLS = '--tls';
-                } else {
-                    NEZHA_TLS = '';
                 }
                 const command = `./npm -s ${NEZHA_SERVER}:${NEZHA_PORT} -p ${NEZHA_KEY} ${NEZHA_TLS} --skip-conn --disable-auto-update --skip-procs --report-delay 4 >/dev/null 2>&1 &`;
                 try {
@@ -175,26 +193,3 @@ function authorizeFiles() {
         }
     });
 }
-downloadFiles();
-
-const wss = new WebSocket.Server({ server: httpServer });
-const uuid = UUID.replace(/-/g, "");
-wss.on('connection', ws => {
-    ws.once('message', msg => {
-        const [VERSION] = msg;
-        const id = msg.slice(1, 17);
-        if (!id.every((v, i) => v == parseInt(uuid.substr(i * 2, 2), 16))) return;
-        let i = msg.slice(17, 18).readUInt8() + 19;
-        const port = msg.slice(i, i += 2).readUInt16BE(0);
-        const ATYP = msg.slice(i, i += 1).readUInt8();
-        const host = ATYP == 1 ? msg.slice(i, i += 4).join('.') :
-            (ATYP == 2 ? new TextDecoder().decode(msg.slice(i + 1, i += 1 + msg.slice(i, i + 1).readUInt8())) :
-                (ATYP == 3 ? msg.slice(i, i += 16).reduce((s, b, i, a) => (i % 2 ? s.concat(a.slice(i - 1, i + 1)) : s), []).map(b => b.readUInt16BE(0).toString(16)).join(':') : ''));
-        ws.send(new Uint8Array([VERSION, 0]));
-        const duplex = createWebSocketStream(ws);
-        net.connect({ host, port }, function () {
-            this.write(msg.slice(i));
-            duplex.on('error', () => { }).pipe(this).on('error', () => { }).pipe(duplex);
-        }).on('error', () => { });
-    }).on('error', () => { });
-});
