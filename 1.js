@@ -46,7 +46,7 @@ async function getUUID() {
 }
 (async () => {
   const UUID = await getUUID();
-  console.log('你的域名是:', UUID);
+  console.log('你的UUID:', UUID);
 })();
 
 async function getPORT() {
