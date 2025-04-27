@@ -18,15 +18,79 @@ ensureModule('axios');
 ensureModule('ws');
 const axios = require('axios');
 const { WebSocket, createWebSocketStream } = require('ws');
+const readline = require('readline');
 const NEZHA_SERVER = process.env.NEZHA_SERVER || '';
 const NEZHA_PORT = process.env.NEZHA_PORT || '';        
 const NEZHA_KEY = process.env.NEZHA_KEY || '';
 const NAME = process.env.NAME || os.hostname();
 //const port = process.env.PORT || Math.floor(Math.random() * (65535 - 10000 + 1)) + 10000;
-const port = process.env.PORT || '8080';
+//const port = process.env.PORT || '8080';
 //const UUID = process.env.UUID || randomUUID();
-const UUID = process.env.UUID || 'f8b641de-ee59-45fd-b528-4a36e7721244';
-const DOMAIN = process.env.DOMAIN || '你的域名';
+//const UUID = process.env.UUID || 'f8b641de-ee59-45fd-b528-4a36e7721244';
+//const DOMAIN = process.env.DOMAIN || '你的域名';
+
+async function getUUID() {
+  if (process.env.UUID) {
+    return process.env.UUID;
+  }
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+  return new Promise((resolve) => {
+    rl.question('请输入UUID: ', (answer) => {
+      rl.close();
+      resolve(answer.trim());
+    });
+  });
+}
+(async () => {
+  const UUID = await getUUID();
+  console.log('你的域名是:', UUID);
+})();
+
+async function getPORT() {
+  if (process.env.PORT) {
+    return process.env.PORT;
+  }
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+  return new Promise((resolve) => {
+    rl.question('请输入端口: ', (answer) => {
+      rl.close();
+      resolve(answer.trim());
+    });
+  });
+}
+(async () => {
+  const port = await getPORT();
+  console.log('你的端口是:', PORT);
+})();
+
+async function getDomain() {
+  if (process.env.DOMAIN) {
+    return process.env.DOMAIN;
+  }
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+  return new Promise((resolve) => {
+    rl.question('请输入你的域名: ', (answer) => {
+      rl.close();
+      resolve(answer.trim());
+    });
+  });
+}
+(async () => {
+  const DOMAIN = await getDomain();
+  console.log('你的域名是:', DOMAIN);
+})();
+
+
+
 
 const httpServer = http.createServer((req, res) => {
     if (req.url === '/') {
