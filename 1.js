@@ -16,7 +16,7 @@ const fs = require('fs');
 const axios = require('axios');
 const path = require('path');
 const net = require('net');
-const { exec, execSync } = require('child_process');
+//const { exec, execSync } = require('child_process');
 const { WebSocket, createWebSocketStream } = require('ws');
 const { randomUUID } = require('crypto');
 const logcb = (...args) => console.log.bind(this, ...args);
