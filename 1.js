@@ -29,66 +29,28 @@ const NAME = process.env.NAME || os.hostname();
 //const UUID = process.env.UUID || 'f8b641de-ee59-45fd-b528-4a36e7721244';
 //const DOMAIN = process.env.DOMAIN || '你的域名';
 
-async function getUUID() {
-  if (process.env.UUID) {
-    return process.env.UUID;
-  }
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
-  return new Promise((resolve) => {
-    rl.question('请输入UUID: ', (answer) => {
-      rl.close();
-      resolve(answer.trim());
+function ask(question, defaultValue = '') {
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
     });
-  });
-}
-(async () => {
-  const UUID = await getUUID();
-  console.log('你的UUID:', UUID);
-})();
-
-async function getPORT() {
-  if (process.env.PORT) {
-    return process.env.PORT;
-  }
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
-  return new Promise((resolve) => {
-    rl.question('请输入端口: ', (answer) => {
-      rl.close();
-      resolve(answer.trim());
+    return new Promise((resolve) => {
+        rl.question(question, (answer) => {
+            rl.close();
+            resolve(answer.trim() || defaultValue);
+        });
     });
-  });
 }
-(async () => {
-  const port = await getPORT();
-  console.log('你的端口是:', PORT);
-})();
 
-async function getDomain() {
-  if (process.env.DOMAIN) {
-    return process.env.DOMAIN;
-  }
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
-  return new Promise((resolve) => {
-    rl.question('请输入你的域名: ', (answer) => {
-      rl.close();
-      resolve(answer.trim());
-    });
-  });
-}
+// 主程序逻辑
 (async () => {
-  const DOMAIN = await getDomain();
-  console.log('你的域名是:', DOMAIN);
-})();
+    const UUID = process.env.UUID || await ask('请输入UUID: ', randomUUID());
+    const PORT = process.env.PORT || await ask('请输入端口: ', '8080');
+    const DOMAIN = process.env.DOMAIN || await ask('请输入你的域名: ', 'your-domain.com');
 
+    console.log('你的UUID:', UUID);
+    console.log('你的端口:', PORT);
+    console.log('你的域名:', DOMAIN);
 
 
 
