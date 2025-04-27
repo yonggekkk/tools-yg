@@ -13,7 +13,7 @@ const NEZHA_SERVER = process.env.NEZHA_SERVER || '';
 const NEZHA_PORT = process.env.NEZHA_PORT || '';        
 const NEZHA_KEY = process.env.NEZHA_KEY || '';   
 const UUID = process.env.UUID || 'c5a8abcc-401c-4f0a-9fa7-b598437bf6fc'; 
-const DOMAIN = process.env.DOMAIN || '';
+const DOMAIN = process.env.DOMAIN || '123456';
 const NAME = process.env.NAME || 'cf';
 const port = process.env.PORT || 8080;
 
@@ -24,10 +24,10 @@ const httpServer = http.createServer((req, res) => {
     } else if (req.url === '/sub') {
         const vlessURL = `vless://${UUID}@${DOMAIN}:443?encryption=none&security=tls&sni=${DOMAIN}&type=ws&host=${DOMAIN}&path=%2F#${NAME}`;
 
-        const base64Content = Buffer.from(vlessURL).toString('base64');
+        //const base64Content = Buffer.from(vlessURL).toString('base64');
 
         res.writeHead(200, { 'Content-Type': 'text/plain' });
-        res.end(base64Content + '\n');
+        res.end(vlessURL + '\n');
     } else {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
         res.end('Not Found\n');
