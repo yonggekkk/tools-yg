@@ -40,12 +40,10 @@ async function getVariableValue(variableName, defaultValue) {
   }
   return input;
 }
-
 function ask(question) {
     const rl = require('readline').createInterface({ input: process.stdin, output: process.stdout });
     return new Promise(resolve => rl.question(question, ans => { rl.close(); resolve(ans.trim()); }));
 }
-
 async function main() {
     const UUID = await getVariableValue('UUID', '');
     console.log('你的UUID:', UUID);
