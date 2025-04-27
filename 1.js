@@ -18,8 +18,6 @@ ensureModule('axios');
 ensureModule('ws');
 const axios = require('axios');
 const { WebSocket, createWebSocketStream } = require('ws');
-//const logcb = (...args) => console.log.bind(this, ...args);
-//const errcb = (...args) => console.error.bind(this, ...args);
 const NEZHA_SERVER = process.env.NEZHA_SERVER || '';
 const NEZHA_PORT = process.env.NEZHA_PORT || '';        
 const NEZHA_KEY = process.env.NEZHA_KEY || '';
