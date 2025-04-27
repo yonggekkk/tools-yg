@@ -41,7 +41,7 @@ function ask(question) {
 }
 
 async function main() {
-    const UUID = await getVariableValue('UUID', 'default-uuid');
+    const UUID = await getVariableValue('UUID', 'f8b641de-ee59-45fd-b528-4a36e7721244');
     console.log('你的UUID:', UUID);
 
     const PORT = await getVariableValue('PORT', '8080');
