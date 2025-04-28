@@ -29,7 +29,7 @@ console.log("甬哥YouTube频道 ：www.youtube.com/@ygkkk");
 console.log("Nodejs真一键无交互Vless代理脚本");
 console.log("当前版本：25.4.28 测试beta1版");
 console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-setTimeout(() => {}, 2000);
+setTimeout(() => {}, 3000);
 async function getVariableValue(variableName, defaultValue) {
     const envValue = process.env[variableName];
     if (envValue) {
