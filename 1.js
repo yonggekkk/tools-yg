@@ -18,43 +18,32 @@ ensureModule('axios');
 ensureModule('ws');
 const axios = require('axios');
 const { WebSocket, createWebSocketStream } = require('ws');
-const readline = require('readline');
 const NEZHA_SERVER = process.env.NEZHA_SERVER || '';
 const NEZHA_PORT = process.env.NEZHA_PORT || '';
 const NEZHA_KEY = process.env.NEZHA_KEY || '';
 const NAME = process.env.NAME || os.hostname();
 
-function ask(question) {
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
-    return new Promise(resolve => rl.question(question, ans => {
-        rl.close();
-        resolve(ans.trim());
-    }));
-}
 async function getVariableValue(variableName, defaultValue) {
-    const envValue = (process.env[variableName] || '').trim();
+    const envValue = process.env[variableName];
     if (envValue) {
-        return envValue;
+        return envValue; 
     }
-
-    const defValue = (defaultValue || '').trim();
-    if (defValue) {
-        return defValue;
+    if (defaultValue) {
+        return defaultValue; 
     }
-
-    let input = '';
-    while (!input) {
-        input = await ask(`请输入${variableName}: `);
-        if (!input) {
-            console.log(`${variableName}不能为空，请重新输入!`);
-        }
+  let input = '';
+  while (!input) {
+    input = await ask(`请输入${variableName}: `);
+    if (!input) {
+      console.log(`${variableName}不能为空，请重新输入!`);
     }
-    return input;
+  }
+  return input;
 }
-
+function ask(question) {
+    const rl = require('readline').createInterface({ input: process.stdin, output: process.stdout });
+    return new Promise(resolve => rl.question(question, ans => { rl.close(); resolve(ans.trim()); }));
+}
 async function main() {
     const UUID = await getVariableValue('UUID', '');
     console.log('你的UUID:', UUID);
