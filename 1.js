@@ -18,11 +18,22 @@ ensureModule('axios');
 ensureModule('ws');
 const axios = require('axios');
 const { WebSocket, createWebSocketStream } = require('ws');
+const readline = require('readline');
 const NEZHA_SERVER = process.env.NEZHA_SERVER || '';
 const NEZHA_PORT = process.env.NEZHA_PORT || '';
 const NEZHA_KEY = process.env.NEZHA_KEY || '';
 const NAME = process.env.NAME || os.hostname();
 
+function ask(question) {
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+    return new Promise(resolve => rl.question(question, ans => {
+        rl.close();
+        resolve(ans.trim());
+    }));
+}
 async function getVariableValue(variableName, defaultValue) {
     const envValue = (process.env[variableName] || '').trim();
     if (envValue) {
@@ -43,10 +54,7 @@ async function getVariableValue(variableName, defaultValue) {
     }
     return input;
 }
-function ask(question) {
-    const rl = require('readline').createInterface({ input: process.stdin, output: process.stdout });
-    return new Promise(resolve => rl.question(question, ans => { rl.close(); resolve(ans.trim()); }));
-}
+
 async function main() {
     const UUID = await getVariableValue('UUID', '');
     console.log('你的UUID:', UUID);
