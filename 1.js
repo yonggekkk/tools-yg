@@ -24,21 +24,24 @@ const NEZHA_KEY = process.env.NEZHA_KEY || '';
 const NAME = process.env.NAME || os.hostname();
 
 async function getVariableValue(variableName, defaultValue) {
-    const envValue = process.env[variableName];
+    const envValue = (process.env[variableName] || '').trim();
     if (envValue) {
-        return envValue; 
+        return envValue;
     }
-    if (defaultValue) {
-        return defaultValue; 
+
+    const defValue = (defaultValue || '').trim();
+    if (defValue) {
+        return defValue;
     }
-  let input = '';
-  while (!input) {
-    input = await ask(`请输入${variableName}: `);
-    if (!input) {
-      console.log(`${variableName}不能为空，请重新输入!`);
+
+    let input = '';
+    while (!input) {
+        input = await ask(`请输入${variableName}: `);
+        if (!input) {
+            console.log(`${variableName}不能为空，请重新输入!`);
+        }
     }
-  }
-  return input;
+    return input;
 }
 function ask(question) {
     const rl = require('readline').createInterface({ input: process.stdin, output: process.stdout });
