@@ -51,8 +51,7 @@
         ],
         "final": "proxyDns",
         "strategy": "prefer_ipv4",
-        "independent_cache": true,
-        "reverse_mapping": true
+        "independent_cache": true
     },
     "inbounds": [
         {
