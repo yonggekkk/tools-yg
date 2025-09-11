@@ -16,9 +16,8 @@
             {
                 "tag": "proxyDns",
                 "type": "https",
-                "server": "dns.google",
+                "server": "8.8.8.8",
                 "path": "/dns-query",
-				"domain_resolver": "aliDns",
                 "detour": "proxy"
             },
 			      {
