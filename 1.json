@@ -48,8 +48,7 @@
         "rules": [
             {
                 "outbound": "any",
-                "server": "aliDns",
-                "disable_cache": true
+                "server": "aliDns"
             },	
             {
                 "rule_set": "geosite-cn",
