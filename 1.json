@@ -2,13 +2,6 @@
     "dns": {
         "servers": [
             {
-                "tag": "aliDns",
-                "type": "https",
-                "server": "dns.alidns.com",
-                "path": "/dns-query",
-                "domain_resolver": "local"
-            },
-            {
                 "tag": "local",
                 "type": "udp",
                 "server": "223.5.5.5"
@@ -30,7 +23,7 @@
         "rules": [
             {
                 "rule_set": "geosite-cn",
-                "server": "aliDns"
+                "server": "local"
             },
             {
                 "clash_mode": "Direct",
@@ -132,7 +125,7 @@
         "final": "proxy",
         "auto_detect_interface": true,
         "default_domain_resolver": {
-            "server": "aliDns"
+            "server": "local"
         }
     },
     "outbounds": [
