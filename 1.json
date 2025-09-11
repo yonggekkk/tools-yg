@@ -1,4 +1,21 @@
 {
+    "log": {
+        "disabled": false,
+        "level": "info",
+        "timestamp": true
+    },
+    "experimental": {
+        "cache_file": {
+            "enabled": true,
+            "path": "./cache.db",
+            "store_fakeip": true
+        },
+        "clash_api": {
+            "external_controller": "127.0.0.1:9090",
+            "external_ui": "ui",
+            "default_mode": "Rule"
+        }
+    },
     "dns": {
         "servers": [
             {
@@ -21,7 +38,7 @@
 				"domain_resolver": "aliDns",
                 "detour": "proxy"
             },
-			      {
+		{
         "type": "fakeip",
         "tag": "fakeip",
         "inet4_range": "198.18.0.0/15",
@@ -62,9 +79,7 @@
                 "fd00::1/126"
             ],
             "auto_route": true,
-            "strict_route": true,
-            "sniff_override_destination": true,
-            "domain_strategy": "prefer_ipv4"
+            "strict_route": true
         }
     ],
     "route": {
@@ -73,15 +88,15 @@
 				"inbound": "tun-in",
                 "action": "sniff"
             },
-      {
-      "protocol": "dns",
-      "action": "hijack-dns"
-      },
-      {
-      "port": 443,
-      "network": "udp",
-      "action": "reject"
-      },
+            {
+              "protocol": "dns",
+                "action": "hijack-dns"
+            },
+            {
+              "port": 443,
+              "network": "udp",
+              "action": "reject"
+            },
             {
                 "ip_is_private": true,
                 "outbound": "direct"
@@ -126,7 +141,6 @@
         }
     },
     "outbounds": [
-
     {
       "type": "vless",
       "tag": "vless-instance-20230521-2323",
@@ -227,11 +241,6 @@
                 "server_name": "www.bing.com"
               }
       },
-
-
-
-
-
         {
             "tag": "proxy",
             "type": "selector",
@@ -264,21 +273,10 @@
             "tag": "direct"
         }
     ],
-    "experimental": {
-        "cache_file": {
-            "enabled": true,
-            "path": "./cache.db",
-            "store_fakeip": true
-        },
-        "clash_api": {
-            "external_controller": "127.0.0.1:9090",
-            "external_ui": "ui",
-            "default_mode": "Rule"
-        }
-    },
-    "log": {
-        "disabled": false,
-        "level": "info",
-        "timestamp": true
-    }
+	"ntp": {
+    "enabled": false,
+    "server": "time.apple.com",
+    "server_port": 123,
+    "interval": "30m"
+	}
 }
