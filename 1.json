@@ -27,8 +27,7 @@
             {
                 "tag": "localdns",
         "server": "223.5.5.5",
-        "type": "https",
-                "detour": "chn"
+        "type": "https"
             },
             {
                 "tag": "fakeip",
@@ -293,7 +292,6 @@
     "enabled": true,
     "server": "time.apple.com",
     "server_port": 123,
-    "interval": "30m",
-    "detour": "chn"
+    "interval": "30m"
   }
 }
