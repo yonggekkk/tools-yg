@@ -18,6 +18,7 @@
                 "type": "https",
                 "server": "dns.google",
                 "path": "/dns-query",
+				"domain_resolver": "aliDns",
                 "detour": "proxy"
             }
         ],
@@ -27,11 +28,11 @@
                 "server": "aliDns"
             },
             {
-                "clash_mode": "direct",
+                "clash_mode": "Direct",
                 "server": "local"
             },
             {
-                "clash_mode": "global",
+                "clash_mode": "Global",
                 "server": "proxyDns"
             }
         ],
@@ -273,7 +274,7 @@
             "external_ui_download_url": "",
             "external_ui_download_detour": "direct",
             "secret": "",
-            "default_mode": "rule"
+            "default_mode": "Rule"
         }
     },
     "log": {
