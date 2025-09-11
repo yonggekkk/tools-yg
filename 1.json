@@ -41,7 +41,12 @@
                 "clash_mode": "Global",
                 "server": "proxyDns"
             },
+			 {
+                 "rule_set": "geosite-geolocation-!cn",
+                 "server": "proxyDns"
+            },
 			      {
+			"rule_set": "geosite-geolocation-!cn",  
         "query_type": [
           "A",
           "AAAA"
@@ -105,7 +110,11 @@
             {
                 "clash_mode": "Direct",
                 "outbound": "direct"
-            }
+            },
+      {
+        "rule_set": "geosite-geolocation-!cn",
+        "outbound": "proxy"
+      }			
         ],
         "rule_set": [
             {
