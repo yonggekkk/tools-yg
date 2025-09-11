@@ -5,6 +5,8 @@
                 "tag": "local",
                 "type": "udp",
                 "server": "223.5.5.5"
+				"path": "/dns-query",
+                "detour": "loc"
             },
             {
                 "tag": "proxyDns",
@@ -80,15 +82,15 @@
             },
             {
                 "ip_is_private": true,
-                "outbound": "direct"
+                "outbound": "loc"
             },
             {
                 "rule_set": "geosite-cn",
-                "outbound": "direct"
+                "outbound": "loc"
             },
             {
                 "rule_set": "geoip-cn",
-                "outbound": "direct"
+                "outbound": "loc"
             },
             {
                 "clash_mode": "Global",
@@ -96,7 +98,7 @@
             },
             {
                 "clash_mode": "Direct",
-                "outbound": "direct"
+                "outbound": "loc"
             }		
         ],
         "rule_set": [
