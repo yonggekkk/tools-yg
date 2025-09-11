@@ -45,11 +45,7 @@
         "inet6_range": "fc00::/18"
       }
         ],
-        "rules": [
-            {
-                "outbound": "any",
-                "server": "aliDns"
-            },	
+        "rules": [	
             {
                 "rule_set": "geosite-cn",
                 "server": "aliDns"
