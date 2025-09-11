@@ -109,7 +109,7 @@ proxy-groups:
     - vmess-ws-instance-20230521-2323
     - hysteria2-instance-20230521-2323
     - tuic5-instance-20230521-2323
-	  - anytls-instance-20230521-2323
+	- anytls-instance-20230521-2323
 
 - name: 自动选择
   type: url-test
@@ -121,7 +121,7 @@ proxy-groups:
     - vmess-ws-instance-20230521-2323
     - hysteria2-instance-20230521-2323
     - tuic5-instance-20230521-2323
-	  - anytls-instance-20230521-2323
+	- anytls-instance-20230521-2323
     
 - name: 🌍选择代理节点
   type: select
@@ -133,7 +133,7 @@ proxy-groups:
     - vmess-ws-instance-20230521-2323
     - hysteria2-instance-20230521-2323
     - tuic5-instance-20230521-2323
-	  - anytls-instance-20230521-2323
+	- anytls-instance-20230521-2323
 rules:
   - GEOIP,LAN,DIRECT
   - GEOIP,CN,DIRECT
