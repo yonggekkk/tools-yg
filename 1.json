@@ -70,6 +70,7 @@
     "route": {
         "rules": [
             {
+				"tag": "tun-in",
                 "action": "sniff"
             },
       {
