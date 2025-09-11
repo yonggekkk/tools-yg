@@ -89,13 +89,17 @@
                 "action": "sniff"
             },
             {
-              "protocol": "dns",
+                "type": "logical",
+                "mode": "or",
+                "rules": [
+                    {
+                        "port": 53
+                    },
+                    {
+                        "protocol": "dns"
+                    }
+                ],
                 "action": "hijack-dns"
-            },
-            {
-              "port": 443,
-              "network": "udp",
-              "action": "reject"
             },
             {
                 "ip_is_private": true,
