@@ -2,10 +2,16 @@
     "dns": {
         "servers": [
             {
+                "tag": "aliDns",
+                "type": "https",
+                "server": "dns.alidns.com",
+                "path": "/dns-query",
+                "domain_resolver": "local"
+            },
+            {
                 "tag": "local",
                 "type": "udp",
-                "server": "223.5.5.5",
-                "detour": "loc"
+                "server": "223.5.5.5"
             },
             {
                 "tag": "proxyDns",
@@ -24,7 +30,7 @@
         "rules": [
             {
                 "rule_set": "geosite-cn",
-                "server": "local"
+                "server": "aliDns"
             },
             {
                 "clash_mode": "Direct",
@@ -66,30 +72,26 @@
             {
                 "action": "sniff"
             },
-            {
-                "type": "logical",
-                "mode": "or",
-                "rules": [
-                    {
-                        "port": 53
-                    },
-                    {
-                        "protocol": "dns"
-                    }
-                ],
-                "action": "hijack-dns"
-            },
+      {
+      "protocol": "dns",
+      "action": "hijack-dns"
+      },
+      {
+      "port": 443,
+      "network": "udp",
+      "action": "reject"
+      },
             {
                 "ip_is_private": true,
-                "outbound": "loc"
+                "outbound": "direct"
             },
             {
                 "rule_set": "geosite-cn",
-                "outbound": "loc"
+                "outbound": "direct"
             },
             {
                 "rule_set": "geoip-cn",
-                "outbound": "loc"
+                "outbound": "direct"
             },
             {
                 "clash_mode": "Global",
@@ -97,7 +99,7 @@
             },
             {
                 "clash_mode": "Direct",
-                "outbound": "loc"
+                "outbound": "direct"
             }		
         ],
         "rule_set": [
@@ -106,27 +108,27 @@
                 "type": "remote",
                 "format": "binary",
                 "url": "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-cn.srs",
-                "download_detour": "loc"
+                "download_detour": "direct"
             },
             {
                 "tag": "geoip-cn",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/cn.srs",
-                "download_detour": "loc"
+                "download_detour": "direct"
             },
             {
                 "tag": "geosite-geolocation-!cn",
                 "type": "remote",
                 "format": "binary",
                 "url": "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-!cn.srs",
-                "download_detour": "loc"
+                "download_detour": "direct"
             }
         ],
         "final": "proxy",
         "auto_detect_interface": true,
         "default_domain_resolver": {
-            "server": "local"
+            "server": "aliDns"
         }
     },
     "outbounds": [
@@ -277,9 +279,6 @@
         "clash_api": {
             "external_controller": "127.0.0.1:9090",
             "external_ui": "ui",
-            "external_ui_download_url": "",
-            "external_ui_download_detour": "direct",
-            "secret": "",
             "default_mode": "Rule"
         }
     },
