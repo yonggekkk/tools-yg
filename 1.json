@@ -1,101 +1,134 @@
 {
-  "log": {
-    "disabled": false,
-    "level": "info",
-    "timestamp": true
-  },
- "experimental": {
-    "cache_file": {
-      "enabled": true,
-      "store_fakeip": true,
-      "store_rdrc": true
-    },
-    "clash_api": {
-      "external_controller": "127.0.0.1:9090",
-      "external_ui": "ui",
-      "external_ui_download_url": ""
-    }
-  },
     "dns": {
         "servers": [
             {
-                "tag": "proxydns",
-        "server": "8.8.8.8",
-        "type": "https",
-                "detour": "select"
+                "tag": "aliDns",
+                "type": "https",
+                "server": "dns.alidns.com",
+                "path": "/dns-query",
+                "domain_resolver": "local"
             },
             {
-                "tag": "localdns",
-        "server": "223.5.5.5",
-        "type": "https"
+                "tag": "local",
+                "type": "udp",
+                "server": "223.5.5.5"
             },
             {
-                "tag": "fakeip",
-                "type": "fakeip",
-        "inet4_range": "198.18.0.0/15",
-        "inet6_range": "fc00::/18"
+                "tag": "proxyDns",
+                "type": "https",
+                "server": "dns.google",
+                "path": "/dns-query",
+                "domain_resolver": "aliDns",
+                "detour": "proxy"
             }
         ],
         "rules": [
             {
-                "outbound": "any",
-                "server": "localdns",
-                "disable_cache": true
+                "rule_set": "geosite-cn",
+                "server": "aliDns"
             },
             {
-                "clash_mode": "Global",
-                "server": "proxydns"
+                "clash_mode": "direct",
+                "server": "local"
             },
             {
-                "clash_mode": "Direct",
-                "server": "localdns"
+                "clash_mode": "global",
+                "server": "proxyDns"
+            }
+        ],
+        "final": "proxyDns",
+        "strategy": "prefer_ipv4",
+        "independent_cache": true,
+        "reverse_mapping": true
+    },
+    "inbounds": [
+        {
+            "type": "tun",
+            "tag": "tun-in",
+            "address": [
+                "172.19.0.1/30",
+                "fd00::1/126"
+            ],
+            "auto_route": true,
+            "strict_route": true,
+            "sniff_override_destination": true,
+            "domain_strategy": "prefer_ipv4"
+        }
+    ],
+    "route": {
+        "rules": [
+            {
+                "action": "sniff"
+            },
+            {
+                "type": "logical",
+                "mode": "or",
+                "rules": [
+                    {
+                        "port": 53
+                    },
+                    {
+                        "protocol": "dns"
+                    }
+                ],
+                "action": "hijack-dns"
+            },
+            {
+                "ip_is_private": true,
+                "outbound": "direct"
             },
             {
                 "rule_set": "geosite-cn",
-                "server": "localdns"
+                "outbound": "direct"
             },
             {
-                 "rule_set": "geosite-geolocation-!cn",
-                 "server": "proxydns"
+                "rule_set": "geoip-cn",
+                "outbound": "direct"
             },
-             {
-                "rule_set": "geosite-geolocation-!cn",         
-                "query_type": [
-                    "A",
-                    "AAAA"
-                ],
-                "server": "fakeip"
+            {
+                "clash_mode": "Global",
+                "outbound": "proxy"
+            },
+            {
+                "clash_mode": "Direct",
+                "outbound": "direct"
+            },
+      {
+        "rule_set": "geosite-geolocation-!cn",
+        "outbound": "proxy"
+      }
+        ],
+        "rule_set": [
+            {
+                "tag": "geosite-cn",
+                "type": "remote",
+                "format": "binary",
+                "url": "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-cn.srs",
+                "download_detour": "direct"
+            },
+            {
+                "tag": "geoip-cn",
+                "type": "remote",
+                "format": "binary",
+                "url": "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/cn.srs",
+                "download_detour": "direct"
+            },
+            {
+                "tag": "geosite-geolocation-!cn",
+                "type": "remote",
+                "format": "binary",
+                "url": "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-!cn.srs",
+                "download_detour": "direct"
             }
-          ],
-          "independent_cache": true,
-          "final": "proxydns"
-        },
-      "inbounds": [
-    {
-      "type": "tun",
-     "tag": "tun-in",
-      "address": [
-      "172.19.0.1/30",
-      "fd00::1/126"
-      ],
-      "auto_route": true,
-      "strict_route": true
-    }
-  ],
-  "outbounds": [
-    {
-      "tag": "select",
-      "type": "selector",
-      "default": "auto",
-      "outbounds": [
-        "auto",
-        "vless-instance-20230521-2323",
-        "vmess-instance-20230521-2323",
-        "hy2-instance-20230521-2323",
-        "tuic5-instance-20230521-2323",
-        "anytls-instance-20230521-2323"
-      ]
+        ],
+        "final": "proxy",
+        "auto_detect_interface": true,
+        "default_domain_resolver": {
+            "server": "aliDns"
+        }
     },
+    "outbounds": [
+
     {
       "type": "vless",
       "tag": "vless-instance-20230521-2323",
@@ -196,102 +229,61 @@
                 "server_name": "www.bing.com"
               }
       },
-    {
-      "tag": "chn",
-      "type": "direct"
-    },
-    {
-      "tag": "auto",
-      "type": "urltest",
-      "outbounds": [
+
+
+
+
+
+        {
+            "tag": "proxy",
+            "type": "selector",
+            "outbounds": [
+                "auto",
+                "direct",
         "vless-instance-20230521-2323",
         "vmess-instance-20230521-2323",
         "hy2-instance-20230521-2323",
         "tuic5-instance-20230521-2323",
         "anytls-instance-20230521-2323"
-      ],
-      "url": "https://www.gstatic.com/generate_204",
-      "interval": "1m",
-      "tolerance": 50,
-      "interrupt_exist_connections": false
-    }
-  ],
-  "route": {
-    "default_domain_resolver": {
-      "server": "localdns"
+            ]
+        },
+        {
+            "tag": "auto",
+            "type": "urltest",
+            "outbounds": [
+        "vless-instance-20230521-2323",
+        "vmess-instance-20230521-2323",
+        "hy2-instance-20230521-2323",
+        "tuic5-instance-20230521-2323",
+        "anytls-instance-20230521-2323"
+            ],
+            "url": "http://www.gstatic.com/generate_204",
+            "interval": "10m",
+            "tolerance": 50
+        },
+        {
+            "type": "direct",
+            "tag": "direct"
+        }
+    ],
+    "experimental": {
+        "cache_file": {
+            "enabled": true,
+            "path": "./cache.db",
+            "store_fakeip": true
+        },
+        "clash_api": {
+            "external_controller": "127.0.0.1:9090",
+            "external_ui": "ui",
+            "external_ui_download_url": "",
+            "external_ui_download_detour": "direct",
+            "secret": "",
+            "default_mode": "rule"
+        }
     },
-      "rule_set": [
-            {
-                "tag": "geosite-geolocation-!cn",
-                "type": "remote",
-                "format": "binary",
-                "url": "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-!cn.srs",
-                "download_detour": "select",
-                "update_interval": "1d"
-            },
-            {
-                "tag": "geosite-cn",
-                "type": "remote",
-                "format": "binary",
-                "url": "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-cn.srs",
-                "download_detour": "select",
-                "update_interval": "1d"
-            },
-            {
-                "tag": "geoip-cn",
-                "type": "remote",
-                "format": "binary",
-                "url": "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/cn.srs",
-                "download_detour": "select",
-                "update_interval": "1d"
-            }
-        ],
-    "auto_detect_interface": true,
-    "final": "select",
-    "rules": [
-      {
-      "inbound": "tun-in",
-      "action": "sniff"
-      },
-      {
-      "protocol": "dns",
-      "action": "hijack-dns"
-      },
-      {
-      "port": 443,
-      "network": "udp",
-      "action": "reject"
-      },
-      {
-        "clash_mode": "Direct",
-        "outbound": "chn"
-      },
-      {
-        "clash_mode": "Global",
-        "outbound": "select"
-      },
-      {
-        "rule_set": "geoip-cn",
-        "outbound": "chn"
-      },
-      {
-        "rule_set": "geosite-cn",
-        "outbound": "chn"
-      },
-      {
-      "ip_is_private": true,
-      "outbound": "chn"
-      },
-      {
-        "rule_set": "geosite-geolocation-!cn",
-        "outbound": "select"
-      }
-    ]
-  },
-    "ntp": {
-    "enabled": true,
-    "server": "time.apple.com",
-    "server_port": 123,
-    "interval": "30m"
-  }
+    "log": {
+        "disabled": false,
+        "level": "info",
+        "timestamp": true
+    }
 }
