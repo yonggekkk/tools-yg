@@ -28,7 +28,7 @@
                 "tag": "localdns",
         "server": "223.5.5.5",
         "type": "https",
-                "detour": "direct"
+                "detour": "chn"
             },
             {
                 "tag": "fakeip",
@@ -198,7 +198,7 @@
               }
       },
     {
-      "tag": "direct",
+      "tag": "chn",
       "type": "direct"
     },
     {
@@ -265,7 +265,7 @@
       },
       {
         "clash_mode": "Direct",
-        "outbound": "direct"
+        "outbound": "chn"
       },
       {
         "clash_mode": "Global",
@@ -273,15 +273,15 @@
       },
       {
         "rule_set": "geoip-cn",
-        "outbound": "direct"
+        "outbound": "chn"
       },
       {
         "rule_set": "geosite-cn",
-        "outbound": "direct"
+        "outbound": "chn"
       },
       {
       "ip_is_private": true,
-      "outbound": "direct"
+      "outbound": "chn"
       },
       {
         "rule_set": "geosite-geolocation-!cn",
@@ -294,6 +294,6 @@
     "server": "time.apple.com",
     "server_port": 123,
     "interval": "30m",
-    "detour": "direct"
+    "detour": "chn"
   }
 }
