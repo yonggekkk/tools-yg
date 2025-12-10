@@ -48,4 +48,3 @@ if [ ! -e cfs5http ]; then
 curl -L -o cfs5http -# --retry 2 --insecure https://raw.githubusercontent.com/yonggekkk/Cloudflare-vless-trojan/main/s5http_wkpgs/$cpu
 chmod +x cfs5http
 fi
-./cfs5http cf_domain=paaz.pages.dev:443 cf_cdnip=www.visa.com.sg token=9527
