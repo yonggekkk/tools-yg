@@ -61,12 +61,12 @@ EOF
 chmod +x "$HOME/cfs5http/cf_$port.sh"
 echo "设置完毕，请回主菜单选择2运行一次"
 elif [ "$menu" = "2" ]; then
-find "$HOME/cfs5http" -maxdepth 1 -type f -name "cf_*" -printf "%f\n"
+showmenu
 read -p "选择要运行的端口节点（输入端口即可）:" port
 bash "$HOME/cfs5http/cf_$port.sh"
 
 elif [ "$menu" = "3" ]; then
-find "$HOME/cfs5http" -maxdepth 1 -type f -name "cf_*" -printf "%f\n"
+showmenu
 read -p "选择要删除的端口节点（输入端口即可）:" port
 pid=$(lsof -t -i :$port)
 if [ -n "$pid" ]; then
@@ -78,7 +78,7 @@ fi
 rm -rf "$HOME/cfs5http/$port.log" "$HOME/cfs5http/cf_$port.sh"
 
 elif [ "$menu" = "4" ]; then
-find "$HOME/cfs5http" -maxdepth 1 -type f -name "cf_*" -printf "%f\n"
+showmenu
 read -p "选择要查看的端口节点日志（输入端口即可）:" port
 cat "$HOME/cfs5http/$port.log"
 
