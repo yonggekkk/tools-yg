@@ -38,10 +38,9 @@ echo
 read -p "请选择【1-6】:" menu
 if [ "$menu" = "1" ]; then
 mkdir -p "$HOME/cfs5http"
-cd "$HOME/cfs5http"
 if [ ! -s cfwp ]; then
-curl -L -o cfwp -# --retry 2 --insecure https://raw.githubusercontent.com/yonggekkk/Cloudflare-vless-trojan/main/s5http_wkpgs/linux-$cpu
-chmod +x cfwp
+curl -L -o "$HOME/cfs5http/cfwp" -# --retry 2 --insecure https://raw.githubusercontent.com/yonggekkk/Cloudflare-vless-trojan/main/s5http_wkpgs/linux-$cpu
+chmod +x "$HOME/cfs5http/cfwp"
 fi
 read -p "客户端本地端口设置（回车跳过为30000）:" menu
 port="${menu:-30000}"
@@ -57,9 +56,9 @@ read -p "ECH开关（回车跳过或者输入y为开启ECH，输入n表示关闭
 enable_ech=$([ -z "$menu" ] || [ "$menu" = y ] && echo y || echo n)
 cat > "cf_$port.sh" << EOF
 #!/bin/bash
-nohup ./cfwp client_ip=:"$port" dns="$dns" cf_domain="$cf_domain" cf_cdnip="$cf_cdnip" token="$token" enable_ech="$enable_ech" > "$port.log" 2>&1 &
+nohup ./$HOME/cfs5http/cfwp client_ip=:"$port" dns="$dns" cf_domain="$cf_domain" cf_cdnip="$cf_cdnip" token="$token" enable_ech="$enable_ech" > "$HOME/cfs5http/$port.log" 2>&1 &
 EOF
-chmod +x "cf_$port.sh"
+chmod +x "$HOME/cfs5http/cf_$port.sh"
 echo "设置完毕，请回主菜单选择2运行一次"
 elif [ "$menu" = "2" ]; then
 find "$HOME/cfs5http" -maxdepth 1 -type f -name "cf_*" -printf "%f\n"
