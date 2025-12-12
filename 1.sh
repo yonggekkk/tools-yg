@@ -43,7 +43,7 @@ if [ ! -s cfwp ]; then
 curl -L -o cfwp -# --retry 2 --insecure https://raw.githubusercontent.com/yonggekkk/Cloudflare-vless-trojan/main/s5http_wkpgs/linux-$cpu
 chmod +x cfwp
 fi
-read -p "客户端端口设置（回车跳过为30000）:" menu
+read -p "客户端本地端口设置（回车跳过为30000）:" menu
 port="${menu:-30000}"
 read -p "CF服务器域名设置（域名:443系端口或者80系端口）:" menu
 cf_domain="$menu"
