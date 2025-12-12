@@ -45,7 +45,7 @@ chmod +x cfwp
 fi
 read -p "客户端本地端口设置（回车跳过为30000）:" menu
 port="${menu:-30000}"
-read -p "CF服务器域名设置（域名:443系端口或者80系端口）:" menu
+read -p "CF workers/pages/自定义的域名设置（格式为域名:443系端口或者80系端口）:" menu
 cf_domain="$menu"
 read -p "客户端地址优选IP/域名（回车跳过为yg1.ygkkk.dpdns.org）:" menu
 cf_cdnip="${menu:-yg1.ygkkk.dpdns.org}"
@@ -60,6 +60,7 @@ cat > "cf_$port.sh" << EOF
 nohup ./cfwp client_ip=:"$port" dns="$dns" cf_domain="$cf_domain" cf_cdnip="$cf_cdnip" token="$token" enable_ech="$enable_ech" > "$port.log" 2>&1 &
 EOF
 chmod +x "cf_$port.sh"
+echo "设置完毕，请回主菜单选择2运行一次"
 elif [ "$menu" = "2" ]; then
 find "$HOME/cfs5http" -maxdepth 1 -type f -name "cf_*" -printf "%f\n"
 read -p "选择要运行的端口节点（输入端口即可）:" port
