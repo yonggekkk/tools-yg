@@ -54,7 +54,7 @@ read -p "DoH服务器设置（回车跳过为dns.alidns.com/dns-query）:" menu
 dns="${menu:-dns.alidns.com/dns-query}"
 read -p "ECH开关（回车跳过或者输入y为开启ECH，输入n表示关闭ECH）:" menu
 enable_ech=$([ -z "$menu" ] || [ "$menu" = y ] && echo y || echo n)
-cat > "cf_$port.sh" << EOF
+cat > "$HOME/cfs5http/cf_$port.sh" << EOF
 #!/bin/bash
 nohup ./$HOME/cfs5http/cfwp client_ip=:"$port" dns="$dns" cf_domain="$cf_domain" cf_cdnip="$cf_cdnip" token="$token" enable_ech="$enable_ech" > "$HOME/cfs5http/$port.log" 2>&1 &
 EOF
