@@ -59,11 +59,17 @@ cat > "$HOME/cfs5http/cf_$port.sh" << EOF
 nohup $HOME/cfs5http/cfwp client_ip=:"$port" dns="$dns" cf_domain="$cf_domain" cf_cdnip="$cf_cdnip" token="$token" enable_ech="$enable_ech" > "$HOME/cfs5http/$port.log" 2>&1 &
 EOF
 chmod +x "$HOME/cfs5http/cf_$port.sh"
+
+
+
 echo "设置完毕，请回主菜单选择2运行一次"
 elif [ "$menu" = "2" ]; then
 showmenu
 read -p "选择要运行的端口节点（输入端口即可）:" port
 bash "$HOME/cfs5http/cf_$port.sh"
+
+
+
 
 elif [ "$menu" = "3" ]; then
 showmenu
