@@ -15,9 +15,9 @@ exit
 ;;
 esac
 showmenu(){
-files=$(find "$HOME/cfs5http" -maxdepth 1 -type f -name "cf_*" 2>/dev/null)
+files=$(ps | grep '/root/cfs5http/cfwp' | grep -v grep | sed -n 's/.*client_ip=:\([0-9]\+\).*/\1/p')
 if [ -n "$files" ]; then
-echo "已安装节点："
+echo "已安装节点端口："
 while IFS= read -r f; do
 echo "$f"
 done <<< "$files"
@@ -26,16 +26,15 @@ echo "未安装任何节点"
 fi
 }
 
-echo "1、设置/重置配置"
-echo "2、运行一次某个节点"
-echo "3、删除某个节点"
-echo "4、查看某个节点日志"
-echo "5、卸载删除所有配置节点"
-echo "6、退出"
+echo "1、设置配置"
+echo "2、删除某个节点"
+echo "3、查看某个节点日志"
+echo "4、卸载删除所有配置节点"
+echo "5、退出"
 echo
 showmenu
 echo
-read -p "请选择【1-6】:" menu
+read -p "请选择【1-5】:" menu
 if [ "$menu" = "1" ]; then
 mkdir -p "$HOME/cfs5http"
 if [ ! -s "$HOME/cfs5http/cfwp" ]; then
@@ -59,19 +58,9 @@ cat > "$HOME/cfs5http/cf_$port.sh" << EOF
 nohup $HOME/cfs5http/cfwp client_ip=:"$port" dns="$dns" cf_domain="$cf_domain" cf_cdnip="$cf_cdnip" token="$token" enable_ech="$enable_ech" > "$HOME/cfs5http/$port.log" 2>&1 &
 EOF
 chmod +x "$HOME/cfs5http/cf_$port.sh"
-
-
-
-echo "设置完毕，请回主菜单选择2运行一次"
-elif [ "$menu" = "2" ]; then
-showmenu
-read -p "选择要运行的端口节点（输入端口即可）:" port
 bash "$HOME/cfs5http/cf_$port.sh"
-
-
-
-
-elif [ "$menu" = "3" ]; then
+echo "安装完毕，请"
+elif [ "$menu" = "2" ]; then
 showmenu
 read -p "选择要删除的端口节点（输入端口即可）:" port
 pid=$(lsof -t -i :$port)
@@ -83,12 +72,12 @@ echo "端口 $port 没有占用进程"
 fi
 rm -rf "$HOME/cfs5http/$port.log" "$HOME/cfs5http/cf_$port.sh"
 
-elif [ "$menu" = "4" ]; then
+elif [ "$menu" = "3" ]; then
 showmenu
 read -p "选择要查看的端口节点日志（输入端口即可）:" port
 cat "$HOME/cfs5http/$port.log"
 
-elif [ "$menu" = "5" ]; then
+elif [ "$menu" = "4" ]; then
 killall -9 cfwp
 rm -rf "$HOME/cfs5http"
 echo "卸载完成"
