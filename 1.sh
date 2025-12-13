@@ -15,7 +15,7 @@ exit
 ;;
 esac
 showmenu(){
-files=$(ps | grep '/root/cfs5http/cfwp' | grep -v grep | sed -n 's/.*client_ip=:\([0-9]\+\).*/\1/p')
+files=$(ps | grep "$HOME/cfs5http/cfwp" | grep -v grep | sed -n 's/.*client_ip=:\([0-9]\+\).*/\1/p')
 if [ -n "$files" ]; then
 echo "已安装节点端口："
 while IFS= read -r f; do
