@@ -25,10 +25,17 @@ else
 echo "未安装任何节点"
 fi
 }
-
-echo "1、设置配置"
-echo "2、删除某个节点"
-echo "3、查看某个节点配置信息及日志"
+echo "================================================================"
+echo "甬哥Github项目 ：github.com/yonggekkk")
+echo "甬哥Blogger博客 ：ygkkk.blogspot.com")
+echo "甬哥YouTube频道 ：www.youtube.com/@ygkkk")
+echo "================================================================"
+echo "支持 Workers域名、Pages域名、自定义域名")
+echo "可选 ECH-TLS、普通TLS、无TLS 三种代理模式，应对各种阻断封杀"
+echo "================================================================"
+echo "1、增设CF-Socks5/Http节点配置"
+echo "2、查看某个节点配置信息及日志"
+echo "3、删除某个节点"
 echo "4、卸载删除所有配置节点"
 echo "5、退出"
 echo
@@ -43,7 +50,7 @@ chmod +x "$HOME/cfs5http/cfwp"
 fi
 read -p "客户端本地端口设置（回车跳过为30000）:" menu
 port="${menu:-30000}"
-read -p "CF workers/pages/自定义的域名设置（格式为域名:443系端口或者80系端口）:" menu
+read -p "CF workers/pages/自定义的域名设置（格式为：域名:443系端口或者80系端口）:" menu
 cf_domain="$menu"
 read -p "客户端地址优选IP/域名（回车跳过为yg1.ygkkk.dpdns.org）:" menu
 cf_cdnip="${menu:-yg1.ygkkk.dpdns.org}"
@@ -59,8 +66,10 @@ nohup $HOME/cfs5http/cfwp client_ip=:"$port" dns="$dns" cf_domain="$cf_domain" c
 EOF
 chmod +x "$HOME/cfs5http/cf_$port.sh"
 bash "$HOME/cfs5http/cf_$port.sh"
-echo "安装完毕已在运行中，查看运行日志请选择3"
-elif [ "$menu" = "2" ]; then
+echo "安装完毕，Socks5/Http节点已在运行中，查看运行日志请选择3"
+sed -n '1,16p' "$HOME/cfs5http/$port.log" | grep '服务端域名与端口\|客户端地址与端口\|运行中的优选IP'
+echo
+elif [ "$menu" = "3" ]; then
 showmenu
 read -p "选择要删除的端口节点（输入端口即可）:" port
 pid=$(lsof -t -i :$port)
@@ -71,7 +80,7 @@ else
 echo "端口 $port 没有占用进程"
 fi
 rm -rf "$HOME/cfs5http/$port.log" "$HOME/cfs5http/cf_$port.sh"
-elif [ "$menu" = "3" ]; then
+elif [ "$menu" = "2" ]; then
 showmenu
 read -p "选择要查看的端口节点配置信息及日志（输入端口即可）:" port
 { echo "$port端口节点配置信息及日志如下：" ; echo "------------------------------------"; sed -n '1,16p' "$HOME/cfs5http/$port.log" | grep '服务端域名与端口\|客户端地址与端口\|运行中的优选IP' ; echo "------------------------------------" ; sed '1,16d' "$HOME/cfs5http/$port.log" | tail -n 10; }
