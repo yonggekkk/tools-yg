@@ -59,7 +59,7 @@ nohup $HOME/cfs5http/cfwp client_ip=:"$port" dns="$dns" cf_domain="$cf_domain" c
 EOF
 chmod +x "$HOME/cfs5http/cf_$port.sh"
 bash "$HOME/cfs5http/cf_$port.sh"
-echo "安装完毕，请"
+echo "安装完毕已在运行中，查看运行日志请选择3"
 elif [ "$menu" = "2" ]; then
 showmenu
 read -p "选择要删除的端口节点（输入端口即可）:" port
