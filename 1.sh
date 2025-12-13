@@ -71,12 +71,10 @@ else
 echo "端口 $port 没有占用进程"
 fi
 rm -rf "$HOME/cfs5http/$port.log" "$HOME/cfs5http/cf_$port.sh"
-
 elif [ "$menu" = "3" ]; then
 showmenu
 read -p "选择要查看的端口节点日志（输入端口即可）:" port
-cat "$HOME/cfs5http/$port.log"
-
+{ head -n 20 "$HOME/cfs5http/$port.log"; echo "------"; tail -n 20 "$HOME/cfs5http/$port.log"; }
 elif [ "$menu" = "4" ]; then
 killall -9 cfwp
 rm -rf "$HOME/cfs5http"
