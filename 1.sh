@@ -74,9 +74,9 @@ rm -rf "$HOME/cfs5http/$port.log" "$HOME/cfs5http/cf_$port.sh"
 elif [ "$menu" = "3" ]; then
 showmenu
 read -p "选择要查看的端口节点日志（输入端口即可）:" port
-{ head -n 20 "$HOME/cfs5http/$port.log"; echo "------"; tail -n 20 "$HOME/cfs5http/$port.log"; }
+{ sed -n '1,16p' "$HOME/cfs5http/$port.log" | grep '服务端域名与端口\|客户端地址与端口\|运行中的优选IP' ; echo "------------------------------------" ; sed '1,16d' "$HOME/cfs5http/$port.log" | tail -n 10; }
 elif [ "$menu" = "4" ]; then
-killall -9 cfwp
+ps | grep '[c]fwp' | awk '{print $1}' | xargs kill -9
 rm -rf "$HOME/cfs5http"
 echo "卸载完成"
 else
