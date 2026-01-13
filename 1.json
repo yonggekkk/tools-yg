@@ -35,10 +35,10 @@
                 "type": "https",
                 "server": "dns.google",
                 "path": "/dns-query",
-				"domain_resolver": "aliDns",
+	            "domain_resolver": "aliDns",
                 "detour": "proxy"
             },
-		{
+           {
         "type": "fakeip",
         "tag": "fakeip",
         "inet4_range": "198.18.0.0/15",
@@ -48,6 +48,7 @@
         "rules": [
             {
                 "rule_set": "geosite-cn",
+                "clash_mode": "Rule",
                 "server": "aliDns"
             },
             {
@@ -58,7 +59,7 @@
                 "clash_mode": "Global",
                 "server": "proxyDns"
             },
-			      {
+            {
         "query_type": [
           "A",
           "AAAA"
@@ -85,7 +86,7 @@
     "route": {
         "rules": [
             {
-				"inbound": "tun-in",
+	           "inbound": "tun-in",
                 "action": "sniff"
             },
             {
@@ -101,26 +102,29 @@
                 ],
                 "action": "hijack-dns"
             },
-            {
-                "ip_is_private": true,
-                "outbound": "direct"
-            },
-            {
-                "rule_set": "geosite-cn",
-                "outbound": "direct"
-            },
-            {
-                "rule_set": "geoip-cn",
-                "outbound": "direct"
-            },
-            {
-                "clash_mode": "Global",
-                "outbound": "proxy"
-            },
-            {
-                "clash_mode": "Direct",
-                "outbound": "direct"
-            }		
+         {
+          "clash_mode": "Global",
+          "outbound": "proxy"
+         },
+        {
+        "rule_set": "geosite-cn",
+        "clash_mode": "Rule",
+        "outbound": "direct"
+       },
+     {
+    "rule_set": "geoip-cn",
+    "clash_mode": "Rule",
+    "outbound": "direct"
+      },
+     {
+    "ip_is_private": true,
+    "clash_mode": "Rule",
+    "outbound": "direct"
+    },
+     {
+      "clash_mode": "Direct",
+      "outbound": "direct"
+     }		
         ],
         "rule_set": [
             {
@@ -144,35 +148,35 @@
             "server": "aliDns"
         }
     },
-    "outbounds": [
+  "outbounds": [
     {
       "type": "vless",
-      "tag": "vless-instance-20230521-2323",
-      "server": "130.162.193.44",
-      "server_port": 55734,
-      "uuid": "8ef0cc19-be30-47a5-aedc-87d12c8a8cb4",
+      "tag": "vless-$hostname",
+      "server": "$server_ipcl",
+      "server_port": $vl_port,
+      "uuid": "$uuid",
       "flow": "xtls-rprx-vision",
       "tls": {
         "enabled": true,
-        "server_name": "www.amd.com",
+        "server_name": "$vl_name",
         "utls": {
           "enabled": true,
           "fingerprint": "chrome"
         },
       "reality": {
           "enabled": true,
-          "public_key": "diQ9hFgWl6nF7igoJnECyO4ZPgsUynmYU2-bPw99TjE",
-          "short_id": "a99bb853"
+          "public_key": "$public_key",
+          "short_id": "$short_id"
         }
       }
     },
 {
-            "server": "130.162.193.44",
-            "server_port": 8080,
-            "tag": "vmess-instance-20230521-2323",
+            "server": "$vmadd_local",
+            "server_port": $vm_port,
+            "tag": "vmess-$hostname",
             "tls": {
-                "enabled": false,
-                "server_name": "www.bing.com",
+                "enabled": $tls,
+                "server_name": "$vm_name",
                 "insecure": false,
                 "utls": {
                     "enabled": true,
@@ -183,27 +187,27 @@
             "transport": {
                 "headers": {
                     "Host": [
-                        "www.bing.com"
+                        "$vm_name"
                     ]
                 },
-                "path": "8ef0cc19-be30-47a5-aedc-87d12c8a8cb4-vm",
+                "path": "$ws_path",
                 "type": "ws"
             },
             "type": "vmess",
             "security": "auto",
-            "uuid": "8ef0cc19-be30-47a5-aedc-87d12c8a8cb4"
+            "uuid": "$uuid"
         },
 
     {
         "type": "hysteria2",
-        "tag": "hy2-instance-20230521-2323",
-        "server": "130.162.193.44",
-        "server_port": 13593,
-        "password": "8ef0cc19-be30-47a5-aedc-87d12c8a8cb4",
+        "tag": "hy2-$hostname",
+        "server": "$cl_hy2_ip",
+        "server_port": $hy2_port,
+        "password": "$uuid",
         "tls": {
             "enabled": true,
-            "server_name": "www.bing.com",
-            "insecure": true,
+            "server_name": "$hy2_name",
+            "insecure": $hy2_ins,
             "alpn": [
                 "h3"
             ]
@@ -211,11 +215,11 @@
     },
         {
             "type":"tuic",
-            "tag": "tuic5-instance-20230521-2323",
-            "server": "130.162.193.44",
-            "server_port": 58214,
-            "uuid": "8ef0cc19-be30-47a5-aedc-87d12c8a8cb4",
-            "password": "8ef0cc19-be30-47a5-aedc-87d12c8a8cb4",
+            "tag": "tuic5-$hostname",
+            "server": "$cl_tu5_ip",
+            "server_port": $tu5_port,
+            "uuid": "$uuid",
+            "password": "$uuid",
             "congestion_control": "bbr",
             "udp_relay_mode": "native",
             "udp_over_stream": false,
@@ -223,50 +227,152 @@
             "heartbeat": "10s",
             "tls":{
                 "enabled": true,
-                "server_name": "www.bing.com",
-                "insecure": true,
+                "server_name": "$tu5_name",
+                "insecure": $tu5_ins,
                 "alpn": [
                     "h3"
                 ]
             }
         },
-		{
-            "type": "anytls",
-            "tag": "anytls-instance-20230521-2323",
-            "server": "130.162.193.44",
-            "server_port": 49727,
-            "password": "8ef0cc19-be30-47a5-aedc-87d12c8a8cb4",
-            "idle_session_check_interval": "30s",
-            "idle_session_timeout": "30s",
-            "min_idle_session": 5,
+$(sbany2)
+{
+            "server": "$vmadd_argo",
+            "server_port": 8443,
+            "tag": "vmess-tls-argo固定-$hostname",
             "tls": {
                 "enabled": true,
-                "insecure": true,
-                "server_name": "www.bing.com"
-              }
-      },
+                "server_name": "$argogd",
+                "insecure": false,
+                "utls": {
+                    "enabled": true,
+                    "fingerprint": "chrome"
+                }
+            },
+            "packet_encoding": "packetaddr",
+            "transport": {
+                "headers": {
+                    "Host": [
+                        "$argogd"
+                    ]
+                },
+                "path": "$ws_path",
+                "type": "ws"
+            },
+            "type": "vmess",
+            "security": "auto",
+            "uuid": "$uuid"
+        },
+{
+            "server": "$vmadd_argo",
+            "server_port": 8880,
+            "tag": "vmess-argo固定-$hostname",
+            "tls": {
+                "enabled": false,
+                "server_name": "$argogd",
+                "insecure": false,
+                "utls": {
+                    "enabled": true,
+                    "fingerprint": "chrome"
+                }
+            },
+            "packet_encoding": "packetaddr",
+            "transport": {
+                "headers": {
+                    "Host": [
+                        "$argogd"
+                    ]
+                },
+                "path": "$ws_path",
+                "type": "ws"
+            },
+            "type": "vmess",
+            "security": "auto",
+            "uuid": "$uuid"
+        },
+{
+            "server": "$vmadd_argo",
+            "server_port": 8443,
+            "tag": "vmess-tls-argo临时-$hostname",
+            "tls": {
+                "enabled": true,
+                "server_name": "$argo",
+                "insecure": false,
+                "utls": {
+                    "enabled": true,
+                    "fingerprint": "chrome"
+                }
+            },
+            "packet_encoding": "packetaddr",
+            "transport": {
+                "headers": {
+                    "Host": [
+                        "$argo"
+                    ]
+                },
+                "path": "$ws_path",
+                "type": "ws"
+            },
+            "type": "vmess",
+            "security": "auto",
+            "uuid": "$uuid"
+        },
+{
+            "server": "$vmadd_argo",
+            "server_port": 8880,
+            "tag": "vmess-argo临时-$hostname",
+            "tls": {
+                "enabled": false,
+                "server_name": "$argo",
+                "insecure": false,
+                "utls": {
+                    "enabled": true,
+                    "fingerprint": "chrome"
+                }
+            },
+            "packet_encoding": "packetaddr",
+            "transport": {
+                "headers": {
+                    "Host": [
+                        "$argo"
+                    ]
+                },
+                "path": "$ws_path",
+                "type": "ws"
+            },
+            "type": "vmess",
+            "security": "auto",
+            "uuid": "$uuid"
+        },
         {
             "tag": "proxy",
             "type": "selector",
+			"default": "auto",
             "outbounds": [
-                "auto",
-                "direct",
-        "vless-instance-20230521-2323",
-        "vmess-instance-20230521-2323",
-        "hy2-instance-20230521-2323",
-        "tuic5-instance-20230521-2323",
-        "anytls-instance-20230521-2323"
+        "auto",
+        "vless-$hostname",
+        "vmess-$hostname",
+        "hy2-$hostname",
+        "tuic5-$hostname",
+        $(sbany1)
+        "vmess-tls-argo固定-$hostname",
+        "vmess-argo固定-$hostname",
+        "vmess-tls-argo临时-$hostname",
+        "vmess-argo临时-$hostname"
             ]
         },
         {
             "tag": "auto",
             "type": "urltest",
             "outbounds": [
-        "vless-instance-20230521-2323",
-        "vmess-instance-20230521-2323",
-        "hy2-instance-20230521-2323",
-        "tuic5-instance-20230521-2323",
-        "anytls-instance-20230521-2323"
+        "vless-$hostname",
+        "vmess-$hostname",
+        "hy2-$hostname",
+        "tuic5-$hostname",
+        $(sbany1)
+        "vmess-tls-argo固定-$hostname",
+        "vmess-argo固定-$hostname",
+        "vmess-tls-argo临时-$hostname",
+        "vmess-argo临时-$hostname"
             ],
             "url": "http://www.gstatic.com/generate_204",
             "interval": "10m",
